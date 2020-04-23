@@ -56,8 +56,8 @@ LOGGER = logging.getLogger(__name__)
 PROCESS_SETTINGS = {
     'id': 'woudc-data-registry-metrics',
     'title': 'WOUDC Data Registry Metrics Provider',
-    'description': 'An extension of the WOUDC Data Registry search index,' \
-                   ' providing an API for metrics queries that assess' \
+    'description': 'An extension of the WOUDC Data Registry search index,'
+                   ' providing an API for metrics queries that assess'
                    ' file submission and/or usage statistics.',
     'keywords': [],
     'links': [],
@@ -244,8 +244,10 @@ def convert_to_rows(response, agg_layers, prefix={}):
     The bottom-level bucket (after all these nested aggregations) must contain
     a doc_count as well as a numerically-valued aggregation named total_obs.
 
-    Each row of the output is a tuple of values, matching each of the buckets
+    Each row of the output is a `dict` of values, matching each of the buckets
     described in <agg_layers> followed by doc_count and the total_obs value.
+    The keys in the `dict` are descriptive terms, not necessarily the same as
+    the property names in Elasticsearch.
 
     :param response: An Elasticsearch query response dictionary.
     :param agg_layers: List of aggregation names from top to bottom.
@@ -304,7 +306,9 @@ class MetricsProcessor(BaseProcessor):
     def __init__(self, provider_def):
         """
         Initialize object
+
         :param provider_def: provider definition
+        :returns: `woudc_api.plugins.metrics.MetricsProcessor`
         """
 
         BaseProcessor.__init__(self, provider_def, PROCESS_SETTINGS)
@@ -361,6 +365,8 @@ class MetricsProcessor(BaseProcessor):
 
         :param timescale: Either 'year' or 'month', describing time range size.
         :param kwargs: Optional property values to filter by.
+        :returns: Response from the filtered query, converted to
+                  "list-of-rows" format in JSON.
         """
 
         if timescale == 'year':
@@ -441,6 +447,8 @@ class MetricsProcessor(BaseProcessor):
 
         :param timescale: Either 'year' or 'month', describing time range size.
         :param kwargs: Optional property values to filter by.
+        :returns: Response from the filtered query, converted to
+                  "list-of-rows" format in JSON.
         """
 
         if timescale == 'year':
