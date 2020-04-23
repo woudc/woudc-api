@@ -1,5 +1,7 @@
 
+import os
 import logging
+
 from elasticsearch import Elasticsearch
 
 from pygeoapi.process.base import BaseProcessor, ProcessorExecuteError
@@ -263,7 +265,7 @@ class MetricsProcessor(BaseProcessor):
 
         BaseProcessor.__init__(self, provider_def, PROCESS_SETTINGS)
 
-        url_tokens = provider_def['elastic_path'].split('/')
+        url_tokens = os.environ.get('WDR_ELASTICSEARCH_URL').split('/')
 
         LOGGER.debug('Setting Elasticsearch properties')
         self.index = url_tokens[-1]
