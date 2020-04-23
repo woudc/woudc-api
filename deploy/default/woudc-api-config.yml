@@ -78,8 +78,6 @@ datasets:
             name: Elasticsearch
             data: ${WDR_ELASTICSEARCH_URL}/woudc_data_registry.project
             id_field: identifier
-            properties:
-                - identifier
     datasets:
         title: WOUDC Data Registry Datasets
         description: Connection to datasets in the WOUDC Data Registry Search Index.
@@ -96,8 +94,6 @@ datasets:
             name: Elasticsearch
             data: ${WDR_ELASTICSEARCH_URL}/woudc_data_registry.dataset
             id_field: identifier
-            properties:
-                - identifier
     countries:
         title: WOUDC Data Registry Countries
         description: Connection to countries in the WOUDC Data Registry Search Index.
@@ -114,14 +110,6 @@ datasets:
             name: Elasticsearch
             data: ${WDR_ELASTICSEARCH_URL}/woudc_data_registry.country
             id_field: identifier
-            properties:
-                - identifier
-                - country_name_en
-                - country_name_fr
-                - link
-                - wmo_region_id
-                - regional_involvement
-                - wmo_membership
     contributors:
         title: WOUDC Data Registry Contributors
         description: Connection to contributors in the WOUDC Data Registry Search Index.
@@ -138,16 +126,6 @@ datasets:
             name: Elasticsearch
             data: ${WDR_ELASTICSEARCH_URL}/woudc_data_registry.contributor
             id_field: identifier
-            properties:
-                - identifier
-                - name
-                - url
-                - country_code
-                - wmo_region_id
-                - active
-                - email
-                - ftp_username
-                - last_validated_datetime
     stations:
         title: WOUDC Data Registry Stations
         description: Connection to stations in the WOUDC Data Registry Search Index.
@@ -164,15 +142,6 @@ datasets:
             name: Elasticsearch
             data: ${WDR_ELASTICSEARH_URL}/woudc_data_registry.station
             id_field: woudc_id
-            properties:
-                - woudc_id
-                - gaw_id
-                - type
-                - name
-                - country_code
-                - wmo_region_id
-                - active
-                - last_validated_datetime
     instruments:
         title: WOUDC Data Registry Instruments
         description: Connection to instruments in the WOUDC Data Registry Search Index.
@@ -189,13 +158,6 @@ datasets:
             name: Elasticsearch
             data: ${WDR_ELASTICSEARCH_URL}/woudc_data_registry.instrument
             id_field: identifier
-            properties:
-                - identifier
-                - dataset
-                - station_id
-                - name
-                - model
-                - serial
     deployments:
         title: WOUDC Data Registry Deployments
         description: Connection to contributor deployments in the WOUDC Data Registry Search Index.
@@ -212,12 +174,6 @@ datasets:
             name: Elasticsearch
             data: ${WDR_ELASTICSEARCH_URL}/woudc_data_registry.deployment
             id_field: identifier
-            properties:
-                - identifier
-                - contributor
-                - station_id
-                - start_date
-                - end_date
     data_records:
         title: WOUDC Data Registry Data Records
         description: Connection to data records in the WOUDC Data Registry Search Index.
@@ -235,37 +191,6 @@ datasets:
             data: ${WDR_ELASTICSEARCH_URL}/woudc_data_registry.data_record
             id_field: identifier
             date_field: timestamp_date
-            properties:
-                - identifier
-                - content_class
-                - content_category
-                - content_level
-                - content_form
-                - data_generation_date
-                - data_generation_agency
-                - data_generation_version
-                - data_generation_scientific_authority
-                - platform_type
-                - platform_id
-                - platform_name
-                - platform_country
-                - platform_gaw_id
-                - instrument_name
-                - instrument_model
-                - instrument_number
-                - timestamp_utcoffset
-                - timestamp_date
-                - timestamp_time
-                - published
-                - received_datetime
-                - inserted_datetime
-                - processed_datetime
-                - published_datetime
-                - number_of_observations
-                - ingest_filepath
-                - filename
-                - output_filepath
-                - url
 processes:
     woudc-data-registry-metrics:
         processor:
