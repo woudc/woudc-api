@@ -1,0 +1,5 @@
+woudc-api (0.1.0) trusty; urgency=medium
+
+  * initial Debian packaging
+
+ -- Tom Kralidis <tom.kralidis@canada.ca>  Wed, 24 Apr 2020 16:29:03 +0000
