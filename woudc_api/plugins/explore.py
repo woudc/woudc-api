@@ -43,8 +43,15 @@
 #
 # =================================================================
 
+import os
+import logging
+
+from elasticsearch import Elasticsearch
+
 from pygeoapi.process.base import BaseProcessor
 
+
+LOGGER = logging.getLogger(__name__)
 
 PROCESS_SETTINGS = {
     'id': 'woudc-data-registry-explore',
@@ -143,3 +150,38 @@ class SearchPageProcessor(BaseProcessor):
         """
 
         BaseProcessor.__init__(self, provider_def, PROCESS_SETTINGS)
+
+        LOGGER.debug('Setting Elasticsearch properties')
+        url_tokens = os.environ.get('WDR_ELASTICSEARCH_URL').split('/')
+        host = url_tokens[2]
+
+        self.index = os.environ.get('WDR_CONTRIBUTIONS_INDEX')
+
+        LOGGER.debug('Host: {}'.format(host))
+        LOGGER.debug('Index name: {}'.format(self.index))
+
+        LOGGER.debug('Connecting to Elasticsearch')
+        self.es = Elasticsearch(host)
+
+        if not self.es.ping():
+            msg = 'Cannot connect to Elasticsearch'
+            LOGGER.error(msg)
+            raise ProcessorExecuteError(msg)
+
+        LOGGER.debug('Checking Elasticsearch version')
+        version = float(self.es.info()['version']['number'][:3])
+        if version < 7:
+            msg = 'Elasticsearch version below 7 not supported ({})' \
+                  .format(version)
+            LOGGER.error(msg)
+            raise ProcessorExecuteError(msg)
+
+    def execute(self, inputs):
+        """
+        Responds to an incoming request to this endpoint of the API.
+
+        :param inputs: Body of the incoming request.
+        :returns: Body of the response sent for that request.
+        """
+
+        return None
