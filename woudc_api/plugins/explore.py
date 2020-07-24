@@ -46,7 +46,81 @@
 from pygeoapi.process.base import BaseProcessor
 
 
-PROCESS_SETTINGS = {}
+PROCESS_SETTINGS = {
+    'id': 'woudc-data-registry-explore',
+    'title': 'WOUDC Data Registry Search Page Helper',
+    'description': 'A WOUDC Data Registry Search Index extension that'
+                   ' provides items for all the WOUDC data search page'
+                   ' dropdowns, all in one request.',
+    'keywords': [],
+    'links': [],
+    'inputs': [
+        {
+            'id': 'dataset',
+            'title': 'Dataset to Filter',
+            'literalDataDomain': {
+                'dataType': 'string',
+                'valueDefinition': {
+                    'anyValue': True
+                }
+            },
+            'minOccurs': 0,
+            'maxOccurs': 1
+        },
+        {
+            'id': 'country',
+            'title': 'Country to Filter',
+            'literalDataDomain': {
+                'dataType': 'string',
+                'valueDefinition': {
+                    'anyValue': True
+                }
+            },
+            'minOccurs': 0,
+            'maxOccurs': 1
+        },
+        {
+            'id': 'station',
+            'title': 'Station to Filter',
+            'literalDataDomain': {
+                'dataType': 'string',
+                'valueDefinition': {
+                    'anyValue': True
+                }
+            },
+            'minOccurs': 0,
+            'maxOccurs': 1
+        }
+    ],
+    'outputs': [{
+        'id': 'woudc-data-registry-explore-response',
+        'title': 'WOUDC Data Registry Search Page Output',
+        'output': [{
+            'formats': [{
+                'mimeType': 'application/json'
+            }]
+        }]
+    }],
+    'example': {
+        'inputs': [
+            {
+                'id': 'dataset',
+                'type': 'text/plain',
+                'value': 'OzoneSonde'
+            },
+            {
+                'id': 'country',
+                'type': 'text/plain',
+                'value': 'CAN'
+            },
+            {
+                'id': 'station',
+                'type': 'text/plain',
+                'value': '077'
+            }
+        ]
+    }
+}
 
 
 class SearchPageProcessor(BaseProcessor):
