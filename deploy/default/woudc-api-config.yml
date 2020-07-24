@@ -195,3 +195,6 @@ processes:
     woudc-data-registry-metrics:
         processor:
             name: woudc_api.plugins.metrics.MetricsProcessor
+    woudc-data-registry-explore:
+        processor:
+            name: woudc_api.plugins.explore.SearchPageProcessor
