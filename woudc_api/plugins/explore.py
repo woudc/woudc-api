@@ -184,4 +184,55 @@ class SearchPageProcessor(BaseProcessor):
         :returns: Body of the response sent for that request.
         """
 
-        return None
+        return_props = {
+            'countries': [
+                'properties.country_name_en',
+                'properties.country_name_fr',
+                'properties.country_id',
+                'geometry'
+            ],
+            'stations': [
+                'properties.station_name',
+                'properties.station_id',
+                'geometry'
+            ],
+            'instruments': [
+                'properties.instrument_name'
+            ]
+        }
+
+        aggregations = {}
+
+        for domain, returnables in return_props.items():
+            aggregations[domain] = {
+                'terms': {
+                    'field': '{}.raw'.format(returnables[0]),
+                    'size': 10000,
+                    'order': { '_key': 'asc' }
+                },
+                'aggregations': {
+                    'example': {
+                        'top_hits': {
+                            '_source': returnables,
+                            'size': 1
+                        }
+                    }
+                }
+            }
+
+        query = {
+            'size': 0,
+            'aggregations': aggregations
+        }
+
+        response = self.es.search(index=self.index, body=query)
+        response_body = response['aggregations']
+
+        summary = {}
+        for domain, groups in response_body.items():
+            summary[domain] = [
+                group['example']['hits']['hits'][0]['_source']
+                for group in groups['buckets']
+            ]
+
+        return summary
