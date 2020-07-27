@@ -399,7 +399,7 @@ class MetricsProcessor(BaseProcessor):
             'aggregations': {
                 'total_files': {
                     'terms': {
-                        'field': 'properties.content_category.keyword'
+                        'field': 'properties.content_category.raw'
                     },
                     'aggregations': {
                         'levels': {
@@ -477,11 +477,11 @@ class MetricsProcessor(BaseProcessor):
         }
 
         aggregation_defs = [
-            ('total_files', 'properties.data_generation_agency.keyword'),
-            ('stations', 'properties.platform_id.keyword'),
-            ('datasets', 'properties.content_category.keyword'),
+            ('total_files', 'properties.data_generation_agency.raw'),
+            ('stations', 'properties.platform_id.raw'),
+            ('datasets', 'properties.content_category.raw'),
             ('levels', 'properties.content_level'),
-            ('instruments', 'properties.instrument_name.keyword')
+            ('instruments', 'properties.instrument_name.raw')
         ]
         aggregation_defs.reverse()
 
