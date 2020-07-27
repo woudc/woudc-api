@@ -46,7 +46,80 @@
 from pygeoapi.process.base import BaseProcessor
 
 
-PROCESS_SETTINGS = {}
+PROCESS_SETTINGS = {
+    'id': 'woudc-data-registry-select-distinct',
+    'title': 'WOUDC Data Registry Group Search',
+    'description': 'A WOUDC Data Registry Search Index extension approximating'
+                   ' the SELECT DISTINCT query in SQL by returning groups'
+                   ' of unique values for selected fields.',
+    'keywords': [],
+    'links': [],
+    'inputs': [
+        {
+            'id': 'index',
+            'title': 'Index to Search',
+            'literalDataDomain': {
+                'dataType': 'string',
+                'valueDefinition': {
+                    'anyValue': True
+                }
+            },
+            'minOccurs': 1,
+            'maxOccurs': 1
+        },
+        {
+            'id': 'distinct',
+            'title': 'Core Query Fields',
+            'literalDataDomain': {
+                'dataType': 'string',
+                'valueDefinition': {
+                    'anyValue': True
+                }
+            },
+            'minOccurs': 1,
+            'maxOccurs': 1
+        },
+        {
+            'id': 'source',
+            'title': 'Satellite Source Fields',
+            'literalDataDomain': {
+                'dataType': 'string',
+                'valueDefinition': {
+                    'anyValue': True
+                }
+            },
+            'minOccurs': 0
+        }
+    ],
+    'outputs': [{
+        'id': 'woudc-data-registry-distinct-response',
+        'title': 'WOUDC Data Registry Group Select Output',
+        'output': [{
+            'formats': [{
+                'mimeType': 'application/json'
+            }]
+        }]
+    }],
+    'example': {
+        'inputs': [
+            {
+                'id': 'index',
+                'type': 'text/plain',
+                'value': 'instrument'
+            },
+            {
+                'id': 'distinct',
+                'type': 'application/json',
+                'value': [ 'name', 'model', 'dataset', 'station_id' ]
+            },
+            {
+                'id': 'source',
+                'type': 'application/json',
+                'value': [ 'data_class', 'station_name', 'waf_url' ]
+            }
+        ]
+    }
+}
 
 
 class GroupSearchProcessor(BaseProcessor):
