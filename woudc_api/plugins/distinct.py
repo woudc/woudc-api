@@ -165,6 +165,49 @@ def wrap_query(query, props):
     return wrap_query(wrapped, remaining_fields)
 
 
+def unwrap_query(response, props):
+    """
+    Transforms the nested Elasticsearch query response format into a more
+    accessible, flat list-of-objects representation mean to mimic the
+    response from a SQL query.
+
+    Assumes that <props> is the same list of fields passed to <wrap_query>:
+    fields early in the list correspond to outer layers of aggregations.
+
+    :param response: Raw response from an Elasticsearch aggregation.
+    :param props: A list of Elasticsearch text field names.
+    :returns: Flat list of objects representing unique field combinations.
+    """
+
+    if len(props) == 0:
+        source = response['example']['hits']['hits'][0]['_source']
+
+        # Remove Elasticsearch ID and document type from response.
+        for field in [ 'id', 'type' ]:
+            if field in source:
+                del source[field]
+
+        return [ source ]
+    else:
+        field_name = props[0]
+        aggregation_name = 'distinct_{}'.format(field_name)
+
+        remaining_props = props[1:]
+
+        collections = response[aggregation_name]['buckets']
+        unwrapped = []
+
+        for subcollection in collections:
+            field_value = subcollection['key']
+            subprops = unwrap_query(subcollection, remaining_props)
+
+            for subgroup in subprops:
+                subgroup['properties'][field_name] = field_value
+                unwrapped.append(subgroup)
+
+        return unwrapped
+
+
 class GroupSearchProcessor(BaseProcessor):
     """
     WOUDC Data Registry API extension for querying distinct groups.
@@ -234,4 +277,4 @@ class GroupSearchProcessor(BaseProcessor):
         response = self.es.search(index=index, body=query)
         response_body = response['aggregations']
 
-        return response_body
+        return unwrap_query(response_body, distinct_props)
