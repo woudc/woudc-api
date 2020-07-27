@@ -122,7 +122,8 @@ PROCESS_SETTINGS = {
             {
                 'id': 'source',
                 'type': 'application/json',
-                'value': [ 'data_class', 'station_name', 'waf_url' ]
+                'value': [ 'data_class', 'station_name', 'waf_url',
+                           'start_date', 'end_date' ]
             }
         ]
     }
@@ -181,6 +182,18 @@ def unwrap_query(response, props):
 
     if len(props) == 0:
         source = response['example']['hits']['hits'][0]['_source']
+        properties = source['properties']
+
+        if 'start_date' in response:
+            start_date = response['start_date']['value_as_string']
+            properties['start_date'] = start_date
+
+        if 'end_date' in response:
+            if response['end_date']['value'] is None:
+                end_date = None
+            else:
+                end_date = response['end_date']['value_as_string']
+            properties['end_date'] = end_date
 
         # Remove Elasticsearch ID and document type from response.
         for field in [ 'id', 'type' ]:
@@ -268,6 +281,30 @@ class GroupSearchProcessor(BaseProcessor):
                 }
             }
         }
+
+        if source_props is not None:
+            if 'start_date' in source_props:
+                source_props.remove('start_date')
+                query_core['start_date'] = {
+                    'min': {
+                        'field': 'properties.start_date'
+                    }
+                }
+
+            if 'end_date' in source_props:
+                source_props.remove('end_date')
+                query_core['end_date'] = {
+                    'max': {
+                        'field': 'properties.end_date'
+                    }
+                }
+
+            query_core['example']['top_hits']['_source'] = { 'includes': [] }
+            source_def = query_core['example']['top_hits']['_source']
+
+            source_def['includes'].extend([
+                'properties.{}'.format(field) for field in source_props
+            ])
 
         query = {
             'size': 0,
