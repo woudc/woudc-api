@@ -198,3 +198,6 @@ processes:
     woudc-data-registry-explore:
         processor:
             name: woudc_api.plugins.explore.SearchPageProcessor
+    woudc-data-registry-select-distinct:
+        processor:
+            name: woudc_api.plugins.distinct.GroupSearchProcessor
