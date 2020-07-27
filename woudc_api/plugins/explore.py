@@ -184,6 +184,31 @@ class SearchPageProcessor(BaseProcessor):
         :returns: Body of the response sent for that request.
         """
 
+        dataset = inputs.get('dataset', None)
+        country = inputs.get('country', None)
+        station = inputs.get('station', None)
+
+        filters = {
+            'countries': [],
+            'stations': [],
+            'instruments': []
+        }
+
+        if dataset is not None:
+            dataset_filter = {'term': {'properties.dataset_id.raw': dataset}}
+            filters['countries'].append(dataset_filter)
+            filters['stations'].append(dataset_filter)
+            filters['instruments'].append(dataset_filter)
+
+        if country is not None:
+            country_filter = {'term': {'properties.country_id.raw': country}}
+            filters['stations'].append(country_filter)
+            filters['instruments'].append(country_filter)
+
+        if station is not None:
+            station_filter = {'term': {'properties.station_id.raw': station}}
+            filters['instruments'].append(station_filter)
+
         return_props = {
             'countries': [
                 'properties.country_name_en',
@@ -205,16 +230,25 @@ class SearchPageProcessor(BaseProcessor):
 
         for domain, returnables in return_props.items():
             aggregations[domain] = {
-                'terms': {
-                    'field': '{}.raw'.format(returnables[0]),
-                    'size': 10000,
-                    'order': { '_key': 'asc' }
+                'filter': {
+                    'bool': {
+                        'must': filters[domain]
+                    }
                 },
                 'aggregations': {
-                    'example': {
-                        'top_hits': {
-                            '_source': returnables,
-                            'size': 1
+                    'search': {
+                        'terms': {
+                            'field': '{}.raw'.format(returnables[0]),
+                            'size': 10000,
+                            'order': { '_key': 'asc' }
+                        },
+                        'aggregations': {
+                            'example': {
+                                'top_hits': {
+                                    '_source': returnables,
+                                    'size': 1
+                                }
+                            }
                         }
                     }
                 }
@@ -232,7 +266,7 @@ class SearchPageProcessor(BaseProcessor):
         for domain, groups in response_body.items():
             summary[domain] = [
                 group['example']['hits']['hits'][0]['_source']
-                for group in groups['buckets']
+                for group in groups['search']['buckets']
             ]
 
         return summary
