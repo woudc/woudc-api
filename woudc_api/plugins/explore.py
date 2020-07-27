@@ -209,26 +209,44 @@ class SearchPageProcessor(BaseProcessor):
             station_filter = {'term': {'properties.station_id.raw': station}}
             filters['instruments'].append(station_filter)
 
-        return_props = {
-            'countries': [
-                'properties.country_name_en',
-                'properties.country_name_fr',
-                'properties.country_id',
-                'geometry'
-            ],
-            'stations': [
-                'properties.station_name',
-                'properties.station_id',
-                'geometry'
-            ],
-            'instruments': [
-                'properties.instrument_name'
-            ]
+        domain_properties = {
+            'countries': {
+                'sortby': [
+                    'properties.country_name_en',
+                    'properties.country_name_fr',
+                    'properties.country_id'
+                ],
+                'return': [
+                    'properties.country_name_en',
+                    'properties.country_name_fr',
+                    'properties.country_id',
+                    'geometry'
+                ]
+            },
+            'stations': {
+                'sortby': [
+                    'properties.station_name',
+                    'properties.station_id'
+                ],
+                'return': [
+                    'properties.station_name',
+                    'properties.station_id',
+                    'geometry'
+                ]
+            },
+            'instruments': {
+                'sortby': [
+                    'properties.instrument_name'
+                ],
+                'return': [
+                    'properties.instrument_name'
+                ]
+            }
         }
 
         aggregations = {}
 
-        for domain, returnables in return_props.items():
+        for domain, properties in domain_properties.items():
             aggregations[domain] = {
                 'filter': {
                     'bool': {
@@ -236,21 +254,21 @@ class SearchPageProcessor(BaseProcessor):
                     }
                 },
                 'aggregations': {
-                    'search': {
+                    'sortby_{}'.format(sort_prop.replace('properties.', '')): {
                         'terms': {
-                            'field': '{}.raw'.format(returnables[0]),
+                            'field': '{}.raw'.format(sort_prop),
                             'size': 10000,
                             'order': { '_key': 'asc' }
                         },
                         'aggregations': {
                             'example': {
                                 'top_hits': {
-                                    '_source': returnables,
+                                    '_source': properties['return'],
                                     'size': 1
                                 }
                             }
                         }
-                    }
+                    } for sort_prop in properties['sortby']
                 }
             }
 
@@ -264,9 +282,15 @@ class SearchPageProcessor(BaseProcessor):
 
         summary = {}
         for domain, groups in response_body.items():
-            summary[domain] = [
-                group['example']['hits']['hits'][0]['_source']
-                for group in groups['search']['buckets']
+            aggregation_names = [
+                key for key in groups if key not in [ 'meta', 'doc_count' ]
             ]
+
+            summary[domain] = {
+                aggregation_name: [
+                    group['example']['hits']['hits'][0]['_source']
+                    for group in groups[aggregation_name]['buckets']
+                ] for aggregation_name in aggregation_names
+            }
 
         return summary
