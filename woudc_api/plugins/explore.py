@@ -209,6 +209,12 @@ class SearchPageProcessor(BaseProcessor):
             station_filter = {'term': {'properties.station_id.raw': station}}
             filters['instruments'].append(station_filter)
 
+        filters['countries'].append({
+            'exists': {
+                'field': 'properties.country_id'
+            }
+        })
+
         domain_properties = {
             'countries': {
                 'sortby': [
