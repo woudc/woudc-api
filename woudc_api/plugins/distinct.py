@@ -305,6 +305,7 @@ class GroupSearchProcessor(BaseProcessor):
             source_def['includes'].extend([
                 'properties.{}'.format(field) for field in source_props
             ])
+            source_def['includes'].append('geometry')
 
         query = {
             'size': 0,
