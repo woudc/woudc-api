@@ -195,7 +195,16 @@ class SearchPageProcessor(BaseProcessor):
         }
 
         if dataset is not None:
-            dataset_filter = {'term': {'properties.dataset_id.raw': dataset}}
+            dataset_list = dataset.split(',')
+            dataset_filter = {
+                'bool': {
+                    'should': [
+                        { 'term': { 'properties.dataset_id.raw': ds } }
+                        for ds in dataset_list
+                    ]
+                }
+            }
+
             filters['countries'].append(dataset_filter)
             filters['stations'].append(dataset_filter)
             filters['instruments'].append(dataset_filter)
