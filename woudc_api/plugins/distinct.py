@@ -221,6 +221,64 @@ def unwrap_query(response, props):
         return unwrapped
 
 
+def build_query(distinct_props, source_props):
+    """
+    Returns an Elasticsearch aggregation to select unique values of
+    the fields in <distinct_props>, also including a random value for
+    each field in <source_props>.
+
+    The values for <source_props> fields are selected by taking a random
+    document as a representative for the distinct field values, and using
+    that representative's source values. This is useful for values that are
+    contant within the group or that can be inexact.
+
+    If special values 'start_date' or 'end_date' are in <source_props> then
+    they are handled through aggregating the overall min/max date over the
+    whole group.
+
+    :param distinct_props: A list of Elasticsearch text field names
+                           that uniquely identify a group.
+    :param source_props: A list of Elasticsearch field names to add to
+                         each group, but which do not identify the group.
+    :returns: An Elasticsearch aggregation returning all unique groups.
+    """
+
+    query_core = {
+        'example': {
+            'top_hits': {
+                'size': 1
+            }
+        }
+    }
+
+    if source_props is not None:
+        if 'start_date' in source_props:
+            source_props.remove('start_date')
+            query_core['start_date'] = {
+                'min': {
+                    'field': 'properties.start_date'
+                }
+            }
+
+        if 'end_date' in source_props:
+            source_props.remove('end_date')
+            query_core['end_date'] = {
+                'max': {
+                    'field': 'properties.end_date'
+                }
+            }
+
+        query_core['example']['top_hits']['_source'] = { 'includes': [] }
+        source_def = query_core['example']['top_hits']['_source']
+
+        source_def['includes'].extend([
+            'properties.{}'.format(field) for field in source_props
+        ])
+        source_def['includes'].append('geometry')
+
+    return wrap_query(query_core, distinct_props)
+
+
 class GroupSearchProcessor(BaseProcessor):
     """
     WOUDC Data Registry API extension for querying distinct groups.
@@ -274,45 +332,35 @@ class GroupSearchProcessor(BaseProcessor):
         distinct_props = inputs['distinct']
         source_props = inputs.get('source', None)
 
-        query_core = {
-            'example': {
-                'top_hits': {
-                    'size': 1
+        if isinstance(distinct_props, list):
+            query = {
+                'size': 0,
+                'aggregations': build_query(distinct_props, source_props)
+            }
+
+            response = self.es.search(index=index, body=query)
+            response_body = response['aggregations']
+
+            return unwrap_query(response_body, distinct_props)
+        else:
+            query = {
+                'size': 0,
+                'aggregations': {
+                    query_name: {
+                        'global': {
+                            # Aggregation with no effects.
+                        },
+                        'aggregations': build_query(group_def, source_props)
+                    } for query_name, group_def in distinct_props.items()
                 }
             }
-        }
 
-        if source_props is not None:
-            if 'start_date' in source_props:
-                source_props.remove('start_date')
-                query_core['start_date'] = {
-                    'min': {
-                        'field': 'properties.start_date'
-                    }
-                }
+            response = self.es.search(index=index, body=query)
 
-            if 'end_date' in source_props:
-                source_props.remove('end_date')
-                query_core['end_date'] = {
-                    'max': {
-                        'field': 'properties.end_date'
-                    }
-                }
+            flattened_response = {}
+            for query_name, group_def in distinct_props.items():
+                response_body = response['aggregations'][query_name]
+                flattened_response[query_name] = unwrap_query(response_body,
+                                                              group_def)
 
-            query_core['example']['top_hits']['_source'] = { 'includes': [] }
-            source_def = query_core['example']['top_hits']['_source']
-
-            source_def['includes'].extend([
-                'properties.{}'.format(field) for field in source_props
-            ])
-            source_def['includes'].append('geometry')
-
-        query = {
-            'size': 0,
-            'aggregations': wrap_query(query_core, distinct_props)
-        }
-
-        response = self.es.search(index=index, body=query)
-        response_body = response['aggregations']
-
-        return unwrap_query(response_body, distinct_props)
+            return flattened_response
