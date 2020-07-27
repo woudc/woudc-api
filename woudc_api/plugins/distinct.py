@@ -129,6 +129,42 @@ PROCESS_SETTINGS = {
 }
 
 
+def wrap_query(query, props):
+    """
+    Surrounds the core Elasticsearch aggregation <query> with one
+    Terms aggregation for every field in the list <props>.
+
+    Fields at the beginning of the list will end up as outer aggregations,
+    while later fields will be nested more deeply and the core query will
+    be nested deepest.
+
+    :param query: A `dict` representing an Elasticsearch aggregation.
+    :param props: A list of Elasticsearch text field names.
+    :returns: Aggregation containing <query> wrapped in Terms aggregations.
+    """
+
+    if len(props) == 0:
+        return query
+
+    field_name = props[-1]
+    field_full = 'properties.{}.raw'.format(field_name)
+
+    remaining_fields = props[:-1]
+
+    wrapped = {
+        'distinct_{}'.format(field_name): {
+            'terms': {
+                'size': 10000,
+                'field': field_full,
+                'order': { '_key': 'asc' }
+            },
+            'aggregations': query
+        }
+    }
+
+    return wrap_query(wrapped, remaining_fields)
+
+
 class GroupSearchProcessor(BaseProcessor):
     """
     WOUDC Data Registry API extension for querying distinct groups.
@@ -178,4 +214,24 @@ class GroupSearchProcessor(BaseProcessor):
         :returns: Body of the response sent for that request.
         """
 
-        return None
+        index = self.index_prefix + inputs['index']
+        distinct_props = inputs['distinct']
+        source_props = inputs.get('source', None)
+
+        query_core = {
+            'example': {
+                'top_hits': {
+                    'size': 1
+                }
+            }
+        }
+
+        query = {
+            'size': 0,
+            'aggregations': wrap_query(query_core, distinct_props)
+        }
+
+        response = self.es.search(index=index, body=query)
+        response_body = response['aggregations']
+
+        return response_body
