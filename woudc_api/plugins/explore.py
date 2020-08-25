@@ -155,7 +155,7 @@ class SearchPageProcessor(BaseProcessor):
         url_tokens = os.environ.get('WDR_ELASTICSEARCH_URL').split('/')
         host = url_tokens[2]
 
-        self.index = os.environ.get('WDR_CONTRIBUTIONS_INDEX')
+        self.index = 'woudc_data_registry.contribution'
 
         LOGGER.debug('Host: {}'.format(host))
         LOGGER.debug('Index name: {}'.format(self.index))
