@@ -107,6 +107,18 @@ PROCESS_SETTINGS = {
             'maxOccurs': 1
         },
         {
+            'id': 'level',
+            'title': 'Data Level Filter',
+            'literalDataDomain': {
+                'dataType': 'number',
+                'valueDefinition': {
+                    'anyValue': True,
+                }
+            },
+            'minOccurs': 0,
+            'maxOccurs': 1
+        },
+        {
             'id': 'country',
             'title': 'Country Filter',
             'literalDataDomain': {
@@ -177,115 +189,6 @@ PROCESS_SETTINGS = {
         ]
     }
 }
-
-
-def wrap_filter(query, prop, value):
-    """
-    Returns a copy of the query argumnt, wrapped in an additional
-    filter requiring the property named by <prop> have a certain value.
-
-    :param query: An Elasticsearch aggregation query dictionary.
-    :param prop: The name of a filterable property.
-    :param value: Value for the property that the query will match.
-    :returns: Query dictionary wrapping the original query in an extra filter.
-    """
-
-    property_to_field = {
-        'dataset': 'properties.content_category',
-        'country': 'properties.platform_country',
-        'station': 'properties.platform_id',
-        'network': 'properties.instrument_name'
-    }
-    field = property_to_field[prop]
-
-    wrapper = {
-        'size': 0,
-        'aggregations': {
-            prop: {
-                'filter': {
-                    'match': {
-                        field: value
-                    }
-                },
-                'aggregations': query['aggregations']
-            }
-        }
-    }
-
-    return wrapper
-
-
-def unwrap_filter(response, category):
-    """
-    Strips one layer of aggregations (named by <category>) from
-    a ElasticSearch query response, leaving it still in proper ES
-    response format.
-
-    :param response: An Elasticsearch aggregation response dictionary.
-    :param category: Name of the topmost aggregation in the response.
-    :returns: The same response, with one level of aggregation removed.
-    """
-
-    unwrapped = response.copy()
-    unwrapped['aggregations'] = response['aggregations'][category]
-
-    return unwrapped
-
-
-def convert_to_rows(response, agg_layers, prefix={}):
-    """
-    Converts the hierarchical, dictionary type of response from an
-    an Elasticsearch query into a more SQL-like list of rows (tuples).
-
-    The Elasticsearch response is expected to have a specific format, where
-    a series of bucket aggregations are nested in each other. The names of
-    these aggregations are listed in order in <agg_layers>, from top to bottom.
-
-    The bottom-level bucket (after all these nested aggregations) must contain
-    a doc_count as well as a numerically-valued aggregation named total_obs.
-
-    Each row of the output is a `dict` of values, matching each of the buckets
-    described in <agg_layers> followed by doc_count and the total_obs value.
-    The keys in the `dict` are descriptive terms, not necessarily the same as
-    the property names in Elasticsearch.
-
-    :param response: An Elasticsearch query response dictionary.
-    :param agg_layers: List of aggregation names from top to bottom.
-    :returns: Contents of the Elasticsearch response in list-of-rows format.
-    """
-
-    if 'aggregations' in response:
-        response = response['aggregations']
-
-    if len(agg_layers) == 0:
-        total_files = response['doc_count']
-        total_obs = int(response['total_obs']['value'])
-
-        if total_files == 0:
-            return []
-        else:
-            row = prefix.copy()
-            row['total_files'] = total_files
-            row['total_obs'] = total_obs
-
-            return [row]
-    else:
-        layer_input_name, layer_output_name = agg_layers[0]
-        remaining_layers = agg_layers[1:]
-
-        rows = []
-        for bucket in response[layer_input_name]['buckets']:
-            if 'key_as_string' in bucket:
-                key = bucket['key_as_string']
-            else:
-                key = bucket['key']
-
-            next_prefix = prefix.copy()
-            next_prefix[layer_output_name] = key
-
-            rows.extend(convert_to_rows(bucket, remaining_layers, next_prefix))
-
-        return rows
 
 
 class MetricsProcessor(BaseProcessor):
@@ -369,6 +272,9 @@ class MetricsProcessor(BaseProcessor):
                   "list-of-rows" format in JSON.
         """
 
+        dataset = kwargs.get('dataset', None)
+        level = kwargs.get('level', None)
+
         if timescale == 'year':
             date_interval = '1y'
             date_format = 'yyyy'
@@ -376,6 +282,14 @@ class MetricsProcessor(BaseProcessor):
             date_interval = '1M'
             date_format = 'yyyy-MM'
         date_aggregation_name = '{}ly'.format(timescale)
+
+        filters = []
+        if dataset is not None:
+            filters.append({ 'properties.content_category.raw': dataset })
+        if level is not None:
+            filters.append({ 'properties.content_level': level })
+
+        conditions = [ { 'term': body } for body in filters ]
 
         query_core = {
             date_aggregation_name: {
@@ -397,44 +311,36 @@ class MetricsProcessor(BaseProcessor):
         query = {
             'size': 0,
             'aggregations': {
-                'total_files': {
-                    'terms': {
-                        'field': 'properties.content_category.keyword'
-                    },
-                    'aggregations': {
-                        'levels': {
-                            'terms': {
-                                'field': 'properties.content_level'
-                            },
-                            'aggregations': query_core
+                'filters': {
+                    'filter': {
+                        'body': {
+                            'must': conditions
                         }
-                    }
+                    },
+                    'aggregations': query_body
                 }
             }
         }
 
-        filterables = ['country', 'station', 'network']
-        filterables.reverse()
-
-        for category in filterables:
-            if category in kwargs:
-                query = wrap_filter(query, category, kwargs[category])
-
         response = self.es.search(index=self.index, body=query)
-        filterables.reverse()
+        response_body = response['aggregations']
 
-        for category in filterables:
-            if category in kwargs:
-                response = unwrap_filter(response, category)
+        total_files = response_body['filters']['doc_count']
+        histogram = response_body['filters'][date_aggregation_name]
 
-        aggregation_names = [
-            ('total_files', 'dataset'),
-            ('levels', 'level'),
-            (date_aggregation_name, timescale)
-        ]
-        rows = convert_to_rows(response, aggregation_names)
+        rows = []
+        for document in histogram['buckets']:
+            if document['doc_count'] > 0:
+                rows.append({
+                    'total_files': document['doc_count'],
+                    'total_obs': document['total_obs']['value'],
+                    timescale: document['key_as_string']
+                })
 
-        return rows
+        return {
+            'total_files': total_files,
+            'metrics': rows
+        }
 
     def metrics_contributor(self, timescale, **kwargs):
         """
@@ -451,6 +357,11 @@ class MetricsProcessor(BaseProcessor):
                   "list-of-rows" format in JSON.
         """
 
+        dataset = kwargs.get('dataset', None)
+        country = kwargs.get('country', None)
+        station = kwargs.get('station', None)
+        network = kwargs.get('network', None)
+
         if timescale == 'year':
             date_interval = '1y'
             date_format = 'yyyy'
@@ -458,6 +369,18 @@ class MetricsProcessor(BaseProcessor):
             date_interval = '1M'
             date_format = 'yyyy-MM'
         date_aggregation_name = '{}ly'.format(timescale)
+
+        filters = []
+        if dataset is not None:
+            filters.append({ 'properties.content_category.raw': dataset })
+        if country is not None:
+            filters.append({ 'properties.platform_country.raw': country })
+        if station is not None:
+            filters.append({ 'properties.platform_id.raw': station })
+        if network is not None:
+            filters.append({ 'properties.instrument_name.raw': network })
+
+        conditions = [ { 'term': body } for body in filters ]
 
         query_core = {
             date_aggregation_name: {
@@ -476,55 +399,39 @@ class MetricsProcessor(BaseProcessor):
             }
         }
 
-        aggregation_defs = [
-            ('total_files', 'properties.data_generation_agency.keyword'),
-            ('stations', 'properties.platform_id.keyword'),
-            ('datasets', 'properties.content_category.keyword'),
-            ('levels', 'properties.content_level'),
-            ('instruments', 'properties.instrument_name.keyword')
-        ]
-        aggregation_defs.reverse()
-
-        for aggregation_name, field in aggregation_defs:
-            query_core = {
-                aggregation_name: {
-                    'terms': {
-                        'field': field
+        query = {
+            'size': 0,
+            'aggregations': {
+                'filters': {
+                    'filter': {
+                        'bool': {
+                            'must': conditions
+                        }
                     },
                     'aggregations': query_core
                 }
             }
-
-        query = {
-            'size': 0,
-            'aggregations': query_core
         }
 
-        filterables = ['dataset', 'station', 'network']
-        filterables.reverse()
-
-        for category in filterables:
-            if category in kwargs:
-                query = wrap_filter(query, category, kwargs[category])
-
         response = self.es.search(index=self.index, body=query)
-        filterables.reverse()
+        response_body = response['aggregations']
 
-        for category in filterables:
-            if category in kwargs:
-                response = unwrap_filter(response, category)
+        total_files = response_body['filters']['doc_count']
+        histogram = response_body['filters'][date_aggregation_name]
 
-        aggregation_names = [
-            ('total_files', 'contributor'),
-            ('stations', 'station'),
-            ('datasets', 'dataset'),
-            ('levels', 'level'),
-            ('instruments', 'network'),
-            (date_aggregation_name, timescale)
-        ]
-        rows = convert_to_rows(response, aggregation_names)
+        rows = []
+        for document in histogram['buckets']:
+            if document['doc_count'] > 0:
+                rows.append({
+                    'total_files': document['doc_count'],
+                    'total_obs': document['total_obs']['value'],
+                    timescale: document['key_as_string']
+                })
 
-        return rows
+        return {
+            'total_files': total_files,
+            'metrics': rows
+        }
 
     def __repr__(self):
         return '<MetricsProcessor> {}'.format(self.name)
