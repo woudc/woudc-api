@@ -179,6 +179,11 @@ datasets:
         description: Connection to data records in the WOUDC Data Registry Search Index.
         keywords: []
         links: []
+    notifications:
+        title: WOUDC notifications
+        description: WOUDC notifications
+        keywords: []
+        links: []
         extents:
             spatial:
                 bbox: [-180, -90, 180, 90]
@@ -191,6 +196,19 @@ datasets:
             data: ${WDR_ELASTICSEARCH_URL}/woudc_data_registry.data_record
             id_field: identifier
             date_field: timestamp_date
+        extents:
+            spatial:
+                bbox: [-180, -90, 180, 90]
+                crs: http://www.opengis.net/def/crs/OGC/1.3/CRS84
+            temporal:
+                begin: 2015-02-03
+                end: null # or empty
+        provider:
+            name: Elasticsearch
+            data: ${WDR_ELASTICSEARCH_URL}/woudc_data_registry.notifications
+            id_field: identifier
+            date_field: published_date
+
 processes:
     woudc-data-registry-metrics:
         processor:
