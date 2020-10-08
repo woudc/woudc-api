@@ -1,8 +1,8 @@
 server:
     bind:
         host: 0.0.0.0
-        port: 5001
-    url: ${WDR_API_URL}
+        port: 5000
+    url: ${WOUDC_API_URL}
     basepath: /
     mimetype: application/json; charset=UTF-8
     encoding: utf-8
@@ -21,45 +21,43 @@ logging:
 
 metadata:
     identification:
-        title: Meteorological Service of Canada Geospatial Web Services
-        description: The weather can have an incredible influence on our daily lives. It affects the growth of crops and the availability of water. It dictates which regions of the world are habitable or uninhabitable
+        title: World Ozone and Ultraviolet Radiation Data Centre (WOUDC)
+        description: The World Ozone and Ultraviolet Radiation Data Centre (WOUDC) is one of six World Data Centres which are part of the Global Atmosphere Watch (GAW) programme of the World Meteorological Organization (WMO).  WOUDC contains ozone and UV data measured by instruments located on ground-based, shipborne or airborne platforms.  Data are subject to the WOUDC Data Policy (https://woudc.org/about/data-policy.php)
         keywords:
-            - Weather
-            - Meteorology
-            - Climate
-            - Forecasting
-            - Floods
-            - Weather alerts
-            - Storms
-            - Wind
-            - Temperature
-            - Precipitation
-            - Snow
-            - Ice
+            - ozone
+            - ultraviolet
+            - uv
+            - totalozone
+            - ozonesonde
+            - umkehr
+            - gaw
+            - wmo
+            - spectral
+            - stations
+            - instruments
         keywords_type: theme
-        terms_of_service: https://www.canada.ca/en/transparency/terms.html
-        url: https://www.canada.ca/en/services/environment/weather.html
+        terms_of_service: https://www.canada.ca/en/environment-climate-change/corporate/transparency.html
+        url: https://woudc.org
     license:
-        name: Environment and Climate Change Canada Data Server End-use Licence
-        url: https://dd.weather.gc.ca/doc/LICENCE_GENERAL.txt
+        name: WOUDC Data Use Policy
+        url: https://woudc.org/about/data-policy.php
     provider:
         name: Government of Canada, Environment and Climate Change Canada, Meteorological Service of Canada
         url: https://www.canada.ca/en/services/environment/weather.html
     contact:
-        name: Government of Canada, Environment and Climate Change Canada, Meteorological Service of Canada
-        position: Service Channel
-        address: 77 Westmorland Street, Suite 260
-        city: Fredericton
-        stateorprovince: New Brunswick
-        postalcode: E3B 6Z3
-        country: Canada
+        name: World Ozone and Ultraviolet Radiation Data Centre
+        position: Data Centre Manager
         phone: None
-        fax: +01-506-451-6010
-        email: ec.ecweather-meteo.ec@canada.ca
-        url: https://weather.gc.ca/mainmenu/contact_us_e.html
-        hours: Monday to Friday, 1300h - 2100h UTC
+        fax: None
+        address: 4905 Dufferin Street
+        city: Toronto
+        stateorprovince: Ontario
+        postalcode: M3H 5T4
+        country: Canada
+        email: ec.woudc.ec@canada.ca
+        url: https://woudc.org/contact.php
+        hours: 1400h - 2200h UTC
         instructions: During hours of service
-        role: pointOfContact
 
 resources:
     projects:
@@ -78,7 +76,7 @@ resources:
         providers:
             - type: feature
               name: Elasticsearch
-              data: ${WDR_ELASTICSEARCH_URL}/woudc_data_registry.project
+              data: ${WOUDC_API_ES_URL}/woudc_data_registry.project
               id_field: identifier
     datasets:
         type: collection
@@ -96,7 +94,7 @@ resources:
         providers:
             - type: feature
               name: Elasticsearch
-              data: ${WDR_ELASTICSEARCH_URL}/woudc_data_registry.dataset
+              data: ${WOUDC_API_ES_URL}/woudc_data_registry.dataset
               id_field: identifier
     countries:
         type: collection
@@ -114,7 +112,7 @@ resources:
         providers:
             - type: feature
               name: Elasticsearch
-              data: ${WDR_ELASTICSEARCH_URL}/woudc_data_registry.country
+              data: ${WOUDC_API_ES_URL}/woudc_data_registry.country
               id_field: identifier
     contributors:
         type: collection
@@ -132,7 +130,7 @@ resources:
         providers:
             - type: feature
               name: Elasticsearch
-              data: ${WDR_ELASTICSEARCH_URL}/woudc_data_registry.contributor
+              data: ${WOUDC_API_ES_URL}/woudc_data_registry.contributor
               id_field: identifier
     stations:
         type: collection
@@ -150,7 +148,7 @@ resources:
         providers:
             - type: feature
               name: Elasticsearch
-              data: ${WDR_ELASTICSEARCH_URL}/woudc_data_registry.station
+              data: ${WOUDC_API_ES_URL}/woudc_data_registry.station
               id_field: woudc_id
     instruments:
         type: collection
@@ -168,7 +166,7 @@ resources:
         providers:
             - type: feature
               name: Elasticsearch
-              data: ${WDR_ELASTICSEARCH_URL}/woudc_data_registry.instrument
+              data: ${WOUDC_API_ES_URL}/woudc_data_registry.instrument
               id_field: identifier
     deployments:
         type: collection
@@ -186,7 +184,7 @@ resources:
         providers:
             - type: feature
               name: Elasticsearch
-              data: ${WDR_ELASTICSEARCH_URL}/woudc_data_registry.deployment
+              data: ${WOUDC_API_ES_URL}/woudc_data_registry.deployment
               id_field: identifier
     data_record:
         type: collection
@@ -204,7 +202,7 @@ resources:
         providers:
             - type: feature
               name: Elasticsearch
-              data: ${WDR_ELASTICSEARCH_URL}/woudc_data_registry.data_record
+              data: ${WOUDC_API_ES_URL}/woudc_data_registry.data_record
               id_field: identifier
     notification:
         type: collection
@@ -222,7 +220,7 @@ resources:
         providers:
             - type: feature
               name: Elasticsearch
-              data: ${WDR_ELASTICSEARCH_URL}/woudc_data_registry.notification
+              data: ${WOUDC_API_ES_URL}/woudc_data_registry.notification
               id_field: identifier
               date_field: published_date
 

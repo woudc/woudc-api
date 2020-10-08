@@ -216,7 +216,7 @@ class MetricsProcessor(BaseProcessor):
 
         BaseProcessor.__init__(self, provider_def, PROCESS_SETTINGS)
 
-        url_tokens = os.environ.get('WDR_ELASTICSEARCH_URL').split('/')
+        url_tokens = os.environ.get('WOUDC_API_ES_URL').split('/')
 
         LOGGER.debug('Setting Elasticsearch properties')
         self.index = url_tokens[-1]

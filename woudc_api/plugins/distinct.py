@@ -298,7 +298,7 @@ class GroupSearchProcessor(BaseProcessor):
         BaseProcessor.__init__(self, provider_def, PROCESS_SETTINGS)
 
         LOGGER.debug('Setting Elasticsearch properties')
-        url_tokens = os.environ.get('WDR_ELASTICSEARCH_URL').split('/')
+        url_tokens = os.environ.get('WOUDC_API_ES_URL').split('/')
         host = url_tokens[2]
 
         LOGGER.debug('Host: {}'.format(host))

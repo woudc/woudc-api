@@ -3,7 +3,7 @@
 # Terms and Conditions of Use
 #
 # Unless otherwise noted, computer program source code of this
-# distribution is covered under Crown Copyright, Government of
+# distribution # is covered under Crown Copyright, Government of
 # Canada, and is distributed under the MIT License.
 #
 # The Canada wordmark and related graphics associated with this
@@ -43,12 +43,16 @@
 #
 # =================================================================
 
-import os
+from flask import Flask, redirect
 
-os.environ['PYGEOAPI_CONFIG'] = '/opt/woudc-api/conf/woudc-api-config.yml'
-os.environ['PYGEOAPI_OPENAPI'] = '/opt/woudc-api/conf/woudc-api-openapi.yml'
-os.environ['WOUDC_API_URL'] = '/opt/woudc-api/conf/woudc-api-openapi.yml'
-os.environ['WOUDC_API_ES_URL'] = 'http://localhost:9200'
+from pygeoapi.flask_app import BLUEPRINT as pygeoapi_blueprint
+
+app = Flask(__name__, static_url_path='/static')
+
+app.register_blueprint(pygeoapi_blueprint, url_prefix='/oapi')
 
 
-from woudc_api.app import app as application
+@app.route('/')
+def hello_world():
+    return redirect('https://woudc.org/about/data-access.php#web-services',
+                    code=302)
