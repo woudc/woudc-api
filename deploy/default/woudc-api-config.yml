@@ -61,8 +61,9 @@ metadata:
         instructions: During hours of service
         role: pointOfContact
 
-datasets:
+resources:
     projects:
+        type: collection
         title: WOUDC Data Registry Projects
         description: Connection to projects in the WOUDC Data Registry Search Index.
         keywords: []
@@ -74,11 +75,13 @@ datasets:
             temporal:
                 begin: 1928-08-18
                 end: null # or empty
-        provider:
-            name: Elasticsearch
-            data: ${WDR_ELASTICSEARCH_URL}/woudc_data_registry.project
-            id_field: identifier
+        providers:
+            - type: feature
+              name: Elasticsearch
+              data: ${WDR_ELASTICSEARCH_URL}/woudc_data_registry.project
+              id_field: identifier
     datasets:
+        type: collection
         title: WOUDC Data Registry Datasets
         description: Connection to datasets in the WOUDC Data Registry Search Index.
         keywords: []
@@ -90,11 +93,13 @@ datasets:
             temporal:
                 begin: 1928-08-18
                 end: null # or empty
-        provider:
-            name: Elasticsearch
-            data: ${WDR_ELASTICSEARCH_URL}/woudc_data_registry.dataset
-            id_field: identifier
+        providers:
+            - type: feature
+              name: Elasticsearch
+              data: ${WDR_ELASTICSEARCH_URL}/woudc_data_registry.dataset
+              id_field: identifier
     countries:
+        type: collection
         title: WOUDC Data Registry Countries
         description: Connection to countries in the WOUDC Data Registry Search Index.
         keywords: []
@@ -106,11 +111,13 @@ datasets:
             temporal:
                 begin: 1928-08-18
                 end: null # or empty
-        provider:
-            name: Elasticsearch
-            data: ${WDR_ELASTICSEARCH_URL}/woudc_data_registry.country
-            id_field: identifier
+        providers:
+            - type: feature
+              name: Elasticsearch
+              data: ${WDR_ELASTICSEARCH_URL}/woudc_data_registry.country
+              id_field: identifier
     contributors:
+        type: collection
         title: WOUDC Data Registry Contributors
         description: Connection to contributors in the WOUDC Data Registry Search Index.
         keywords: []
@@ -122,11 +129,13 @@ datasets:
             temporal:
                 begin: 1928-08-18
                 end: null # or empty
-        provider:
-            name: Elasticsearch
-            data: ${WDR_ELASTICSEARCH_URL}/woudc_data_registry.contributor
-            id_field: identifier
+        providers:
+            - type: feature
+              name: Elasticsearch
+              data: ${WDR_ELASTICSEARCH_URL}/woudc_data_registry.contributor
+              id_field: identifier
     stations:
+        type: collection
         title: WOUDC Data Registry Stations
         description: Connection to stations in the WOUDC Data Registry Search Index.
         keywords: []
@@ -138,11 +147,13 @@ datasets:
             temporal:
                 begin: 1928-08-18
                 end: null # or empty
-        provider:
-            name: Elasticsearch
-            data: ${WDR_ELASTICSEARCH_URL}/woudc_data_registry.station
-            id_field: woudc_id
+        providers:
+            - type: feature
+              name: Elasticsearch
+              data: ${WDR_ELASTICSEARCH_URL}/woudc_data_registry.station
+              id_field: woudc_id
     instruments:
+        type: collection
         title: WOUDC Data Registry Instruments
         description: Connection to instruments in the WOUDC Data Registry Search Index.
         keywords: []
@@ -154,11 +165,13 @@ datasets:
             temporal:
                 begin: 1928-08-18
                 end: null # or empty
-        provider:
-            name: Elasticsearch
-            data: ${WDR_ELASTICSEARCH_URL}/woudc_data_registry.instrument
-            id_field: identifier
+        providers:
+            - type: feature
+              name: Elasticsearch
+              data: ${WDR_ELASTICSEARCH_URL}/woudc_data_registry.instrument
+              id_field: identifier
     deployments:
+        type: collection
         title: WOUDC Data Registry Deployments
         description: Connection to contributor deployments in the WOUDC Data Registry Search Index.
         keywords: []
@@ -170,18 +183,15 @@ datasets:
             temporal:
                 begin: 1928-08-18
                 end: null # or empty
-        provider:
-            name: Elasticsearch
-            data: ${WDR_ELASTICSEARCH_URL}/woudc_data_registry.deployment
-            id_field: identifier
-    data_records:
+        providers:
+            - type: feature
+              name: Elasticsearch
+              data: ${WDR_ELASTICSEARCH_URL}/woudc_data_registry.deployment
+              id_field: identifier
+    data_record:
+        type: collection
         title: WOUDC Data Registry Data Records
         description: Connection to data records in the WOUDC Data Registry Search Index.
-        keywords: []
-        links: []
-    notifications:
-        title: WOUDC notifications
-        description: WOUDC notifications
         keywords: []
         links: []
         extents:
@@ -191,11 +201,17 @@ datasets:
             temporal:
                 begin: 1928-08-18
                 end: null # or empty
-        provider:
-            name: Elasticsearch
-            data: ${WDR_ELASTICSEARCH_URL}/woudc_data_registry.data_record
-            id_field: identifier
-            date_field: timestamp_date
+        providers:
+            - type: feature
+              name: Elasticsearch
+              data: ${WDR_ELASTICSEARCH_URL}/woudc_data_registry.data_record
+              id_field: identifier
+    notification:
+        type: collection
+        title: WOUDC notifications
+        description: WOUDC notifications
+        keywords: []
+        links: []
         extents:
             spatial:
                 bbox: [-180, -90, 180, 90]
@@ -203,19 +219,22 @@ datasets:
             temporal:
                 begin: 2015-02-03
                 end: null # or empty
-        provider:
-            name: Elasticsearch
-            data: ${WDR_ELASTICSEARCH_URL}/woudc_data_registry.notifications
-            id_field: identifier
-            date_field: published_date
+        providers:
+            - type: feature
+              name: Elasticsearch
+              data: ${WDR_ELASTICSEARCH_URL}/woudc_data_registry.notification
+              id_field: identifier
+              date_field: published_date
 
-processes:
     woudc-data-registry-metrics:
+        type: process
         processor:
             name: woudc_api.plugins.metrics.MetricsProcessor
     woudc-data-registry-explore:
+        type: process
         processor:
             name: woudc_api.plugins.explore.SearchPageProcessor
     woudc-data-registry-select-distinct:
+        type: process
         processor:
             name: woudc_api.plugins.distinct.GroupSearchProcessor
