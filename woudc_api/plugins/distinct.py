@@ -117,13 +117,13 @@ PROCESS_SETTINGS = {
             {
                 'id': 'distinct',
                 'type': 'application/json',
-                'value': [ 'name', 'model', 'dataset', 'station_id' ]
+                'value': ['name', 'model', 'dataset', 'station_id']
             },
             {
                 'id': 'source',
                 'type': 'application/json',
-                'value': [ 'data_class', 'station_name', 'waf_url',
-                           'start_date', 'end_date' ]
+                'value': ['data_class', 'station_name', 'waf_url',
+                          'start_date', 'end_date']
             }
         ]
     }
@@ -157,7 +157,7 @@ def wrap_query(query, props):
             'terms': {
                 'size': 10000,
                 'field': field_full,
-                'order': { '_key': 'asc' }
+                'order': {'_key': 'asc'}
             },
             'aggregations': query
         }
@@ -196,11 +196,11 @@ def unwrap_query(response, props):
             properties['end_date'] = end_date
 
         # Remove Elasticsearch ID and document type from response.
-        for field in [ 'id', 'type' ]:
+        for field in ['id', 'type']:
             if field in source:
                 del source[field]
 
-        return [ source ]
+        return [source]
     else:
         field_name = props[0]
         aggregation_name = 'distinct_{}'.format(field_name)
@@ -268,7 +268,7 @@ def build_query(distinct_props, source_props):
                 }
             }
 
-        query_core['example']['top_hits']['_source'] = { 'includes': [] }
+        query_core['example']['top_hits']['_source'] = {'includes': []}
         source_def = query_core['example']['top_hits']['_source']
 
         source_def['includes'].extend([

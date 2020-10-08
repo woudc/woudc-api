@@ -43,6 +43,7 @@
 #
 # =================================================================
 
+import click
 from flask import Flask, redirect
 
 from pygeoapi.flask_app import BLUEPRINT as pygeoapi_blueprint
@@ -51,8 +52,26 @@ app = Flask(__name__, static_url_path='/static')
 
 app.register_blueprint(pygeoapi_blueprint, url_prefix='/oapi')
 
+print(dir(pygeoapi_blueprint))
+
 
 @app.route('/')
 def hello_world():
     return redirect('https://woudc.org/about/data-access.php#web-services',
                     code=302)
+
+
+@click.command()
+@click.pass_context
+def serve(ctx):
+    """
+    Serve woudc-api via Flask. Runs woudc-api
+    as a flask server. Not recommend for production.
+    :returns: void
+    """
+
+    app.run(debug=True, host='0.0.0.0', port=5000)
+
+
+if __name__ == '__main__':  # run locally, for testing
+    serve()

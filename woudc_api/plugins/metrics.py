@@ -285,11 +285,11 @@ class MetricsProcessor(BaseProcessor):
 
         filters = []
         if dataset is not None:
-            filters.append({ 'properties.content_category.raw': dataset })
+            filters.append({'properties.content_category.raw': dataset})
         if level is not None:
-            filters.append({ 'properties.content_level': level })
+            filters.append({'properties.content_level': level})
 
-        conditions = [ { 'term': body } for body in filters ]
+        conditions = [{'term': body} for body in filters]
 
         query_core = {
             date_aggregation_name: {
@@ -317,7 +317,7 @@ class MetricsProcessor(BaseProcessor):
                             'must': conditions
                         }
                     },
-                    'aggregations': query_body
+                    'aggregations': query_core
                 }
             }
         }
@@ -372,15 +372,15 @@ class MetricsProcessor(BaseProcessor):
 
         filters = []
         if dataset is not None:
-            filters.append({ 'properties.content_category.raw': dataset })
+            filters.append({'properties.content_category.raw': dataset})
         if country is not None:
-            filters.append({ 'properties.platform_country.raw': country })
+            filters.append({'properties.platform_country.raw': country})
         if station is not None:
-            filters.append({ 'properties.platform_id.raw': station })
+            filters.append({'properties.platform_id.raw': station})
         if network is not None:
-            filters.append({ 'properties.instrument_name.raw': network })
+            filters.append({'properties.instrument_name.raw': network})
 
-        conditions = [ { 'term': body } for body in filters ]
+        conditions = [{'term': body} for body in filters]
 
         query_core = {
             date_aggregation_name: {

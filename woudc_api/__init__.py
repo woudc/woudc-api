@@ -44,3 +44,21 @@
 # =================================================================
 
 __version__ = '0.1.0'
+
+import click
+
+
+@click.group()
+@click.version_option(version=__version__)
+def cli():
+    pass
+
+
+@cli.command()
+@click.pass_context
+def serve(ctx):
+    """Run the server in development mode"""
+
+    from woudc_api.app import serve
+    ctx.forward(serve)
+    ctx.invoke(serve)

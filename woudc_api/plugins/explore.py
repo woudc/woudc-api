@@ -48,7 +48,7 @@ import logging
 
 from elasticsearch import Elasticsearch
 
-from pygeoapi.process.base import BaseProcessor
+from pygeoapi.process.base import BaseProcessor, ProcessorExecuteError
 
 
 LOGGER = logging.getLogger(__name__)
@@ -199,7 +199,7 @@ class SearchPageProcessor(BaseProcessor):
             dataset_filter = {
                 'bool': {
                     'should': [
-                        { 'term': { 'properties.dataset_id.raw': ds } }
+                        {'term': {'properties.dataset_id.raw': ds}}
                         for ds in dataset_list
                     ]
                 }
@@ -273,7 +273,7 @@ class SearchPageProcessor(BaseProcessor):
                         'terms': {
                             'field': '{}.raw'.format(sort_prop),
                             'size': 10000,
-                            'order': { '_key': 'asc' }
+                            'order': {'_key': 'asc'}
                         },
                         'aggregations': {
                             'example': {
@@ -298,7 +298,7 @@ class SearchPageProcessor(BaseProcessor):
         summary = {}
         for domain, groups in response_body.items():
             aggregation_names = [
-                key for key in groups if key not in [ 'meta', 'doc_count' ]
+                key for key in groups if key not in ['meta', 'doc_count']
             ]
 
             summary[domain] = {

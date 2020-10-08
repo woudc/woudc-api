@@ -164,6 +164,11 @@ setup(
     install_requires=read('requirements.txt').splitlines(),
     packages=find_packages(exclude=['woudc_api.tests']),
     include_package_data=True,
+    entry_points={
+        'console_scripts': [
+            'woudc-api=woudc_api:cli'
+        ]
+    },
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Console',
