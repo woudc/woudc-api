@@ -1,7 +1,7 @@
 server:
     bind:
-        host: 0.0.0.0
-        port: 5000
+        host: ${WOUDC_API_BIND_HOST}
+        port: ${WOUDC_API_BIND_PORT}
     url: ${WOUDC_API_URL}
     basepath: /
     mimetype: application/json; charset=UTF-8

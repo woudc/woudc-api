@@ -43,7 +43,7 @@ python setup.py install
 
 # set system environment variables
 cp default.env local.env
-vi local.env  # edit URLs
+vi local.env  # edit accordingly
 . local.env
 
 # run the server
