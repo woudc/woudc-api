@@ -43,6 +43,8 @@
 #
 # =================================================================
 
+import os
+
 import click
 from flask import Flask, redirect
 
@@ -51,8 +53,6 @@ from pygeoapi.flask_app import BLUEPRINT as pygeoapi_blueprint
 app = Flask(__name__, static_url_path='/static')
 
 app.register_blueprint(pygeoapi_blueprint, url_prefix='/oapi')
-
-print(dir(pygeoapi_blueprint))
 
 
 @app.route('/')
@@ -70,7 +70,10 @@ def serve(ctx):
     :returns: void
     """
 
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    HOST = os.environ.get('WOUDC_API_BIND_HOST', '0.0.0.0')
+    PORT = os.environ.get('WOUDC_API_BIND_PORT', 5000)
+
+    app.run(debug=True, host=HOST, port=PORT)
 
 
 if __name__ == '__main__':  # run locally, for testing
