@@ -46,6 +46,9 @@ cp default.env local.env
 vi local.env  # edit accordingly
 . local.env
 
+# generate openapi document
+pygeoapi generate-openapi-document -c $PYGEOAPI_CONFIG > $PYGEOAPI_OPENAPI
+
 # run the server
 woudc-api serve  # server runs on http://localhost:5000
 
