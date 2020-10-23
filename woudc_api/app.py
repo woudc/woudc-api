@@ -52,7 +52,14 @@ from pygeoapi.flask_app import BLUEPRINT as pygeoapi_blueprint
 
 app = Flask(__name__, static_url_path='/static')
 
+app.url_map.strict_slashes = False
 app.register_blueprint(pygeoapi_blueprint, url_prefix='/oapi')
+
+try:
+    from flask_cors import CORS
+    CORS(app)
+except ImportError:  # CORS handled by upstream server
+    pass
 
 
 @app.route('/')
