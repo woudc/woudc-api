@@ -31,11 +31,11 @@ BASEDIR=/data/web/woudc-api-nightly
 PYGEOAPI_GITREPO=https://github.com/geopython/pygeoapi.git
 WOUDC_API_GITREPO=https://github.com/woudc/woudc-api.git
 DAYSTOKEEP=7
-WOUDC_API_URL=https://geo-1804.woudc-dev.cmc.ec.gc.ca/
-WOUDC_API_BIND_HOST=0.0.0.0/
-WOUDC_API_BIND_PORT=5000
-WOUDC_API_ES_URL=http://localhost:9200
 
+export WOUDC_API_URL=https://geo-1804.woudc-dev.cmc.ec.gc.ca/
+export WOUDC_API_BIND_HOST=0.0.0.0/
+export WOUDC_API_BIND_PORT=5000
+export WOUDC_API_ES_URL=http://localhost:9200
 
 
 # you should be okay from here
@@ -61,9 +61,11 @@ rm -fr latest
 echo "Generating nightly build for $TIMESTAMP"
 python3.6 -m venv --system-site-packages $NIGHTLYDIR && cd $NIGHTLYDIR
 source bin/activate
-git clone $MSC_PYGEOAPI_GITREPO
+git clone $WOUDC_API_GITREPO
 git clone $PYGEOAPI_GITREPO
 cd pygeoapi
+pip3 install cython
+pip3 install pyproj==1.9.6
 pip3 install -r requirements.txt
 pip3 install flask_cors elasticsearch
 python3 setup.py install
