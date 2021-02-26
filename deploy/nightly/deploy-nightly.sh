@@ -67,7 +67,7 @@ cd pygeoapi
 pip3 install cython
 pip3 install pyproj==1.9.6
 pip3 install -r requirements.txt
-pip3 install flask_cors elasticsearch
+pip3 install click flask_cors elasticsearch
 python3 setup.py install
 cd ../woudc-api
 python3 setup.py install
