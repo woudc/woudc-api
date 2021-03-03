@@ -49,7 +49,7 @@ os.environ['PYGEOAPI_CONFIG'] = '/opt/woudc-api/conf/woudc-api-config.yml'
 os.environ['PYGEOAPI_OPENAPI'] = '/opt/woudc-api/conf/woudc-api-openapi.yml'
 os.environ['WOUDC_API_BIND_HOST'] = '0.0.0.0'
 os.environ['WOUDC_API_BIND_PORT'] = 5000
-os.environ['WOUDC_API_URL'] = 'http://woudc-geo-dev2.cmc.ec.gc.ca/'
+os.environ['WOUDC_API_URL'] = 'https://gods-geo.woudc-dev.cmc.ec.gc.ca/woudc-api/nightly/latest'
 os.environ['WOUDC_API_ES_URL'] = 'http://localhost:9200'
 
 

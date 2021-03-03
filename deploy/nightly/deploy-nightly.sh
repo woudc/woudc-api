@@ -65,7 +65,7 @@ git clone $WOUDC_API_GITREPO
 git clone $PYGEOAPI_GITREPO
 cd pygeoapi
 pip3 install cython
-pip3 install pyproj==1.9.6
+pip3 install click pyproj==1.9.6
 pip3 install -r requirements.txt
 pip3 install click flask_cors elasticsearch
 python3 setup.py install
