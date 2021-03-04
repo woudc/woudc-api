@@ -74,7 +74,7 @@ python3 setup.py install
 cd ..
 
 cp woudc-api/deploy/default/woudc-api-config.yml woudc-api/deploy/nightly
-sed -i 's#basepath: /# /woudc-api/nightly/latest#' woudc-api/deploy/nightly/woudc-api-config.yml
+sed -i 's#basepath: /#basepath: /woudc-api/nightly/latest#' woudc-api/deploy/nightly/woudc-api-config.yml
 sed -i 's^# cors: true^cors: true^' woudc-api/deploy/nightly/woudc-api-config.yml
 
 pygeoapi generate-openapi-document -c woudc-api/deploy/default/woudc-api-config.yml > woudc-api/deploy/default/woudc-api-openapi.yml
