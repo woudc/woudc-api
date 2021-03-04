@@ -32,7 +32,7 @@ PYGEOAPI_GITREPO=https://github.com/geopython/pygeoapi.git
 WOUDC_API_GITREPO=https://github.com/woudc/woudc-api.git
 DAYSTOKEEP=7
 
-export WOUDC_API_URL=https://geo-1804.woudc-dev.cmc.ec.gc.ca/
+export WOUDC_API_URL=https://gods-geo.woudc-dev.cmc.ec.gc.ca/woudc-api/nightly/latest/oapi/
 export WOUDC_API_BIND_HOST=0.0.0.0/
 export WOUDC_API_BIND_PORT=5000
 export WOUDC_API_ES_URL=http://localhost:9200
@@ -77,7 +77,7 @@ cp woudc-api/deploy/default/woudc-api-config.yml woudc-api/deploy/nightly
 sed -i 's#basepath: /#basepath: /woudc-api/nightly/latest#' woudc-api/deploy/nightly/woudc-api-config.yml
 sed -i 's^# cors: true^cors: true^' woudc-api/deploy/nightly/woudc-api-config.yml
 
-pygeoapi generate-openapi-document -c woudc-api/deploy/default/woudc-api-config.yml > woudc-api/deploy/default/woudc-api-openapi.yml
+pygeoapi generate-openapi-document -c woudc-api/deploy/nightly/woudc-api-config.yml > woudc-api/deploy/nightly/woudc-api-openapi.yml
 
 cd ..
 
