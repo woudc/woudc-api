@@ -65,14 +65,16 @@ PROCESS_SETTINGS = {
         {
             'id': 'domain',
             'title': 'Metric Domain',
-            'literalDataDomain': {
-                'dataType': 'string',
-                'valueDefinition': {
-                    'anyValue': False,
-                    'options': [
-                        'dataset',
-                        'contributor',
-                    ]
+            'input': {
+                'literalDataDomain': {
+                    'dataType': 'string',
+                    'valueDefinition': {
+                        'anyValue': False,
+                        'options': [
+                            'dataset',
+                            'contributor',
+                        ]
+                    }
                 }
             },
             'minOccurs': 1,
@@ -81,14 +83,16 @@ PROCESS_SETTINGS = {
         {
             'id': 'timescale',
             'title': 'Time Scale',
-            'literalDataDomain': {
-                'dataType': 'string',
-                'valueDefinition': {
-                    'anyValue': False,
-                    'options': [
-                        'year',
-                        'month',
-                    ]
+            'input': {
+                'literalDataDomain': {
+                    'dataType': 'string',
+                    'valueDefinition': {
+                        'anyValue': False,
+                        'options': [
+                            'year',
+                            'month',
+                        ]
+                    }
                 }
             },
             'minOccurs': 1,
@@ -97,10 +101,12 @@ PROCESS_SETTINGS = {
         {
             'id': 'dataset',
             'title': 'Dataset Filter',
-            'literalDataDomain': {
-                'dataType': 'string',
-                'valueDefinition': {
-                    'anyValue': True,
+            'input': {
+                'literalDataDomain': {
+                    'dataType': 'string',
+                    'valueDefinition': {
+                        'anyValue': True,
+                    }
                 }
             },
             'minOccurs': 0,
@@ -109,10 +115,12 @@ PROCESS_SETTINGS = {
         {
             'id': 'level',
             'title': 'Data Level Filter',
-            'literalDataDomain': {
-                'dataType': 'number',
-                'valueDefinition': {
-                    'anyValue': True,
+            'input': {
+                'literalDataDomain': {
+                    'dataType': 'number',
+                    'valueDefinition': {
+                        'anyValue': True,
+                    }
                 }
             },
             'minOccurs': 0,
@@ -121,10 +129,12 @@ PROCESS_SETTINGS = {
         {
             'id': 'country',
             'title': 'Country Filter',
-            'literalDataDomain': {
-                'dataType': 'string',
-                'valueDefinition': {
-                    'anyValue': True,
+            'input': {
+                'literalDataDomain': {
+                    'dataType': 'string',
+                    'valueDefinition': {
+                        'anyValue': True,
+                    }
                 }
             },
             'minOccurs': 0,
@@ -133,10 +143,12 @@ PROCESS_SETTINGS = {
         {
             'id': 'station',
             'title': 'Station Filter',
-            'literalDataDomain': {
-                'dataType': 'string',
-                'valueDefinition': {
-                    'anyValue': True,
+            'input': {
+                'literalDataDomain': {
+                    'dataType': 'string',
+                    'valueDefinition': {
+                        'anyValue': True,
+                    }
                 }
             },
             'minOccurs': 0,
@@ -145,10 +157,12 @@ PROCESS_SETTINGS = {
         {
             'id': 'network',
             'title': 'Instrument Filter',
-            'literalDataDomain': {
-                'dataType': 'string',
-                'valueDefinition': {
-                    'anyValue': True,
+            'input': {
+                'literalDataDomain': {
+                    'dataType': 'string',
+                    'valueDefinition': {
+                        'anyValue': True,
+                    }
                 }
             },
             'minOccurs': 0,
@@ -219,7 +233,7 @@ class MetricsProcessor(BaseProcessor):
         url_tokens = os.environ.get('WOUDC_API_ES_URL').split('/')
 
         LOGGER.debug('Setting Elasticsearch properties')
-        self.index = url_tokens[-1]
+        self.index = 'woudc_data_registry.data_record'
         host = url_tokens[2]
 
         LOGGER.debug('Host: {}'.format(host))
@@ -333,7 +347,7 @@ class MetricsProcessor(BaseProcessor):
             if document['doc_count'] > 0:
                 rows.append({
                     'total_files': document['doc_count'],
-                    'total_obs': document['total_obs']['value'],
+                    'total_obs': int(document['total_obs']['value']),
                     timescale: document['key_as_string']
                 })
 
@@ -424,7 +438,7 @@ class MetricsProcessor(BaseProcessor):
             if document['doc_count'] > 0:
                 rows.append({
                     'total_files': document['doc_count'],
-                    'total_obs': document['total_obs']['value'],
+                    'total_obs': int(document['total_obs']['value']),
                     timescale: document['key_as_string']
                 })
 

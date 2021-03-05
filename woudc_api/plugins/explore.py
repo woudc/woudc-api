@@ -65,10 +65,12 @@ PROCESS_SETTINGS = {
         {
             'id': 'dataset',
             'title': 'Dataset to Filter',
-            'literalDataDomain': {
-                'dataType': 'string',
-                'valueDefinition': {
-                    'anyValue': True
+            'input': {
+                'literalDataDomain': {
+                    'dataType': 'string',
+                    'valueDefinition': {
+                        'anyValue': True
+                    }
                 }
             },
             'minOccurs': 0,
@@ -77,10 +79,12 @@ PROCESS_SETTINGS = {
         {
             'id': 'country',
             'title': 'Country to Filter',
-            'literalDataDomain': {
-                'dataType': 'string',
-                'valueDefinition': {
-                    'anyValue': True
+            'input': {
+                'literalDataDomain': {
+                    'dataType': 'string',
+                    'valueDefinition': {
+                        'anyValue': True
+                    }
                 }
             },
             'minOccurs': 0,
@@ -89,10 +93,12 @@ PROCESS_SETTINGS = {
         {
             'id': 'station',
             'title': 'Station to Filter',
-            'literalDataDomain': {
-                'dataType': 'string',
-                'valueDefinition': {
-                    'anyValue': True
+            'input': {
+                'literalDataDomain': {
+                    'dataType': 'string',
+                    'valueDefinition': {
+                        'anyValue': True
+                    }
                 }
             },
             'minOccurs': 0,

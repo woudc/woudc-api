@@ -65,10 +65,12 @@ PROCESS_SETTINGS = {
         {
             'id': 'index',
             'title': 'Index to Search',
-            'literalDataDomain': {
-                'dataType': 'string',
-                'valueDefinition': {
-                    'anyValue': True
+            'input': {
+                'literalDataDomain': {
+                    'dataType': 'string',
+                    'valueDefinition': {
+                        'anyValue': True
+                    }
                 }
             },
             'minOccurs': 1,
@@ -77,10 +79,12 @@ PROCESS_SETTINGS = {
         {
             'id': 'distinct',
             'title': 'Core Query Fields',
-            'literalDataDomain': {
-                'dataType': 'string',
-                'valueDefinition': {
-                    'anyValue': True
+            'input': {
+                'literalDataDomain': {
+                    'dataType': 'string',
+                    'valueDefinition': {
+                        'anyValue': True
+                    }
                 }
             },
             'minOccurs': 1,
@@ -89,10 +93,12 @@ PROCESS_SETTINGS = {
         {
             'id': 'source',
             'title': 'Satellite Source Fields',
-            'literalDataDomain': {
-                'dataType': 'string',
-                'valueDefinition': {
-                    'anyValue': True
+            'input': {
+                'literalDataDomain': {
+                    'dataType': 'string',
+                    'valueDefinition': {
+                        'anyValue': True
+                    }
                 }
             },
             'minOccurs': 0
