@@ -107,11 +107,11 @@ PROCESS_SETTINGS = {
     'outputs': [{
         'id': 'woudc-data-registry-distinct-response',
         'title': 'WOUDC Data Registry Group Select Output',
-        'output': [{
+        'output': {
             'formats': [{
                 'mimeType': 'application/json'
             }]
-        }]
+        }
     }],
     'example': {
         'inputs': [

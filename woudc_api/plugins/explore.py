@@ -108,11 +108,11 @@ PROCESS_SETTINGS = {
     'outputs': [{
         'id': 'woudc-data-registry-explore-response',
         'title': 'WOUDC Data Registry Search Page Output',
-        'output': [{
+        'output': {
             'formats': [{
                 'mimeType': 'application/json'
             }]
-        }]
+        }
     }],
     'example': {
         'inputs': [
