@@ -363,7 +363,6 @@ class GroupSearchProcessor(BaseProcessor):
 
             response = self.es.search(index=index, body=query)
 
-
             flattened_response = {}
             for query_name, group_def in distinct_props.items():
                 response_body = response['aggregations'][query_name]
