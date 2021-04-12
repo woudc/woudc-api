@@ -314,4 +314,4 @@ class SearchPageProcessor(BaseProcessor):
                 ] for aggregation_name in aggregation_names
             }
 
-        return summary
+        return 'application/json', summary

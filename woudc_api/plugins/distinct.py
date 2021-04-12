@@ -363,10 +363,11 @@ class GroupSearchProcessor(BaseProcessor):
 
             response = self.es.search(index=index, body=query)
 
+
             flattened_response = {}
             for query_name, group_def in distinct_props.items():
                 response_body = response['aggregations'][query_name]
                 flattened_response[query_name] = unwrap_query(response_body,
                                                               group_def)
 
-            return flattened_response
+            return 'application/json', flattened_response

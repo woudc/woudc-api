@@ -351,10 +351,12 @@ class MetricsProcessor(BaseProcessor):
                     timescale: document['key_as_string']
                 })
 
-        return {
+        response = {
             'total_files': total_files,
             'metrics': rows
         }
+
+        return 'application/json', response
 
     def metrics_contributor(self, timescale, **kwargs):
         """
@@ -442,10 +444,12 @@ class MetricsProcessor(BaseProcessor):
                     timescale: document['key_as_string']
                 })
 
-        return {
+        response = {
             'total_files': total_files,
             'metrics': rows
         }
+
+        return 'application/json', response
 
     def __repr__(self):
         return '<MetricsProcessor> {}'.format(self.name)
