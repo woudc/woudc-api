@@ -36,6 +36,7 @@ export WOUDC_API_URL=https://gods-geo.woudc-dev.cmc.ec.gc.ca/woudc-api/nightly/l
 export WOUDC_API_BIND_HOST=0.0.0.0/
 export WOUDC_API_BIND_PORT=5000
 export WOUDC_API_ES_URL=http://localhost:9200
+export WOUDC_API_OGC_SCHEMAS_LOCATION=/data/web/woudc-api-nightly/latest/schemas.opengis.net
 
 
 # you should be okay from here
