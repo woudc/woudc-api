@@ -1,1 +1,2 @@
 deploy/default/woudc-api-config.yml opt/woudc-api/conf
+debian/schemas.opengis.net opt/woudc-api/schemas.opengis.net

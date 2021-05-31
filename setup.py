@@ -50,7 +50,8 @@ class PyCleanBuild(Command):
             'debian/woudc-api.debhelper.log',
             'debian/woudc-api.postinst.debhelper',
             'debian/woudc-api.prerm.debhelper',
-            'debian/woudc-api.substvars'
+            'debian/woudc-api.substvars',
+            'debian/schemas.opengis.net'
         ]
 
         remove_dirs = [

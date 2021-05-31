@@ -65,19 +65,23 @@ git clone $WOUDC_API_GITREPO
 git clone $PYGEOAPI_GITREPO
 cd pygeoapi
 pip3 install cython
-pip3 install click pyproj==1.9.6
+pip3 install "click >= 7.1" pyproj==1.9.6
 pip3 install -r requirements.txt
-pip3 install click flask_cors elasticsearch
+pip3 install flask_cors elasticsearch
 python3 setup.py install
 cd ../woudc-api
 python3 setup.py install
 cd ..
+
+mkdir schemas.opengis.net
+curl -O http://schemas.opengis.net/SCHEMAS_OPENGIS_NET.zip && unzip ./SCHEMAS_OPENGIS_NET.zip "ogcapi/*" -d schemas.opengis.net && rm -f ./SCHEMAS_OPENGIS_NET.zip
 
 cp woudc-api/deploy/default/woudc-api-config.yml woudc-api/deploy/nightly
 sed -i 's#basepath: /#basepath: /woudc-api/nightly/latest#' woudc-api/deploy/nightly/woudc-api-config.yml
 sed -i 's^# cors: true^cors: true^' woudc-api/deploy/nightly/woudc-api-config.yml
 
 pygeoapi generate-openapi-document -c woudc-api/deploy/nightly/woudc-api-config.yml > woudc-api/deploy/nightly/woudc-api-openapi.yml
+sed -i "s#http://schemas.opengis.net#$WOUDC_API_URL/schemas#g" woudc-api/deploy/nightly/woudc-api-openapi.yml
 
 cd ..
 
