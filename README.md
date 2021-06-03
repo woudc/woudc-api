@@ -30,6 +30,10 @@ python3 -m venv --system-site-packages woudc-api
 cd woudc-api
 source bin/activate
 
+# setup local OGC schemas (i.e. WOUDC_API_OGC_SCHEMAS_LOCATION in default.env)
+mkdir schemas.opengis.net
+curl -O http://schemas.opengis.net/SCHEMAS_OPENGIS_NET.zip && unzip ./SCHEMAS_OPENGIS_NET.zip "ogcapi/*" -d schemas.opengis.net && rm -f ./SCHEMAS_OPENGIS_NET.zip
+
 # clone pygeoapi codebase and install
 git clone https://github.com/geopython/pygeoapi.git
 cd pygeoapi
