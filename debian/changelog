@@ -1,4 +1,4 @@
-woudc-api (0.1.0) bionic ; urgency=medium
+woudc-api (0.1.0) bionic; urgency=medium
 
   * initial Debian packaging
 
