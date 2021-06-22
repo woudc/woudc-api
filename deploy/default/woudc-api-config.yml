@@ -242,6 +242,7 @@ resources:
               name: Elasticsearch
               data: ${WOUDC_API_ES_URL}/woudc_data_registry.uv_index_hourly
               id_field: identifier
+
     woudc-data-registry-metrics:
         type: process
         processor:
