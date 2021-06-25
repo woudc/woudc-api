@@ -1,4 +1,5 @@
 deploy/default/woudc-api-config.yml opt/woudc-api/conf
 deploy/default/woudc-api-openapi.yml opt/woudc-api/conf
+deploy/default/woudc-api.conf opt/woudc-api/conf
 deploy/default/woudc-api.wsgi opt/woudc-api/app
 debian/schemas.opengis.net opt/woudc-api/schemas.opengis.net
