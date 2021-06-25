@@ -224,6 +224,24 @@ resources:
               data: ${WOUDC_API_ES_URL}/woudc_data_registry.notification
               id_field: published_date
               date_field: published_date
+    uv_index_hourly:
+        type: collection
+        title: WOUDC UV Index Hourly
+        description: Connection to uv_index_hourly in the WOUDC Data Registry Search Index.
+        keywords: []
+        links: []
+        extents:
+            spatial:
+                bbox:  [-180, -90, 180, 90]
+                crs: http://www.opengis.net/def/crs/OGC/1.3/CRS84
+            temporal:
+                begin: 1928-08-18
+                end: null # or empty
+        providers:
+            - type: feature
+              name: Elasticsearch
+              data: ${WOUDC_API_ES_URL}/woudc_data_registry.uv_index_hourly
+              id_field: identifier
 
     woudc-data-registry-metrics:
         type: process
