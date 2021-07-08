@@ -48,7 +48,7 @@ import os
 os.environ['PYGEOAPI_CONFIG'] = '/opt/woudc-api/conf/woudc-api-config.yml'
 os.environ['PYGEOAPI_OPENAPI'] = '/opt/woudc-api/conf/woudc-api-openapi.yml'
 os.environ['WOUDC_API_BIND_HOST'] = '0.0.0.0'
-os.environ['WOUDC_API_BIND_PORT'] = 5000
+os.environ['WOUDC_API_BIND_PORT'] = '5000'
 os.environ['WOUDC_API_URL'] = 'https://geobeta-woudc-dev.cmc.ec.gc.ca/oapi'
 os.environ['WOUDC_API_ES_URL'] = 'http://localhost:9200'
 os.environ['WOUDC_API_OGC_SCHEMAS_LOCATION'] = '/opt/woudc-api/schemas.opengis.net'
