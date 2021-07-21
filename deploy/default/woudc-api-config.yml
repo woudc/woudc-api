@@ -260,10 +260,10 @@ resources:
               name: Elasticsearch
               data: ${WOUDC_API_ES_URL}/woudc_data_registry.uv_index_hourly
               id_field: identifier
-    total_ozone:
+    totalozone:
         type: collection
         title: WOUDC Total Ozone
-        description: Connection to total_ozone in the WOUDC Data Registry Search Index.
+        description: Connection to totalozone in the WOUDC Data Registry Search Index.
         keywords: []
         links: []
         extents:
@@ -276,7 +276,7 @@ resources:
         providers:
             - type: feature
               name: Elasticsearch
-              data: ${WOUDC_API_ES_URL}/woudc_data_registry.total_ozone
+              data: ${WOUDC_API_ES_URL}/woudc_data_registry.totalozone
               id_field: identifier
 
     woudc-data-registry-metrics:
