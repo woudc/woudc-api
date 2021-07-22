@@ -196,7 +196,7 @@ class SearchPageProcessor(BaseProcessor):
         source = inputs.get('source', None)
 
         peer_records = False
-        if (dataset is not None) and (dataset == 'peer_data_records'):
+        if dataset not in [None, 'peer_data_records']:
             self.index = 'woudc_data_registry.peer_data_record'
             peer_records = True
 
