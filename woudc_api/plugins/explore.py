@@ -194,19 +194,18 @@ class SearchPageProcessor(BaseProcessor):
         country = inputs.get('country', None)
         station = inputs.get('station', None)
         source = inputs.get('source', None)
-        
+
         peer_records = False
         if (dataset is not None) and (dataset == 'peer_data_records'):
             self.index = 'woudc_data_registry.peer_data_record'
             peer_records = True
-
 
         filters = {
             'countries': [],
             'stations': [],
             'instruments': []
         }
-        
+
         if not peer_records:
             if dataset is not None:
                 dataset_list = dataset.split(',')
@@ -224,7 +223,8 @@ class SearchPageProcessor(BaseProcessor):
                 filters['instruments'].append(dataset_filter)
 
             if country is not None:
-                country_filter = {'term': {'properties.country_id.raw': country}}
+                country_filter =  \
+                    {'term': {'properties.country_id.raw': country}}
                 filters['stations'].append(country_filter)
                 filters['instruments'].append(country_filter)
         else:
@@ -236,7 +236,7 @@ class SearchPageProcessor(BaseProcessor):
         if station is not None:
             station_filter = {'term': {'properties.station_id.raw': station}}
             filters['instruments'].append(station_filter)
-        
+
         if peer_records:
             domain_properties = {
                 'stations': {
@@ -260,7 +260,7 @@ class SearchPageProcessor(BaseProcessor):
                 }
             }
 
-        else: 
+        else:
             filters['countries'].append({
                 'exists': {
                     'field': 'properties.country_id'

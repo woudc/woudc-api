@@ -266,9 +266,10 @@ class MetricsProcessor(BaseProcessor):
         domain = inputs.pop('domain')
         timescale = inputs.pop('timescale')
         peer_records = False
-        if ('dataset' in inputs) and (inputs['dataset'] == 'peer_data_records'):
-            self.index = 'woudc_data_registry.peer_data_record'
-            peer_records = True
+        if 'dataset' in inputs:
+            if inputs['dataset'] == 'peer_data_records':
+                self.index = 'woudc_data_registry.peer_data_record'
+                peer_records = True
 
         if domain == 'dataset':
             return self.metrics_dataset(timescale, peer_records, **inputs)
@@ -291,6 +292,7 @@ class MetricsProcessor(BaseProcessor):
         """
         dataset = kwargs.get('dataset', None)
         level = kwargs.get('level', None)
+        source = kwargs.get('source', None)
 
         if timescale == 'year':
             date_interval = '1y'
@@ -301,12 +303,12 @@ class MetricsProcessor(BaseProcessor):
         date_aggregation_name = '{}ly'.format(timescale)
 
         filters = []
-        
+
         if peer_records:
             if source is not None:
                 filters.append({'properties.source.raw': source})
             field = 'properties.start_datetime'
-        else: 
+        else:
             if dataset is not None:
                 filters.append({'properties.content_category.raw': dataset})
             if level is not None:
@@ -388,7 +390,7 @@ class MetricsProcessor(BaseProcessor):
         station = kwargs.get('station', None)
         network = kwargs.get('network', None)
         source = kwargs.get('source', None)
-        
+
         if timescale == 'year':
             date_interval = '1y'
             date_format = 'yyyy'
