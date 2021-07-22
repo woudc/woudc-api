@@ -193,6 +193,12 @@ class SearchPageProcessor(BaseProcessor):
         dataset = inputs.get('dataset', None)
         country = inputs.get('country', None)
         station = inputs.get('station', None)
+        source = inputs.get('source', None)
+
+        peer_records = False
+        if dataset not in [None, 'peer_data_records']:
+            self.index = 'woudc_data_registry.peer_data_record'
+            peer_records = True
 
         filters = {
             'countries': [],
@@ -200,70 +206,101 @@ class SearchPageProcessor(BaseProcessor):
             'instruments': []
         }
 
-        if dataset is not None:
-            dataset_list = dataset.split(',')
-            dataset_filter = {
-                'bool': {
-                    'should': [
-                        {'term': {'properties.dataset_id.raw': ds}}
-                        for ds in dataset_list
-                    ]
+        if not peer_records:
+            if dataset is not None:
+                dataset_list = dataset.split(',')
+                dataset_filter = {
+                    'bool': {
+                        'should': [
+                            {'term': {'properties.dataset_id.raw': ds}}
+                            for ds in dataset_list
+                        ]
+                    }
                 }
-            }
 
-            filters['countries'].append(dataset_filter)
-            filters['stations'].append(dataset_filter)
-            filters['instruments'].append(dataset_filter)
+                filters['countries'].append(dataset_filter)
+                filters['stations'].append(dataset_filter)
+                filters['instruments'].append(dataset_filter)
 
-        if country is not None:
-            country_filter = {'term': {'properties.country_id.raw': country}}
-            filters['stations'].append(country_filter)
-            filters['instruments'].append(country_filter)
+            if country is not None:
+                country_filter =  \
+                    {'term': {'properties.country_id.raw': country}}
+                filters['stations'].append(country_filter)
+                filters['instruments'].append(country_filter)
+        else:
+            if source is not None:
+                source_filter = {'term': {'properties.source.raw': source}}
+                filters['stations'].append(source_filter)
+                filters['instruments'].append(source_filter)
 
         if station is not None:
             station_filter = {'term': {'properties.station_id.raw': station}}
             filters['instruments'].append(station_filter)
 
-        filters['countries'].append({
-            'exists': {
-                'field': 'properties.country_id'
+        if peer_records:
+            domain_properties = {
+                'stations': {
+                    'sortby': [
+                        'properties.name',
+                        'properties.station_id'
+                    ],
+                    'return': [
+                        'properties.name',
+                        'properties.station_id',
+                        'geometry'
+                    ]
+                },
+                'instruments': {
+                    'sortby': [
+                        'properties.instrument_type'
+                    ],
+                    'return': [
+                        'properties.instrument_type'
+                    ]
+                }
             }
-        })
 
-        domain_properties = {
-            'countries': {
-                'sortby': [
-                    'properties.country_name_en',
-                    'properties.country_name_fr',
-                    'properties.country_id'
-                ],
-                'return': [
-                    'properties.country_name_en',
-                    'properties.country_name_fr',
-                    'properties.country_id',
-                    'geometry'
-                ]
-            },
-            'stations': {
-                'sortby': [
-                    'properties.station_name',
-                    'properties.station_id'
-                ],
-                'return': [
-                    'properties.station_name',
-                    'properties.station_id',
-                    'geometry'
-                ]
-            },
-            'instruments': {
-                'sortby': [
-                    'properties.instrument_name'
-                ],
-                'return': [
-                    'properties.instrument_name'
-                ]
+        else:
+            filters['countries'].append({
+                'exists': {
+                    'field': 'properties.country_id'
+                }
+            })
+
+            domain_properties = {
+                'countries': {
+                    'sortby': [
+                        'properties.country_name_en',
+                        'properties.country_name_fr',
+                        'properties.country_id'
+                    ],
+                    'return': [
+                        'properties.country_name_en',
+                        'properties.country_name_fr',
+                        'properties.country_id',
+                        'geometry'
+                    ]
+                },
+                'stations': {
+                    'sortby': [
+                        'properties.station_name',
+                        'properties.station_id'
+                    ],
+                    'return': [
+                        'properties.station_name',
+                        'properties.station_id',
+                        'geometry'
+                    ]
+                },
+                'instruments': {
+                    'sortby': [
+                        'properties.instrument_name'
+                    ],
+                    'return': [
+                        'properties.instrument_name'
+                    ]
+                }
             }
-        }
 
         aggregations = {}
 
@@ -300,7 +337,6 @@ class SearchPageProcessor(BaseProcessor):
 
         response = self.es.search(index=self.index, body=query)
         response_body = response['aggregations']
-
         summary = {}
         for domain, groups in response_body.items():
             aggregation_names = [
