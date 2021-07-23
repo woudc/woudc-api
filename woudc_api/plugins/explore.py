@@ -61,77 +61,47 @@ PROCESS_SETTINGS = {
                    ' dropdowns, all in one request.',
     'keywords': [],
     'links': [],
-    'inputs': [
-        {
-            'id': 'dataset',
+    'inputs': {
+        'dataset': {
             'title': 'Dataset to Filter',
-            'input': {
-                'literalDataDomain': {
-                    'dataType': 'string',
-                    'valueDefinition': {
-                        'anyValue': True
-                    }
-                }
+            'schema': {
+                'type': 'string'
             },
             'minOccurs': 0,
             'maxOccurs': 1
         },
-        {
-            'id': 'country',
+        'country': {
             'title': 'Country to Filter',
-            'input': {
-                'literalDataDomain': {
-                    'dataType': 'string',
-                    'valueDefinition': {
-                        'anyValue': True
-                    }
-                }
+            'schema': {
+                'type': 'string'
             },
             'minOccurs': 0,
             'maxOccurs': 1
         },
-        {
-            'id': 'station',
+        'station': {
             'title': 'Station to Filter',
-            'input': {
-                'literalDataDomain': {
-                    'dataType': 'string',
-                    'valueDefinition': {
-                        'anyValue': True
-                    }
-                }
+            'schema': {
+                'type': 'string'
             },
             'minOccurs': 0,
             'maxOccurs': 1
         }
-    ],
-    'outputs': [{
-        'id': 'woudc-data-registry-explore-response',
-        'title': 'WOUDC Data Registry Search Page Output',
-        'output': {
-            'formats': [{
-                'mimeType': 'application/json'
-            }]
-        }
-    }],
-    'example': {
-        'inputs': [
-            {
-                'id': 'dataset',
-                'type': 'text/plain',
-                'value': 'OzoneSonde'
-            },
-            {
-                'id': 'country',
-                'type': 'text/plain',
-                'value': 'CAN'
-            },
-            {
-                'id': 'station',
-                'type': 'text/plain',
-                'value': '077'
+    },
+    'outputs': {
+        'woudc-data-registry-explore-response': {
+            'title': 'WOUDC Data Registry Search Page Output',
+            "schema": {
+                "type": "object",
+                "contentMediaType": "application/json"
             }
-        ]
+        }
+    },
+    'example': {
+        'inputs': {
+            'dataset': 'OzoneSonde',
+            'country': 'CAN',
+            'station': '077'
+        }
     }
 }
 

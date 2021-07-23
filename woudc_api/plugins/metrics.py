@@ -61,146 +61,88 @@ PROCESS_SETTINGS = {
                    ' file submission and/or usage statistics.',
     'keywords': [],
     'links': [],
-    'inputs': [
-        {
-            'id': 'domain',
+    'inputs': {
+        'domain': {
             'title': 'Metric Domain',
-            'input': {
-                'literalDataDomain': {
-                    'dataType': 'string',
-                    'valueDefinition': {
-                        'anyValue': False,
-                        'options': [
-                            'dataset',
-                            'contributor',
-                        ]
-                    }
-                }
+            'schema': {
+                'type': 'string',
+                'enum': [
+                    'dataset',
+                    'contributor',
+                ]
             },
             'minOccurs': 1,
             'maxOccurs': 1
         },
-        {
-            'id': 'timescale',
+        'timescale': {
             'title': 'Time Scale',
-            'input': {
-                'literalDataDomain': {
-                    'dataType': 'string',
-                    'valueDefinition': {
-                        'anyValue': False,
-                        'options': [
-                            'year',
-                            'month',
-                        ]
-                    }
-                }
+            'schema': {
+                'type': 'string',
+                'enum': [
+                    'year',
+                    'month',
+                ]
             },
             'minOccurs': 1,
             'maxOccurs': 1
         },
-        {
-            'id': 'dataset',
+        'dataset': {
             'title': 'Dataset Filter',
-            'input': {
-                'literalDataDomain': {
-                    'dataType': 'string',
-                    'valueDefinition': {
-                        'anyValue': True,
-                    }
-                }
+            'schema': {
+                'type': 'string',
             },
             'minOccurs': 0,
             'maxOccurs': 1
         },
-        {
-            'id': 'level',
+        'level': {
             'title': 'Data Level Filter',
-            'input': {
-                'literalDataDomain': {
-                    'dataType': 'number',
-                    'valueDefinition': {
-                        'anyValue': True,
-                    }
-                }
+            'schema': {
+                'type': 'string',
             },
             'minOccurs': 0,
             'maxOccurs': 1
         },
-        {
-            'id': 'country',
+        'country': {
             'title': 'Country Filter',
-            'input': {
-                'literalDataDomain': {
-                    'dataType': 'string',
-                    'valueDefinition': {
-                        'anyValue': True,
-                    }
-                }
+            'schema': {
+                'type': 'string',
             },
             'minOccurs': 0,
             'maxOccurs': 1
         },
-        {
-            'id': 'station',
+        'station': {
             'title': 'Station Filter',
-            'input': {
-                'literalDataDomain': {
-                    'dataType': 'string',
-                    'valueDefinition': {
-                        'anyValue': True,
-                    }
-                }
+            'schema': {
+                'type': 'string',
             },
             'minOccurs': 0,
             'maxOccurs': 1
         },
-        {
-            'id': 'network',
+        'network': {
             'title': 'Instrument Filter',
-            'input': {
-                'literalDataDomain': {
-                    'dataType': 'string',
-                    'valueDefinition': {
-                        'anyValue': True,
-                    }
-                }
+            'schema': {
+                'type': 'string',
             },
             'minOccurs': 0,
             'maxOccurs': 1
         }
-    ],
-    'outputs': [{
-        'id': 'woudc-data-registry-metrics-response',
-        'title': 'WOUDC Data Registry Metrics Output',
-        'output': {
-            'formats': [{
-                'mimeType': 'application/json'
-            }]
-        }
-    }],
-    'example': {
-        'inputs': [
-            {
-                'id': 'domain',
-                'type': 'text/plain',
-                'value': 'dataset'
-            },
-            {
-                'id': 'timescale',
-                'type': 'text/plain',
-                'value': 'year'
-            },
-            {
-                'id': 'network',
-                'type': 'text/plain',
-                'value': 'Brewer'
-            },
-            {
-                'id': 'country',
-                'type': 'text/plain',
-                'value': 'CAN'
+    },
+    'outputs': {
+        'woudc-data-registry-metrics-response': {
+            'title': 'WOUDC Data Registry Metrics Output',
+            'schema': {
+                'type': 'object',
+                'contentMediaType': 'application/json'
             }
-        ]
+        }
+    },
+    'example': {
+        'inputs': {
+            'domain': 'dataset',
+            'timescale': 'year',
+            'network': 'Brewer',
+            'country': 'CAN'
+        }
     }
 }
 

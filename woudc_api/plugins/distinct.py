@@ -61,77 +61,51 @@ PROCESS_SETTINGS = {
                    ' of unique values for selected fields.',
     'keywords': [],
     'links': [],
-    'inputs': [
-        {
-            'id': 'index',
+    'inputs': {
+        'index': {
             'title': 'Index to Search',
-            'input': {
-                'literalDataDomain': {
-                    'dataType': 'string',
-                    'valueDefinition': {
-                        'anyValue': True
-                    }
-                }
+            'schema': {
+                'type': 'string'
             },
             'minOccurs': 1,
             'maxOccurs': 1
         },
-        {
-            'id': 'distinct',
+        'distinct': {
             'title': 'Core Query Fields',
-            'input': {
-                'literalDataDomain': {
-                    'dataType': 'string',
-                    'valueDefinition': {
-                        'anyValue': True
-                    }
-                }
+            'schema': {
+                'type': 'object',
             },
             'minOccurs': 1,
             'maxOccurs': 1
         },
-        {
-            'id': 'source',
+        'source': {
             'title': 'Satellite Source Fields',
-            'input': {
-                'literalDataDomain': {
-                    'dataType': 'string',
-                    'valueDefinition': {
-                        'anyValue': True
-                    }
+            'schema': {
+                'type': 'array',
+                'minItems': 1,
+                'items': {
+                    'type': 'string'
                 }
             },
             'minOccurs': 0
         }
-    ],
-    'outputs': [{
-        'id': 'woudc-data-registry-distinct-response',
-        'title': 'WOUDC Data Registry Group Select Output',
-        'output': {
-            'formats': [{
-                'mimeType': 'application/json'
-            }]
-        }
-    }],
-    'example': {
-        'inputs': [
-            {
-                'id': 'index',
-                'type': 'text/plain',
-                'value': 'instrument'
-            },
-            {
-                'id': 'distinct',
-                'type': 'application/json',
-                'value': ['name', 'model', 'dataset', 'station_id']
-            },
-            {
-                'id': 'source',
-                'type': 'application/json',
-                'value': ['data_class', 'station_name', 'waf_url',
-                          'start_date', 'end_date']
+    },
+    'outputs': {
+        'woudc-data-registry-distinct-response': {
+            'title': 'WOUDC Data Registry Group Select Output',
+            'schema': {
+                'type': 'object',
+                'contentMediaType': 'application/json'
             }
-        ]
+        }
+    },
+    'example': {
+        'inputs': {
+            'index': 'instrument',
+            'distinct': ['name', 'model', 'dataset', 'station_id'],
+            'source': ['data_class', 'station_name', 'waf_url',
+                       'start_date', 'end_date']
+        }
     }
 }
 
