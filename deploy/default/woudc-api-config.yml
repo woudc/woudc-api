@@ -187,7 +187,7 @@ resources:
               name: Elasticsearch
               data: ${WOUDC_API_ES_URL}/woudc_data_registry.deployment
               id_field: identifier
-              time_field: timestamp_date
+              time_field: timestamp_utc
     data_records:
         type: collection
         title: WOUDC Data Registry Data Records
@@ -261,7 +261,7 @@ resources:
               name: Elasticsearch
               data: ${WOUDC_API_ES_URL}/woudc_data_registry.uv_index_hourly
               id_field: identifier
-              time_field: observation_date
+              time_field: timestamp_utc
     totalozone:
         type: collection
         title: WOUDC Total Ozone
