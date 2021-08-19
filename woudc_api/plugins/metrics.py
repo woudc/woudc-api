@@ -345,6 +345,8 @@ class MetricsProcessor(BaseProcessor):
         if peer_records:
             if source is not None:
                 filters.append({'properties.source.raw': source})
+            if country is not None:
+                filters.append({'properties.country_id.raw': country})
             if station is not None:
                 filters.append({'properties.station_id.raw': station})
             if network is not None:

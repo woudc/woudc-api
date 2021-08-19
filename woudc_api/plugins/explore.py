@@ -192,16 +192,22 @@ class SearchPageProcessor(BaseProcessor):
                 filters['stations'].append(dataset_filter)
                 filters['instruments'].append(dataset_filter)
 
-            if country is not None:
-                country_filter =  \
-                    {'term': {'properties.country_id.raw': country}}
-                filters['stations'].append(country_filter)
-                filters['instruments'].append(country_filter)
         else:
             if source is not None:
                 source_filter = {'term': {'properties.source.raw': source}}
                 filters['stations'].append(source_filter)
                 filters['instruments'].append(source_filter)
+
+        if country is not None:
+            country_filter =  \
+                {'term': {'properties.country_id.raw': country}}
+            filters['stations'].append(country_filter)
+            filters['instruments'].append(country_filter)
+            filters['countries'].append({
+                'exists': {
+                    'field': 'properties.country_id'
+                }
+            })
 
         if station is not None:
             station_filter = {'term': {'properties.station_id.raw': station}}
@@ -209,6 +215,14 @@ class SearchPageProcessor(BaseProcessor):
 
         if peer_records:
             domain_properties = {
+                'countries': {
+                    'sortby': [
+                        'properties.country_id'
+                    ],
+                    'return': [
+                        'properties.country_id'
+                    ]
+                },
                 'stations': {
                     'sortby': [
                         'properties.name',
@@ -231,12 +245,6 @@ class SearchPageProcessor(BaseProcessor):
             }
 
         else:
-            filters['countries'].append({
-                'exists': {
-                    'field': 'properties.country_id'
-                }
-            })
-
             domain_properties = {
                 'countries': {
                     'sortby': [
