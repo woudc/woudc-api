@@ -86,6 +86,14 @@ PROCESS_SETTINGS = {
             'minOccurs': 1,
             'maxOccurs': 1
         },
+        'bbox': {
+            'title': 'Bounding Box',
+            'schema': {
+                'type': 'array',
+            },
+            'minOccurs': 0,
+            'maxOccurs': 1
+        },
         'dataset': {
             'title': 'Dataset Filter',
             'schema': {
@@ -332,6 +340,7 @@ class MetricsProcessor(BaseProcessor):
         station = kwargs.get('station', None)
         network = kwargs.get('network', None)
         source = kwargs.get('source', None)
+        bbox = kwargs.get('bbox', None)
 
         if timescale == 'year':
             date_interval = '1y'
@@ -361,6 +370,10 @@ class MetricsProcessor(BaseProcessor):
                 filters.append({'properties.platform_id.raw': station})
             if network is not None:
                 filters.append({'properties.instrument_name.raw': network})
+            if bbox is not None:
+                bbox_vals = bbox.split(',')
+                west_long, east_long = float(bbox_vals[0]), float(bbox_vals[2])
+                south_lat, north_lat = float(bbox_vals[1]), float(bbox_vals[3])
             field = 'properties.timestamp_date'
 
         conditions = [{'term': body} for body in filters]
@@ -382,19 +395,49 @@ class MetricsProcessor(BaseProcessor):
             }
         }
 
-        query = {
-            'size': 0,
-            'aggregations': {
-                'filters': {
-                    'filter': {
-                        'bool': {
-                            'must': conditions
-                        }
-                    },
-                    'aggregations': query_core
+        if bbox is not None:
+            query = {
+                'size': 0,
+                'aggregations': {
+                    'filters': {
+                        'filter': {
+                            'bool': {
+                                'must': conditions,
+                                'filter': {
+                                    'geo_shape': {
+                                        'geometry': {
+                                            'shape': {
+                                                'type': 'envelope',
+                                                'coordinates': [
+                                                    [west_long, north_lat],
+                                                    [east_long, south_lat]
+                                                ]
+                                            },
+                                            'relation': 'within'
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        'aggregations': query_core
+                    }
                 }
             }
-        }
+
+        else:
+            query = {
+                'size': 0,
+                'aggregations': {
+                    'filters': {
+                        'filter': {
+                            'bool': {
+                                'must': conditions
+                            }
+                        },
+                        'aggregations': query_core
+                    }
+                }
+            }
 
         response = self.es.search(index=self.index, body=query)
         response_body = response['aggregations']
