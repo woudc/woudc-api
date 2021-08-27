@@ -395,49 +395,35 @@ class MetricsProcessor(BaseProcessor):
             }
         }
 
+        query = {
+            'size': 0,
+            'aggregations': {
+                'filters': {
+                    'filter': {
+                       'bool': {
+                        'must': conditions
+                        }
+                    },
+                    'aggregations': query_core
+                }
+            }
+        }
+
         if bbox is not None:
-            query = {
-                'size': 0,
-                'aggregations': {
-                    'filters': {
-                        'filter': {
-                            'bool': {
-                                'must': conditions,
-                                'filter': {
-                                    'geo_shape': {
-                                        'geometry': {
-                                            'shape': {
-                                                'type': 'envelope',
-                                                'coordinates': [
-                                                    [west_long, north_lat],
-                                                    [east_long, south_lat]
-                                                ]
-                                            },
-                                            'relation': 'within'
+            query['aggregations']['filters']['filter']['bool']['filter'] = {
+                                        'geo_shape': {
+                                            'geometry': {
+                                                'shape': {
+                                                    'type': 'envelope',
+                                                    'coordinates': [
+                                                        [west_long, north_lat],
+                                                        [east_long, south_lat]
+                                                    ]
+                                                },
+                                                'relation': 'within'
+                                            }
                                         }
                                     }
-                                }
-                            }
-                        },
-                        'aggregations': query_core
-                    }
-                }
-            }
-
-        else:
-            query = {
-                'size': 0,
-                'aggregations': {
-                    'filters': {
-                        'filter': {
-                            'bool': {
-                                'must': conditions
-                            }
-                        },
-                        'aggregations': query_core
-                    }
-                }
-            }
 
         response = self.es.search(index=self.index, body=query)
         response_body = response['aggregations']
