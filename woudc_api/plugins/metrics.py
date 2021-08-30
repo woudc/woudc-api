@@ -360,6 +360,10 @@ class MetricsProcessor(BaseProcessor):
                 filters.append({'properties.station_id.raw': station})
             if network is not None:
                 filters.append({'properties.instrument_type.raw': network})
+            if bbox is not None:
+                bbox_vals = bbox.split(',')
+                west_long, east_long = float(bbox_vals[0]), float(bbox_vals[2])
+                south_lat, north_lat = float(bbox_vals[1]), float(bbox_vals[3])
             field = 'properties.start_datetime'
         else:
             if dataset is not None:
