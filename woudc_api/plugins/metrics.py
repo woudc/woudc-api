@@ -146,7 +146,7 @@ PROCESS_SETTINGS = {
     },
     'example': {
         'inputs': {
-            'domain': 'dataset',
+            'domain': 'contributor',
             'timescale': 'year',
             'network': 'Brewer',
             'country': 'CAN'
