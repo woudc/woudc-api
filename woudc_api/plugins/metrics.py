@@ -236,6 +236,12 @@ class MetricsProcessor(BaseProcessor):
         level = kwargs.get('level', None)
         source = kwargs.get('source', None)
 
+        country = kwargs.get('country', None)
+        station = kwargs.get('station', None)
+        network = kwargs.get('network', None)
+        source = kwargs.get('source', None)
+        bbox = kwargs.get('bbox', None)
+
         if timescale == 'year':
             date_interval = '1y'
             date_format = 'yyyy'
@@ -249,12 +255,32 @@ class MetricsProcessor(BaseProcessor):
         if peer_records:
             if source is not None:
                 filters.append({'properties.source.raw': source})
+            if country is not None:
+                filters.append({'properties.platform_country.raw': country})
+            if station is not None:
+                filters.append({'properties.platform_id.raw': station})
+            if network is not None:
+                filters.append({'properties.instrument_name.raw': network})
+            if bbox is not None:
+                bbox_vals = bbox.split(',')
+                west_long, east_long = float(bbox_vals[0]), float(bbox_vals[2])
+                south_lat, north_lat = float(bbox_vals[1]), float(bbox_vals[3])
             field = 'properties.start_datetime'
         else:
             if dataset is not None:
                 filters.append({'properties.content_category.raw': dataset})
             if level is not None:
                 filters.append({'properties.content_level': level})
+            if country is not None:
+                filters.append({'properties.platform_country.raw': country})
+            if station is not None:
+                filters.append({'properties.platform_id.raw': station})
+            if network is not None:
+                filters.append({'properties.instrument_name.raw': network})
+            if bbox is not None:
+                bbox_vals = bbox.split(',')
+                west_long, east_long = float(bbox_vals[0]), float(bbox_vals[2])
+                south_lat, north_lat = float(bbox_vals[1]), float(bbox_vals[3])
             field = 'properties.timestamp_date'
 
         conditions = [{'term': body} for body in filters]
@@ -289,6 +315,22 @@ class MetricsProcessor(BaseProcessor):
                 }
             }
         }
+
+        if bbox is not None:
+            query['aggregations']['filters']['filter']['bool']['filter'] = {
+                                        'geo_shape': {
+                                            'geometry': {
+                                                'shape': {
+                                                    'type': 'envelope',
+                                                    'coordinates': [
+                                                        [west_long, north_lat],
+                                                        [east_long, south_lat]
+                                                    ]
+                                                },
+                                                'relation': 'within'
+                                            }
+                                        }
+                                    }
 
         response = self.es.search(index=self.index, body=query)
         response_body = response['aggregations']
