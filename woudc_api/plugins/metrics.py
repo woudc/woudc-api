@@ -226,6 +226,22 @@ class MetricsProcessor(BaseProcessor):
         elif domain == 'contributor':
             return self.metrics_contributor(timescale, peer_records, **inputs)
 
+    def generate_geo_shape_filter(self, minx, miny, maxx, maxy):
+        return {
+            'geo_shape': {
+                'geometry': {
+                    'shape': {
+                        'type': 'envelope',
+                        'coordinates': [
+                            [minx, maxy],
+                            [maxx, miny]
+                        ]
+                    },
+                    'relation': 'within'
+                }
+            }
+        }
+
     def metrics_dataset(self, timescale, peer_records, **kwargs):
         """
         Returns submission metrics from the WOUDC Data Registry, describing
@@ -320,20 +336,8 @@ class MetricsProcessor(BaseProcessor):
         }
 
         if bbox is not None:
-            query['aggregations']['filters']['filter']['bool']['filter'] = {
-                                        'geo_shape': {
-                                            'geometry': {
-                                                'shape': {
-                                                    'type': 'envelope',
-                                                    'coordinates': [
-                                                        [minx, maxy],
-                                                        [maxx, miny]
-                                                    ]
-                                                },
-                                                'relation': 'within'
-                                            }
-                                        }
-                                    }
+            query['aggregations']['filters']['filter']['bool']['filter'] =\
+                self.generate_geo_shape_filter(minx, miny, maxx, maxy)
 
         response = self.es.search(index=self.index, body=query)
         response_body = response['aggregations']
@@ -447,20 +451,8 @@ class MetricsProcessor(BaseProcessor):
         }
 
         if bbox is not None:
-            query['aggregations']['filters']['filter']['bool']['filter'] = {
-                                        'geo_shape': {
-                                            'geometry': {
-                                                'shape': {
-                                                    'type': 'envelope',
-                                                    'coordinates': [
-                                                        [minx, maxy],
-                                                        [maxx, miny]
-                                                    ]
-                                                },
-                                                'relation': 'within'
-                                            }
-                                        }
-                                    }
+            query['aggregations']['filters']['filter']['bool']['filter'] =\
+                self.generate_geo_shape_filter(minx, miny, maxx, maxy)
 
         response = self.es.search(index=self.index, body=query)
         response_body = response['aggregations']
