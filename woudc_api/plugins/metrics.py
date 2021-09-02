@@ -243,6 +243,11 @@ class MetricsProcessor(BaseProcessor):
         dataset = kwargs.get('dataset', None)
         level = kwargs.get('level', None)
         source = kwargs.get('source', None)
+        country = kwargs.get('country', None)
+        station = kwargs.get('station', None)
+        network = kwargs.get('network', None)
+        source = kwargs.get('source', None)
+        bbox = kwargs.get('bbox', None)
 
         if timescale == 'year':
             date_interval = '1y'
@@ -257,12 +262,28 @@ class MetricsProcessor(BaseProcessor):
         if peer_records:
             if source is not None:
                 filters.append({'properties.source.raw': source})
+            if country is not None:
+                filters.append({'properties.platform_country.raw': country})
+            if station is not None:
+                filters.append({'properties.platform_id.raw': station})
+            if network is not None:
+                filters.append({'properties.instrument_name.raw': network})
+            if bbox is not None:
+                minx, miny, maxx, maxy = [float(b) for b in bbox]
             field = 'properties.start_datetime'
         else:
             if dataset is not None:
                 filters.append({'properties.content_category.raw': dataset})
             if level is not None:
                 filters.append({'properties.content_level': level})
+            if country is not None:
+                filters.append({'properties.platform_country.raw': country})
+            if station is not None:
+                filters.append({'properties.platform_id.raw': station})
+            if network is not None:
+                filters.append({'properties.instrument_name.raw': network})
+            if bbox is not None:
+                minx, miny, maxx, maxy = [float(b) for b in bbox]
             field = 'properties.timestamp_date'
 
         conditions = [{'term': body} for body in filters]
@@ -297,6 +318,22 @@ class MetricsProcessor(BaseProcessor):
                 }
             }
         }
+
+        if bbox is not None:
+            query['aggregations']['filters']['filter']['bool']['filter'] = {
+                                        'geo_shape': {
+                                            'geometry': {
+                                                'shape': {
+                                                    'type': 'envelope',
+                                                    'coordinates': [
+                                                        [minx, maxy],
+                                                        [maxx, miny]
+                                                    ]
+                                                },
+                                                'relation': 'within'
+                                            }
+                                        }
+                                    }
 
         response = self.es.search(index=self.index, body=query)
         response_body = response['aggregations']
