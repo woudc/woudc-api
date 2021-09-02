@@ -361,9 +361,7 @@ class MetricsProcessor(BaseProcessor):
             if network is not None:
                 filters.append({'properties.instrument_type.raw': network})
             if bbox is not None:
-                bbox_vals = bbox.split(',')
-                west_long, east_long = float(bbox_vals[0]), float(bbox_vals[2])
-                south_lat, north_lat = float(bbox_vals[1]), float(bbox_vals[3])
+                minx, miny, maxx, maxy = [float(b) for b in bbox]
             field = 'properties.start_datetime'
         else:
             if dataset is not None:
@@ -375,9 +373,7 @@ class MetricsProcessor(BaseProcessor):
             if network is not None:
                 filters.append({'properties.instrument_name.raw': network})
             if bbox is not None:
-                bbox_vals = bbox.split(',')
-                west_long, east_long = float(bbox_vals[0]), float(bbox_vals[2])
-                south_lat, north_lat = float(bbox_vals[1]), float(bbox_vals[3])
+                minx, miny, maxx, maxy = [float(b) for b in bbox]
             field = 'properties.timestamp_date'
 
         conditions = [{'term': body} for body in filters]
@@ -420,8 +416,8 @@ class MetricsProcessor(BaseProcessor):
                                                 'shape': {
                                                     'type': 'envelope',
                                                     'coordinates': [
-                                                        [west_long, north_lat],
-                                                        [east_long, south_lat]
+                                                        [minx, maxy],
+                                                        [maxx, miny]
                                                     ]
                                                 },
                                                 'relation': 'within'
