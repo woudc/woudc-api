@@ -187,7 +187,6 @@ resources:
               name: Elasticsearch
               data: ${WOUDC_API_ES_URL}/woudc_data_registry.deployment
               id_field: identifier
-              time_field: timestamp_utc
     data_records:
         type: collection
         title: WOUDC Data Registry Data Records
@@ -206,6 +205,7 @@ resources:
               name: Elasticsearch
               data: ${WOUDC_API_ES_URL}/woudc_data_registry.data_record
               id_field: identifier
+              time_field: timestamp_utc
     notifications:
         type: collection
         title: WOUDC notifications
