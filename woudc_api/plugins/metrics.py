@@ -86,6 +86,14 @@ PROCESS_SETTINGS = {
             'minOccurs': 1,
             'maxOccurs': 1
         },
+        'bbox': {
+            'title': 'Bounding Box',
+            'schema': {
+                'type': 'array',
+            },
+            'minOccurs': 0,
+            'maxOccurs': 1
+        },
         'dataset': {
             'title': 'Dataset Filter',
             'schema': {
@@ -138,7 +146,7 @@ PROCESS_SETTINGS = {
     },
     'example': {
         'inputs': {
-            'domain': 'dataset',
+            'domain': 'contributor',
             'timescale': 'year',
             'network': 'Brewer',
             'country': 'CAN'
@@ -218,6 +226,22 @@ class MetricsProcessor(BaseProcessor):
         elif domain == 'contributor':
             return self.metrics_contributor(timescale, peer_records, **inputs)
 
+    def generate_geo_shape_filter(self, minx, miny, maxx, maxy):
+        return {
+            'geo_shape': {
+                'geometry': {
+                    'shape': {
+                        'type': 'envelope',
+                        'coordinates': [
+                            [minx, maxy],
+                            [maxx, miny]
+                        ]
+                    },
+                    'relation': 'within'
+                }
+            }
+        }
+
     def metrics_dataset(self, timescale, peer_records, **kwargs):
         """
         Returns submission metrics from the WOUDC Data Registry, describing
@@ -235,6 +259,11 @@ class MetricsProcessor(BaseProcessor):
         dataset = kwargs.get('dataset', None)
         level = kwargs.get('level', None)
         source = kwargs.get('source', None)
+        country = kwargs.get('country', None)
+        station = kwargs.get('station', None)
+        network = kwargs.get('network', None)
+        source = kwargs.get('source', None)
+        bbox = kwargs.get('bbox', None)
 
         if timescale == 'year':
             date_interval = '1y'
@@ -249,12 +278,28 @@ class MetricsProcessor(BaseProcessor):
         if peer_records:
             if source is not None:
                 filters.append({'properties.source.raw': source})
+            if country is not None:
+                filters.append({'properties.platform_country.raw': country})
+            if station is not None:
+                filters.append({'properties.platform_id.raw': station})
+            if network is not None:
+                filters.append({'properties.instrument_name.raw': network})
+            if bbox is not None:
+                minx, miny, maxx, maxy = [float(b) for b in bbox]
             field = 'properties.start_datetime'
         else:
             if dataset is not None:
                 filters.append({'properties.content_category.raw': dataset})
             if level is not None:
                 filters.append({'properties.content_level': level})
+            if country is not None:
+                filters.append({'properties.platform_country.raw': country})
+            if station is not None:
+                filters.append({'properties.platform_id.raw': station})
+            if network is not None:
+                filters.append({'properties.instrument_name.raw': network})
+            if bbox is not None:
+                minx, miny, maxx, maxy = [float(b) for b in bbox]
             field = 'properties.timestamp_date'
 
         conditions = [{'term': body} for body in filters]
@@ -289,6 +334,10 @@ class MetricsProcessor(BaseProcessor):
                 }
             }
         }
+
+        if bbox is not None:
+            query['aggregations']['filters']['filter']['bool']['filter'] =\
+                self.generate_geo_shape_filter(minx, miny, maxx, maxy)
 
         response = self.es.search(index=self.index, body=query)
         response_body = response['aggregations']
@@ -332,6 +381,7 @@ class MetricsProcessor(BaseProcessor):
         station = kwargs.get('station', None)
         network = kwargs.get('network', None)
         source = kwargs.get('source', None)
+        bbox = kwargs.get('bbox', None)
 
         if timescale == 'year':
             date_interval = '1y'
@@ -351,6 +401,8 @@ class MetricsProcessor(BaseProcessor):
                 filters.append({'properties.station_id.raw': station})
             if network is not None:
                 filters.append({'properties.instrument_type.raw': network})
+            if bbox is not None:
+                minx, miny, maxx, maxy = [float(b) for b in bbox]
             field = 'properties.start_datetime'
         else:
             if dataset is not None:
@@ -361,6 +413,8 @@ class MetricsProcessor(BaseProcessor):
                 filters.append({'properties.platform_id.raw': station})
             if network is not None:
                 filters.append({'properties.instrument_name.raw': network})
+            if bbox is not None:
+                minx, miny, maxx, maxy = [float(b) for b in bbox]
             field = 'properties.timestamp_date'
 
         conditions = [{'term': body} for body in filters]
@@ -387,14 +441,18 @@ class MetricsProcessor(BaseProcessor):
             'aggregations': {
                 'filters': {
                     'filter': {
-                        'bool': {
-                            'must': conditions
+                       'bool': {
+                        'must': conditions
                         }
                     },
                     'aggregations': query_core
                 }
             }
         }
+
+        if bbox is not None:
+            query['aggregations']['filters']['filter']['bool']['filter'] =\
+                self.generate_geo_shape_filter(minx, miny, maxx, maxy)
 
         response = self.es.search(index=self.index, body=query)
         response_body = response['aggregations']
