@@ -1,3 +1,19 @@
+woudc-api (0.2.0) bionic; urgency=medium
+
+  * update OpenAPI document
+  * add peer_data_record
+  * add TotalOzone collection support
+  * add missing packages
+  * update processess to align with OAProc updates
+  * add datetime querying for PeerDataRecords and TotalOzone
+  * enable CORS
+  * add enpoints for ozonesonde index
+  * update plugins to include countries for PeerDataRecords
+  * add bbox filtering to metrics process
+  * update woudc-api-config.yml
+
+ -- Kevin Ngai <kevin.ngai@canada.ca>  Mon, 04 Oct 2021 16:37:00 +0000
+
 woudc-api (0.1.1) bionic; urgency=medium
 
   * add Apache configuration
