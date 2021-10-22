@@ -222,11 +222,11 @@ class SearchPageProcessor(BaseProcessor):
                 },
                 'stations': {
                     'sortby': [
-                        'properties.name',
+                        'properties.station_name',
                         'properties.station_id'
                     ],
                     'return': [
-                        'properties.name',
+                        'properties.station_name',
                         'properties.station_id',
                         'geometry'
                     ]
