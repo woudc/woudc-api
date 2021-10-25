@@ -203,15 +203,12 @@ class SearchPageProcessor(BaseProcessor):
                 {'term': {'properties.country_id.raw': country}}
             filters['stations'].append(country_filter)
             filters['instruments'].append(country_filter)
-            filters['countries'].append({
-                'exists': {
-                    'field': 'properties.country_id'
-                }
-            })
+            filters['countries'].append(country_filter)
 
         if station is not None:
             station_filter = {'term': {'properties.station_id.raw': station}}
             filters['instruments'].append(station_filter)
+            filters['stations'].append(station_filter)
 
         if peer_records:
             domain_properties = {
@@ -225,11 +222,11 @@ class SearchPageProcessor(BaseProcessor):
                 },
                 'stations': {
                     'sortby': [
-                        'properties.name',
+                        'properties.station_name',
                         'properties.station_id'
                     ],
                     'return': [
-                        'properties.name',
+                        'properties.station_name',
                         'properties.station_id',
                         'geometry'
                     ]
