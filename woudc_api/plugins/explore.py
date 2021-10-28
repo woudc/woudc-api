@@ -166,7 +166,10 @@ class SearchPageProcessor(BaseProcessor):
         source = inputs.get('source', None)
 
         peer_records = False
-        if dataset and dataset == 'peer_data_records':
+        if dataset and dataset in ['peer_data_records',
+                                   'ndacc_total',
+                                   'ndacc_uv',
+                                   'ndacc_vertical']:
             self.index = 'woudc_data_registry.peer_data_record'
             peer_records = True
 
@@ -193,10 +196,28 @@ class SearchPageProcessor(BaseProcessor):
                 filters['instruments'].append(dataset_filter)
 
         else:
+            if source is None and dataset in ['ndacc_total',
+                                              'ndacc_uv',
+                                              'ndacc_vertical']:
+                source = 'ndacc'
+            measurement = None
+            if dataset == 'ndacc_total':
+                measurement = 'TOTALCOL'
+            if dataset == 'ndacc_uv':
+                measurement = 'UV'
+            if dataset == 'ndacc_vertical':
+                measurement = 'OZONE'
+
             if source is not None:
                 source_filter = {'term': {'properties.source.raw': source}}
                 filters['stations'].append(source_filter)
                 filters['instruments'].append(source_filter)
+            if measurement is not None:
+                measurement_filter = {
+                        'term': {'properties.measurement.raw': measurement}
+                }
+                filters['stations'].append(measurement_filter)
+                filters['instruments'].append(measurement_filter)
 
         if country is not None:
             country_filter =  \
