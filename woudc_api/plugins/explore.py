@@ -166,10 +166,10 @@ class SearchPageProcessor(BaseProcessor):
         source = inputs.get('source', None)
 
         peer_records = False
-        if dataset and (dataset == 'peer_data_records' or
-                        dataset == 'ndacc_total' or
-                        dataset == 'ndacc_uv' or
-                        dataset == 'ndacc_vertical'):
+        if dataset and dataset in ['peer_data_records',
+                                   'ndacc_total',
+                                   'ndacc_uv',
+                                   'ndacc_vertical']:
             self.index = 'woudc_data_registry.peer_data_record'
             peer_records = True
 
@@ -196,9 +196,9 @@ class SearchPageProcessor(BaseProcessor):
                 filters['instruments'].append(dataset_filter)
 
         else:
-            if source is None and (dataset == 'ndacc_total' or
-                                   dataset == 'ndacc_uv' or
-                                   dataset == 'ndacc_vertical'):
+            if source is None and dataset in ['ndacc_total',
+                                              'ndacc_uv',
+                                              'ndacc_vertical']:
                 source = 'ndacc'
             measurement = None
             if dataset == 'ndacc_total':

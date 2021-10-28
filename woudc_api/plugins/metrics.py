@@ -217,10 +217,10 @@ class MetricsProcessor(BaseProcessor):
         timescale = inputs.pop('timescale')
         peer_records = False
         if 'dataset' in inputs:
-            if (inputs['dataset'] == 'peer_data_records') or \
-              (inputs['dataset'] == 'ndacc_total') or \
-              (inputs['dataset'] == 'ndacc_uv') or \
-              (inputs['dataset'] == 'ndacc_vertical'):
+            if inputs['dataset'] in ['peer_data_records',
+                                     'ndacc_total',
+                                     'ndacc_uv',
+                                     'ndacc_vertical']:
                 self.index = 'woudc_data_registry.peer_data_record'
                 peer_records = True
 
@@ -280,14 +280,13 @@ class MetricsProcessor(BaseProcessor):
 
         if peer_records:
             if dataset == 'ndacc_total':
-                filters.append({'properties.source.raw': 'ndacc'})
                 filters.append({'properties.measurement.raw': 'TOTALCOL'})
             if dataset == 'ndacc_uv':
-                filters.append({'properties.source.raw': 'ndacc'})
                 filters.append({'properties.measurement.raw': 'UV'})
             if dataset == 'ndacc_vertical':
-                filters.append({'properties.source.raw': 'ndacc'})
                 filters.append({'properties.measurement.raw': 'OZONE'})
+            if dataset in ['ndacc_total', 'ndacc_uv', 'ndacc_vertical']:
+                filters.append({'properties.source.raw': 'ndacc'})
 
             if source is not None:
                 filters.append({'properties.source.raw': source})
@@ -407,14 +406,13 @@ class MetricsProcessor(BaseProcessor):
         filters = []
         if peer_records:
             if dataset == 'ndacc_total':
-                filters.append({'properties.source.raw': 'ndacc'})
                 filters.append({'properties.measurement.raw': 'TOTALCOL'})
             if dataset == 'ndacc_uv':
-                filters.append({'properties.source.raw': 'ndacc'})
                 filters.append({'properties.measurement.raw': 'UV'})
             if dataset == 'ndacc_vertical':
-                filters.append({'properties.source.raw': 'ndacc'})
                 filters.append({'properties.measurement.raw': 'OZONE'})
+            if dataset in ['ndacc_total', 'ndacc_uv', 'ndacc_vertical']:
+                filters.append({'properties.source.raw': 'ndacc'})
 
             if source is not None:
                 filters.append({'properties.source.raw': source})
