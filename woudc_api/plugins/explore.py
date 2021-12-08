@@ -243,7 +243,6 @@ class SearchPageProcessor(BaseProcessor):
                 },
                 'stations': {
                     'sortby': [
-                        'properties.station_name',
                         'properties.station_id'
                     ],
                     'return': [
@@ -266,8 +265,6 @@ class SearchPageProcessor(BaseProcessor):
             domain_properties = {
                 'countries': {
                     'sortby': [
-                        'properties.country_name_en',
-                        'properties.country_name_fr',
                         'properties.country_id'
                     ],
                     'return': [
@@ -279,7 +276,6 @@ class SearchPageProcessor(BaseProcessor):
                 },
                 'stations': {
                     'sortby': [
-                        'properties.station_name',
                         'properties.station_id'
                     ],
                     'return': [
