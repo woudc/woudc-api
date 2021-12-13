@@ -246,7 +246,7 @@ class SearchPageProcessor(BaseProcessor):
                         'properties.station_id'
                     ],
                     'return': [
-                        'properties.station_name',
+                        'properties.name',
                         'properties.station_id',
                         'geometry'
                     ]
@@ -279,7 +279,7 @@ class SearchPageProcessor(BaseProcessor):
                         'properties.station_id'
                     ],
                     'return': [
-                        'properties.station_name',
+                        'properties.name',
                         'properties.station_id',
                         'geometry'
                     ]
