@@ -1,3 +1,9 @@
+woudc-api (0.5.0) bionic; urgency=medium
+
+  * Change station_name field to name in Explore process return
+
+ -- Kevin Ngai <kevin.ngai@ec.gc.ca>  Tue, 25 Jan 2022 14:55:00 +0000
+
 woudc-api (0.4.0) bionic; urgency=medium
 
   * Remove redundant results from the Explore process return
