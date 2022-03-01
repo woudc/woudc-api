@@ -1,3 +1,9 @@
+woudc-api (0.6.0) focal; urgency=medium
+
+  * Update debian build for focal
+
+ -- Kevin Ngai <kevin.ngai@ec.gc.ca>  Tue, 01 Mar 2022 15:45:00 +0000
+
 woudc-api (0.5.0) bionic; urgency=medium
 
   * Change station_name field to name in Explore process return
