@@ -44,7 +44,7 @@ woudc-api (0.1.1) bionic; urgency=medium
 
   * add Apache configuration
 
- -- Tom Kralidis <tom.kralidis@canada.ca>  Fri, 25 Jun 2021 211:11:29 +0000
+ -- Tom Kralidis <tom.kralidis@canada.ca>  Fri, 25 Jun 2021 11:11:29 +0000
 
 woudc-api (0.1.0) bionic; urgency=medium
 
