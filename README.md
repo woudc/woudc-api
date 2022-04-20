@@ -7,8 +7,8 @@ REST and OGC API for WOUDC data services
 WOUDC API provides a RESTful API for that provides discovery and access to
 ozone and ultraviolet radiation data in support of the [World Ozone and 
 Ultraviolet Radiation Data Centre (WOUDC)](https://woudc.org), one of six
-World Data Centres as part of the [Global Atmosphere Watch](https://public.wmo.int/en/programmes/global-atmosphere-watch-programme)
-programme of the [WMO](https://public.wmo.int).
+World Data Centres as part of the [Global Atmosphere Watch](https://community.wmo.int/activity-areas/gaw)
+programme of the [WMO](https://wmo.int).
 
 ## Installation
 
