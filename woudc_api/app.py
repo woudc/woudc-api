@@ -62,9 +62,6 @@ except ImportError:  # CORS handled by upstream server
     pass
 
 
-@app.route('/foo')
-def foo():
-    return "foo"
 @app.route('/')
 def hello_world():
     return redirect('https://woudc.org/about/data-access.php#web-services',
