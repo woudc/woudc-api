@@ -1207,6 +1207,194 @@ paths:
       summary: Get WOUDC Data Registry Deployments queryables
       tags:
       - deployments
+  /collections/discovery_metadata:
+    get:
+      description: Connection to discovery_metadata in the WOUDC Data Registry Search Index.
+      operationId: describeDiscoveryMetadataCollection
+      parameters:
+      - $ref: '#/components/parameters/f'
+      - $ref: '#/components/parameters/lang'
+      responses:
+        '200':
+          $ref: https://geobeta-woudc-dev.cmc.ec.gc.ca/oapi/schemas/ogcapi/features/part1/1.0/openapi/ogcapi-features-1.yaml#/components/responses/Collection
+        '400':
+          $ref: https://geobeta-woudc-dev.cmc.ec.gc.ca/oapi/schemas/ogcapi/features/part1/1.0/openapi/ogcapi-features-1.yaml#/components/responses/InvalidParameter
+        '404':
+          $ref: https://geobeta-woudc-dev.cmc.ec.gc.ca/oapi/schemas/ogcapi/features/part1/1.0/openapi/ogcapi-features-1.yaml#/components/responses/NotFound
+        '500':
+          $ref: https://geobeta-woudc-dev.cmc.ec.gc.ca/oapi/schemas/ogcapi/features/part1/1.0/openapi/ogcapi-features-1.yaml#/components/responses/ServerError
+      summary: Get WOUDC Data Registry Discovery Metadata metadata
+      tags:
+      - discovery_metadata
+  /collections/discovery_metadata/items:
+    get:
+      description: Connection to discovery_metadata in the WOUDC Data Registry Search Index.
+      operationId: getDiscoveryMetadataFeatures
+      parameters:
+      - *id001
+      - *id002
+      - $ref: https://geobeta-woudc-dev.cmc.ec.gc.ca/oapi/schemas/ogcapi/features/part1/1.0/openapi/ogcapi-features-1.yaml#/components/parameters/bbox
+      - $ref: https://geobeta-woudc-dev.cmc.ec.gc.ca/oapi/schemas/ogcapi/features/part1/1.0/openapi/ogcapi-features-1.yaml#/components/parameters/limit
+      - description: The properties that should be included for each feature. The
+          parameter value is a comma-separated list of property names.
+        explode: false
+        in: query
+        name: properties
+        required: false
+        schema:
+          items:
+            enum:
+            - identifier
+            - abstract_en
+            - abstract_fr
+            - dataset_snapshots
+            - keywords_en
+            - keywords_fr
+            - levels
+            - search
+            - spatial_extent
+            - temporal_begin
+            - temporal_end
+            - title_en
+            - title_fr
+            - topic_category
+            - url
+            - waf
+            - wms
+            type: string
+          type: array
+        style: form
+      - $ref: '#/components/parameters/skipGeometry'
+      - $ref: https://raw.githubusercontent.com/opengeospatial/ogcapi-records/master/core/openapi/parameters/sortby.yaml
+      - $ref: '#/components/parameters/startindex'
+      - explode: false
+        in: query
+        name: identifier
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: false
+        in: query
+        name: abstract_en
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: false
+        in: query
+        name: abstract_fr
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: false
+        in: query
+        name: keywords_en
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: false
+        in: query
+        name: keywords_fr
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: false
+        in: query
+        name: temporal_begin
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: false
+        in: query
+        name: temporal_end
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: false
+        in: query
+        name: title_en
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: false
+        in: query
+        name: title_fr
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: false
+        in: query
+        name: topic_category
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: false
+        in: query
+        name: url
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        '200':
+          $ref: https://geobeta-woudc-dev.cmc.ec.gc.ca/oapi/schemas/ogcapi/features/part1/1.0/openapi/ogcapi-features-1.yaml#/components/responses/Features
+        '400':
+          $ref: https://geobeta-woudc-dev.cmc.ec.gc.ca/oapi/schemas/ogcapi/features/part1/1.0/openapi/ogcapi-features-1.yaml#/components/responses/InvalidParameter
+        '404':
+          $ref: https://geobeta-woudc-dev.cmc.ec.gc.ca/oapi/schemas/ogcapi/features/part1/1.0/openapi/ogcapi-features-1.yaml#/components/responses/NotFound
+        '500':
+          $ref: https://geobeta-woudc-dev.cmc.ec.gc.ca/oapi/schemas/ogcapi/features/part1/1.0/openapi/ogcapi-features-1.yaml#/components/responses/ServerError
+      summary: Get WOUDC Data Registry Discovery Metadata items
+      tags:
+      - discovery_metadata
+  /collections/discovery_metadata/items/{featureId}:
+    get:
+      description: Connection to discovery_metadata in the WOUDC Data Registry Search Index.
+      operationId: getDiscoveryMetadataFeature
+      parameters:
+      - $ref: https://geobeta-woudc-dev.cmc.ec.gc.ca/oapi/schemas/ogcapi/features/part1/1.0/openapi/ogcapi-features-1.yaml#/components/parameters/featureId
+      - $ref: '#/components/parameters/f'
+      - $ref: '#/components/parameters/lang'
+      responses:
+        '200':
+          $ref: https://geobeta-woudc-dev.cmc.ec.gc.ca/oapi/schemas/ogcapi/features/part1/1.0/openapi/ogcapi-features-1.yaml#/components/responses/Feature
+        '400':
+          $ref: https://geobeta-woudc-dev.cmc.ec.gc.ca/oapi/schemas/ogcapi/features/part1/1.0/openapi/ogcapi-features-1.yaml#/components/responses/InvalidParameter
+        '404':
+          $ref: https://geobeta-woudc-dev.cmc.ec.gc.ca/oapi/schemas/ogcapi/features/part1/1.0/openapi/ogcapi-features-1.yaml#/components/responses/NotFound
+        '500':
+          $ref: https://geobeta-woudc-dev.cmc.ec.gc.ca/oapi/schemas/ogcapi/features/part1/1.0/openapi/ogcapi-features-1.yaml#/components/responses/ServerError
+      summary: Get WOUDC Data Registry Discovery Metadata item by id
+      tags:
+      - discovery_metadata
+  /collections/discovery_metadata/queryables:
+    get:
+      description: Connection to discovery_metadata in the WOUDC Data Registry Search Index.
+      operationId: getDiscoveryMetadataQueryables
+      parameters:
+      - *id001
+      - *id002
+      responses:
+        '200':
+          $ref: '#/components/responses/Queryables'
+        '400':
+          $ref: https://geobeta-woudc-dev.cmc.ec.gc.ca/oapi/schemas/ogcapi/features/part1/1.0/openapi/ogcapi-features-1.yaml#/components/responses/InvalidParameter
+        '404':
+          $ref: https://geobeta-woudc-dev.cmc.ec.gc.ca/oapi/schemas/ogcapi/features/part1/1.0/openapi/ogcapi-features-1.yaml#/components/responses/NotFound
+        '500':
+          $ref: https://geobeta-woudc-dev.cmc.ec.gc.ca/oapi/schemas/ogcapi/features/part1/1.0/openapi/ogcapi-features-1.yaml#/components/responses/ServerError
+      summary: Get WOUDC Data Registry Discovery Metadata queryables
+      tags:
+      - discovery_metadata
   /collections/instruments:
     get:
       description: Connection to instruments in the WOUDC Data Registry Search Index.
