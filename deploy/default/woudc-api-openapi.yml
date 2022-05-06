@@ -1258,7 +1258,7 @@ paths:
             - title_en
             - title_fr
             - topic_category
-            - url
+            - uri
             - waf
             - wms
             type: string
@@ -1339,7 +1339,7 @@ paths:
         style: form
       - explode: false
         in: query
-        name: url
+        name: uri
         required: false
         schema:
           type: string
