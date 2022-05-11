@@ -1,3 +1,9 @@
+woudc-api (0.7.1) focal; urgency=medium
+
+  * Update email contact
+
+ -- Kevin Ngai <kevin.ngai@ec.gc.ca>  Wed, 11 May 2022 15:59:00 +0000
+
 woudc-api (0.7.0) focal; urgency=medium
 
   * Update WMO URLs
