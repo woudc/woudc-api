@@ -38,6 +38,6 @@ os.environ['WOUDC_API_URL'] = 'https://gods-geo.woudc-dev.cmc.ec.gc.ca/woudc-api
 os.environ['WOUDC_API_ES_URL'] = 'http://localhost:9200'
 os.environ['WOUDC_API_OGC_SCHEMAS_LOCATION'] = '/data/web/woudc-api-nightly/latest/schemas.opengis.net'
 
-sys.path.insert(0, '/data/web/woudc-api-nightly/latest/lib/python3.6/site-packages')
+sys.path.insert(0, '/data/web/woudc-api-nightly/latest/lib/python3.8/site-packages')
 
 from woudc_api.app import app as application

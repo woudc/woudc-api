@@ -60,7 +60,7 @@ done
 
 rm -fr latest
 echo "Generating nightly build for $TIMESTAMP"
-python3 -m venv --system-site-packages $NIGHTLYDIR && cd $NIGHTLYDIR
+python3.8 -m venv --system-site-packages $NIGHTLYDIR && cd $NIGHTLYDIR
 source bin/activate
 git clone $WOUDC_API_GITREPO
 git clone $PYGEOAPI_GITREPO
@@ -69,9 +69,9 @@ pip3 install cython
 pip3 install "click >= 7.1" pyproj==1.9.6
 pip3 install -r requirements.txt
 pip3 install flask_cors elasticsearch
-python3 setup.py install
+python3.8 setup.py install
 cd ../woudc-api
-python3 setup.py install
+python3.8 setup.py install
 cd ..
 
 mkdir schemas.opengis.net
@@ -84,4 +84,8 @@ sed -i 's^# cors: true^cors: true^' woudc-api/deploy/nightly/woudc-api-config.ym
 pygeoapi openapi generate woudc-api/deploy/nightly/woudc-api-config.yml > woudc-api/deploy/nightly/woudc-api-openapi.yml
 sed -i "s#http://schemas.opengis.net#$WOUDC_API_URL/schemas#g" woudc-api/deploy/nightly/woudc-api-openapi.yml
 
-ln -s $NIGHTLYDIR ../latest
+cd ..
+
+ln -s $NIGHTLYDIR latest
+chgrp dmsec -R $NIGHTLYDIR # ensure correct group permission
+chmod -R 775 $NIGHTLYDIR # ensure group writable
