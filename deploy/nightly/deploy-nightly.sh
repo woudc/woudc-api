@@ -60,7 +60,7 @@ done
 
 rm -fr latest
 echo "Generating nightly build for $TIMESTAMP"
-python3.6 -m venv --system-site-packages $NIGHTLYDIR && cd $NIGHTLYDIR
+python3 -m venv --system-site-packages $NIGHTLYDIR && cd $NIGHTLYDIR
 source bin/activate
 git clone $WOUDC_API_GITREPO
 git clone $PYGEOAPI_GITREPO
@@ -84,6 +84,4 @@ sed -i 's^# cors: true^cors: true^' woudc-api/deploy/nightly/woudc-api-config.ym
 pygeoapi openapi generate woudc-api/deploy/nightly/woudc-api-config.yml > woudc-api/deploy/nightly/woudc-api-openapi.yml
 sed -i "s#http://schemas.opengis.net#$WOUDC_API_URL/schemas#g" woudc-api/deploy/nightly/woudc-api-openapi.yml
 
-cd ..
-
-ln -s $NIGHTLYDIR latest
+ln -s $NIGHTLYDIR ../latest
