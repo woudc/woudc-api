@@ -65,10 +65,10 @@ source bin/activate
 git clone $WOUDC_API_GITREPO
 git clone $PYGEOAPI_GITREPO
 cd pygeoapi
-pip3.8 install --prefix $NIGHTLYDIR cython
-pip3.8 install --prefix $NIGHTLYDIR "click >= 7.1" pyproj==1.9.6
-pip3.8 install --prefix $NIGHTLYDIR -r requirements.txt
-pip3.8 install --prefix $NIGHTLYDIR flask_cors elasticsearch
+pip3.8 install --prefix $BASEDIR/$NIGHTLYDIR cython
+pip3.8 install --prefix $BASEDIR/$NIGHTLYDIR "click >= 7.1" pyproj==1.9.6
+pip3.8 install --prefix $BASEDIR/$NIGHTLYDIR -r requirements.txt
+pip3.8 install --prefix $BASEDIR/$NIGHTLYDIR flask_cors elasticsearch
 python3.8 setup.py install
 cd ../woudc-api
 python3.8 setup.py install
