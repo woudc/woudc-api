@@ -30,6 +30,7 @@
 BASEDIR=/data/web/woudc-api-nightly
 PYGEOAPI_GITREPO=https://github.com/geopython/pygeoapi.git
 WOUDC_API_GITREPO=https://github.com/woudc/woudc-api.git
+WOUDC_EXTCSV_GITREPO=https://github.com/woudc/woudc-extcsv.git
 DAYSTOKEEP=7
 
 export WOUDC_API_URL=https://gods-geo.woudc-dev.cmc.ec.gc.ca/woudc-api/nightly/latest/oapi/
@@ -63,12 +64,15 @@ echo "Generating nightly build for $TIMESTAMP"
 python3.8 -m venv --system-site-packages $NIGHTLYDIR && cd $NIGHTLYDIR
 source bin/activate
 git clone $WOUDC_API_GITREPO
+git clone $WOUDC_EXTCSV_GITREPO
 git clone $PYGEOAPI_GITREPO
 cd pygeoapi
 pip3.8 install --prefix $BASEDIR/$NIGHTLYDIR cython
 pip3.8 install --prefix $BASEDIR/$NIGHTLYDIR "click >= 7.1" pyproj==1.9.6
 pip3.8 install --prefix $BASEDIR/$NIGHTLYDIR -r requirements.txt
 pip3.8 install --prefix $BASEDIR/$NIGHTLYDIR flask_cors elasticsearch
+python3.8 setup.py install
+cd ../woudc-extcsv
 python3.8 setup.py install
 cd ../woudc-api
 python3.8 setup.py install
