@@ -2,3 +2,4 @@ click
 elasticsearch
 elasticsearch-dsl
 flask
+woudc-extcsv>=0.5.0

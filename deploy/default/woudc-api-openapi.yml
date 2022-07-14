@@ -3170,6 +3170,77 @@ paths:
       summary: Retrieve job list for process
       tags:
       - woudc-data-registry-select-distinct
+  /processes/woudc-data-registry-validate:
+    get:
+      description: A WOUDC Data Registry Extended CSV extension that validates the format of
+        the inputted extended CSV object, with resulting error and warnings in the output.
+      operationId: describeWoudc-data-registry-validateProcess
+      parameters:
+      - $ref: '#/components/parameters/f'
+      responses:
+        '200':
+          $ref: '#/components/responses/200'
+        default:
+          $ref: '#/components/responses/default'
+      summary: Get process metadata
+      tags:
+      - woudc-data-registry-validate
+  /processes/woudc-data-registry-validate/execution:
+    post:
+      description: A WOUDC Data Registry Extended CSV extension that validates the format of
+        the inputted extended CSV object, with resulting error and warnings in the output.
+      operationId: executeWoudc-data-registry-validateJob
+      parameters:
+      - description: Response type
+        in: query
+        name: response
+        required: false
+        schema:
+          default: document
+          enum:
+          - raw
+          - document
+          type: string
+      requestBody:
+        content:
+          application/json:
+            example:
+              inputs:
+                check_metadata: true
+                extcsv:  "#CONTENT\nnClass,Category,Level,Form\nnWOUDC,Spectral,1.0,1\nn#DATA_GENERATION\nnDate,Agency,Version,ScientificAuthority\nn2002-05-29,JMA,1.0,\nn#PLATFORM\nnType,ID,Name,Country,GAW_ID\nnSTN,007,Kagoshima,JPN,47827\nn#INSTRUMENT\nnName,Model,Number\nnBrewer,MKII,059\nn#LOCATION\nnLatitude,Longitude,Height\nn31.63,130.6,283\nn#TIMESTAMP\nnUTCOffset,Date,Time\nn+08:38:47,1991-01-01,06:38:47\nn#TIMESTAMP\nnUTCOffset,Date,Time\nn+08:38:46,1991-01-01,07:38:46\nn#GLOBAL_SUMMARY\nnTime,IntACGIH,IntCIE,ZenAngle,MuValue,AzimAngle,Flag,TempC\nn06:38:47,0.0007117,0.00898,94.12,99.99,114.64,001000,999\nn#GLOBAL\nnWavelength,S-Irradiance,Time\nn290.0,0.0\nn290.5,0.0\nn291.0,0.0\nn* This is a table level comment\nn#GLOBAL_SUMMARY\nnTime,IntACGIH,IntCIE,ZenAngle,MuValue,AzimAngle,Flag,TempC\nn07:38:46,0.02376,0.3984,82.92,6.75,122.69,100000,999"
+            schema:
+              $ref: https://raw.githubusercontent.com/opengeospatial/ogcapi-processes/master/core/openapi/schemas/execute.yaml
+        description: Mandatory execute request JSON
+        required: true
+      responses:
+        '200':
+          $ref: '#/components/responses/200'
+        '201':
+          $ref: https://raw.githubusercontent.com/opengeospatial/ogcapi-processes/master/core/openapi/responses/ExecuteAsync.yaml
+        '404':
+          $ref: https://raw.githubusercontent.com/opengeospatial/ogcapi-processes/master/core/openapi/responses/NotFound.yaml
+        '500':
+          $ref: https://raw.githubusercontent.com/opengeospatial/ogcapi-processes/master/core/openapi/responses/ServerError.yaml
+        default:
+          $ref: '#/components/responses/default'
+      summary: Process WOUDC Data Registry Search Page Helper execution
+      tags:
+      - woudc-data-registry-validate
+  /processes/woudc-data-registry-validate/jobs:
+    get:
+      description: A WOUDC Data Registry Extended CSV extension that validates the format of
+        the inputted extended CSV object, with resulting error and warnings in the output.
+      operationId: getWoudc-data-registry-validateJobs
+      responses:
+        '200':
+          $ref: '#/components/responses/200'
+        '404':
+          $ref: https://raw.githubusercontent.com/opengeospatial/ogcapi-processes/master/core/openapi/responses/NotFound.yaml
+        default:
+          $ref: '#/components/responses/default'
+      summary: Retrieve job list for process
+      tags:
+      - woudc-data-registry-validate
 servers:
 - description: The World Ozone and Ultraviolet Radiation Data Centre (WOUDC) is one
     of six World Data Centres which are part of the Global Atmosphere Watch (GAW)
@@ -3193,6 +3264,8 @@ tags:
   name: projects
 - description: Connection to datasets in the WOUDC Data Registry Search Index.
   name: datasets
+- description: Connection to discovery_metadata in the WOUDC Data Registry Search Index.
+  name: discovery_metadata
 - description: Connection to countries in the WOUDC Data Registry Search Index.
   name: countries
 - description: Connection to contributors in the WOUDC Data Registry Search Index.
@@ -3224,4 +3297,7 @@ tags:
 - description: A WOUDC Data Registry Search Index extension approximating the SELECT
     DISTINCT query in SQL by returning groups of unique values for selected fields.
   name: woudc-data-registry-select-distinct
+- description: A WOUDC Data Registry Extended CSV extension that validates the format of
+    the inputted extended CSV object, with resulting error and warnings in the output.
+  name: woudc-data-registry-validate
 

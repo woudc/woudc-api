@@ -17,6 +17,7 @@ programme of the [WMO](https://wmo.int).
 - [virtualenv](https://virtualenv.pypa.io/)
 - [Elasticsearch](https://www.elastic.co/products/elasticsearch) (5.5.0 and above)
 - [pygeoapi](https://pygeoapi.io)
+- [woudc-extcsv](https://github.com/woudc/woudc-extcsv) (0.5.0 and above)
 
 ### Dependencies
 Dependencies are listed in [requirements.txt](requirements.txt). Dependencies

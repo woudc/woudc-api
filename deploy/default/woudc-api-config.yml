@@ -332,3 +332,7 @@ resources:
         type: process
         processor:
             name: woudc_api.plugins.distinct.GroupSearchProcessor
+    woudc-data-registry-validate:
+        type: process
+        processor:
+            name: woudc_api.plugins.validate.ExtendedCSVProcessor
