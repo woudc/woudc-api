@@ -1,9 +1,9 @@
-woudc-api (0.7.2) focal; urgency=medium
+woudc-api (0.8.0) focal; urgency=medium
 
   * Add CSV format validation process
   * Add woudc-extcsv requirement
 
- -- WOUDC <ec.woudc.ec@canada.ca>  Thurs, 14 July 2022 13:30:00 +0000
+ -- Kevin Ngai <kevin.ngai@ec.gc.ca>  Thurs, 4 Aug 2022 14:30:00 +0000
 
 woudc-api (0.7.1) focal; urgency=medium
 
