@@ -1,0 +1,8 @@
+#!/bin/sh
+
+set -e 
+
+USERNAME="woudcuser"
+GROUP="www-data"
+
+chown -R $USERNAME.$GROUP /opt/woudc-api
