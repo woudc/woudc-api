@@ -27,24 +27,31 @@ are automatically installed during installation.
 
 ```bash
 # setup virtualenv
-python3 -m venv --system-site-packages woudc-api
-cd woudc-api
+python3 -m venv --system-site-packages woudc-api_env
+cd woudc-api_env
 source bin/activate
 
 # setup local OGC schemas (i.e. WOUDC_API_OGC_SCHEMAS_LOCATION in default.env)
 mkdir schemas.opengis.net
 curl -O http://schemas.opengis.net/SCHEMAS_OPENGIS_NET.zip && unzip ./SCHEMAS_OPENGIS_NET.zip "ogcapi/*" -d schemas.opengis.net && rm -f ./SCHEMAS_OPENGIS_NET.zip
 
-# clone pygeoapi codebase and install
+# optional for development: clone pygeoapi codebase and install
 git clone https://github.com/geopython/pygeoapi.git
 cd pygeoapi
-python setup.py install
+pip3 install -r requirements.txt
+python3 setup.py install
+cd ..
+
+# clone woudc-extcsv and install
+git clone https://github.com/woudc/woudc-extcsv.git
+cd woudc-extcsv
+python3 setup.py install
 cd ..
 
 # clone woudc-api codebase and install
 git clone https://github.com/woudc/woudc-api.git
 cd woudc-api
-python setup.py install
+python3 setup.py install
 
 # set system environment variables
 cp default.env local.env
@@ -52,7 +59,10 @@ vi local.env  # edit accordingly
 . local.env
 
 # generate openapi document
-pygeoapi openapi generate -c $PYGEOAPI_CONFIG > $PYGEOAPI_OPENAPI
+pygeoapi openapi generate ${PYGEOAPI_CONFIG} -f json --output-file ${PYGEOAPI_OPENAPI}
+
+# optional: validate openapi document
+pygeoapi openapi validate ${PYGEOAPI_OPENAPI}
 
 # run the server
 woudc-api serve  # server runs on http://localhost:5000
@@ -60,6 +70,39 @@ woudc-api serve  # server runs on http://localhost:5000
 curl http://localhost:5000  # redirect to WOUDC data services pages
 
 curl http://localhost:5000/oapi  # OGC API endpoint
+```
+
+#### Docker
+
+Docker commands:
+```bash
+# set system environment variables
+cp default.env local.env
+vi local.env  # edit accordingly
+. local.env
+
+# build
+docker build -t woudc-api .
+
+# run container
+docker run -d --name woudc-api -p ${WOUDC_API_BIND_PORT}:${WOUDC_API_BIND_PORT} woudc-api
+```
+
+Docker compose commands (recommended):
+```bash
+# set system environment variables
+cp default.env local.env
+vi local.env  # edit accordingly
+. local.env
+
+# take down container
+docker compose -f docker-compose.yml down
+
+# build
+docker compose -f docker-compose.yml build
+
+# run container (detached)
+docker compose -f docker-compose.yml up -d
 ```
 
 ### Development

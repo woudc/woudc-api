@@ -1,8 +1,10 @@
+#!/bin/bash
+
 # =================================================================
 #
-# Author: Tom Kralidis <tom.kralidis@canada.ca>
+# Author: Kevin Ngai <kevin.ngai@ec.gc.ca>
 #
-# Copyright (c) 2021 Tom Kralidis
+# Copyright (c) 2024 Kevin Ngai
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -36,60 +38,87 @@ DAYSTOKEEP=7
 export WOUDC_API_URL=https://gods-geo.woudc-dev.cmc.ec.gc.ca/woudc-api/nightly/latest/oapi/
 export WOUDC_API_BIND_HOST=0.0.0.0/
 export WOUDC_API_BIND_PORT=5000
-export WOUDC_API_ES_URL=http://localhost:9200
+# WOUDC_API_ES_USERNAME and WOUDC_API_ES_PASSWORD loaded from ~/.profile
+export WOUDC_API_ES_URL=https://${WOUDC_API_ES_USERNAME}:${WOUDC_API_ES_PASSWORD}@localhost:9200
 export WOUDC_API_OGC_SCHEMAS_LOCATION=/data/web/woudc-api-nightly/latest/schemas.opengis.net
 
+DATETIME=$(date +%Y%m%d)
+TIMESTAMP=$(date +%Y%m%d.%H%M)
+NIGHTLYDIR="woudc-api-$TIMESTAMP"
 
-# you should be okay from here
+log() {
+    echo "$(date +'%Y-%m-%d %H:%M:%S') - $*"
+}
 
-DATETIME=`date +%Y%m%d`
-TIMESTAMP=`date +%Y%m%d.%H%M`
-NIGHTLYDIR=woudc-api-$TIMESTAMP
+cleanup_old_builds() {
+    log "Deleting nightly builds > $DAYSTOKEEP days old"
+    find . -type d -name "woudc-api-20*" | while read -r dir; do
+        DATETIME2=$(echo "$dir" | awk -F- '{print $3}' | awk -F. '{print $1}')
+        DIFF=$(( ( $(date +%s -d "$DATETIME") - $(date +%s -d "$DATETIME2") ) / 86400 ))
+        if [ "$DIFF" -gt "$DAYSTOKEEP" ]; then
+            rm -rf "$dir"
+        fi
+    done
+    rm -rf latest
+}
 
-echo "Deleting nightly builds > $DAYSTOKEEP days old"
+create_venv_and_install() {
+    log "Generating nightly build for $TIMESTAMP"
+    python3 -m venv --system-site-packages "$NIGHTLYDIR" && cd "$NIGHTLYDIR" || exit 1
+    source bin/activate
 
-cd $BASEDIR
+    log "Cloning repositories..."
+    git clone "$WOUDC_API_GITREPO"
+    git clone "$WOUDC_EXTCSV_GITREPO"
+    git clone "$PYGEOAPI_GITREPO"
 
-for f in `find . -type d -name "woudc-api-20*"`
-do
-    DATETIME2=`echo $f | awk -F- '{print $3}' | awk -F. '{print $1}'`
-    let DIFF=(`date +%s -d $DATETIME`-`date +%s -d $DATETIME2`)/86400
-    if [ $DIFF -gt $DAYSTOKEEP ]; then
-        rm -fr $f
-    fi
-done
+    log "Installing pygeoapi..."
+    cd pygeoapi || exit 1
+    git checkout 0.16.1
+    pip3 install -r requirements.txt
+    python3 setup.py install
 
-rm -fr latest
-echo "Generating nightly build for $TIMESTAMP"
-python3.8 -m venv --system-site-packages $NIGHTLYDIR && cd $NIGHTLYDIR
-source bin/activate
-git clone $WOUDC_API_GITREPO
-git clone $WOUDC_EXTCSV_GITREPO
-git clone $PYGEOAPI_GITREPO
-cd pygeoapi
-pip3.8 install --prefix $BASEDIR/$NIGHTLYDIR cython
-pip3.8 install --prefix $BASEDIR/$NIGHTLYDIR "click >= 7.1" pyproj==1.9.6
-pip3.8 install --prefix $BASEDIR/$NIGHTLYDIR -r requirements.txt
-pip3.8 install --prefix $BASEDIR/$NIGHTLYDIR flask_cors elasticsearch
-python3.8 setup.py install
-cd ../woudc-extcsv
-python3.8 setup.py install
-cd ../woudc-api
-python3.8 setup.py install
-cd ..
+    log "Installing woudc-extcsv..."
+    cd ../woudc-extcsv || exit 1
+    python3 setup.py install
 
-mkdir schemas.opengis.net
-curl -O http://schemas.opengis.net/SCHEMAS_OPENGIS_NET.zip && unzip ./SCHEMAS_OPENGIS_NET.zip "ogcapi/*" -d schemas.opengis.net && rm -f ./SCHEMAS_OPENGIS_NET.zip
+    log "Installing woudc-api..."
+    cd ../woudc-api || exit 1
+    python3 setup.py install
+    cd ..
+}
 
-cp woudc-api/deploy/default/woudc-api-config.yml woudc-api/deploy/nightly
-sed -i 's#basepath: /#basepath: /woudc-api/nightly/latest#' woudc-api/deploy/nightly/woudc-api-config.yml
-sed -i 's^# cors: true^cors: true^' woudc-api/deploy/nightly/woudc-api-config.yml
+configure_woudc_api() {
+    log "Generating schemas.opengis.net..."
+    mkdir schemas.opengis.net
+    curl -O http://schemas.opengis.net/SCHEMAS_OPENGIS_NET.zip
+    unzip ./SCHEMAS_OPENGIS_NET.zip "ogcapi/*" -d schemas.opengis.net
+    rm -f ./SCHEMAS_OPENGIS_NET.zip
 
-pygeoapi openapi generate woudc-api/deploy/nightly/woudc-api-config.yml > woudc-api/deploy/nightly/woudc-api-openapi.yml
-sed -i "s#http://schemas.opengis.net#$WOUDC_API_URL/schemas#g" woudc-api/deploy/nightly/woudc-api-openapi.yml
+    log "Configuring woudc-api configurations..."
+    cp woudc-api/deploy/default/woudc-api-config.yml woudc-api/deploy/nightly
+    sed -i 's#basepath: /#basepath: /woudc-api/nightly/latest#' woudc-api/deploy/nightly/woudc-api-config.yml
+    sed -i 's^# cors: true^cors: true^' woudc-api/deploy/nightly/woudc-api-config.yml
 
-cd ..
+    log "Generating woudc-api-openapi.yml..."
+    pygeoapi openapi generate woudc-api/deploy/nightly/woudc-api-config.yml > woudc-api/deploy/nightly/woudc-api-openapi.yml
+    sed -i "s#http://schemas.opengis.net#$WOUDC_API_URL/schemas#g" woudc-api/deploy/nightly/woudc-api-openapi.yml
+}
 
-ln -s $NIGHTLYDIR latest
-chgrp dmsec -R $NIGHTLYDIR # ensure correct group permission
-chmod -R 775 $NIGHTLYDIR # ensure group writable
+set_symlink_and_permissions() {
+    log "Creating 'latest' symlink and setting correct permissions..."
+    ln -s "$NIGHTLYDIR" latest
+    chgrp eccc-hpc-cmdx -R "$NIGHTLYDIR"
+    chmod -R 775 "$NIGHTLYDIR"
+    log "Done."
+}
+
+main() {
+    cd "$BASEDIR" || exit 1
+    cleanup_old_builds
+    create_venv_and_install
+    configure_woudc_api
+    set_symlink_and_permissions
+}
+
+main "$@"
