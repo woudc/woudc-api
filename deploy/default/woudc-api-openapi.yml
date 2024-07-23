@@ -653,14 +653,14 @@ paths:
         name: content_form
         required: false
         schema:
-          type: byte
+          type: string
         style: form
       - explode: false
         in: query
         name: content_level
         required: false
         schema:
-          type: float
+          type: number
         style: form
       - explode: false
         in: query
@@ -689,7 +689,7 @@ paths:
         name: data_generation_version
         required: false
         schema:
-          type: float
+          type: number
         style: form
       - explode: false
         in: query
@@ -2359,14 +2359,14 @@ paths:
         name: daily_columno3
         required: false
         schema:
-          type: float
+          type: number
         style: form
       - explode: false
         in: query
         name: daily_columnso2
         required: false
         schema:
-          type: float
+          type: number
         style: form
       - explode: false
         in: query
@@ -2388,7 +2388,7 @@ paths:
         name: daily_nobs
         required: false
         schema:
-          type: float
+          type: number
         style: form
       - explode: false
         in: query
@@ -2402,7 +2402,7 @@ paths:
         name: daily_stdevo3
         required: false
         schema:
-          type: float
+          type: number
         style: form
       - explode: false
         in: query
@@ -2486,7 +2486,7 @@ paths:
         name: monthly_columno3
         required: false
         schema:
-          type: float
+          type: number
         style: form
       - explode: false
         in: query
@@ -2508,7 +2508,7 @@ paths:
         name: monthly_stdevo3
         required: false
         schema:
-          type: float
+          type: number
         style: form
       - explode: false
         in: query
@@ -2770,7 +2770,7 @@ paths:
         name: solar_zenith_angle
         required: false
         schema:
-          type: float
+          type: number
         style: form
       - explode: false
         in: query
@@ -2812,14 +2812,14 @@ paths:
         name: uv_daily_max
         required: false
         schema:
-          type: float
+          type: number
         style: form
       - explode: false
         in: query
         name: uv_index
         required: false
         schema:
-          type: float
+          type: number
         style: form
       - explode: false
         in: query

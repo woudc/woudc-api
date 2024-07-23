@@ -47,6 +47,7 @@ import os
 import logging
 
 from elasticsearch import Elasticsearch
+from urllib.parse import urlparse
 
 from pygeoapi.process.base import BaseProcessor, ProcessorExecuteError
 
@@ -54,6 +55,7 @@ from pygeoapi.process.base import BaseProcessor, ProcessorExecuteError
 LOGGER = logging.getLogger(__name__)
 
 PROCESS_SETTINGS = {
+    'version': '1.0.0',
     'id': 'woudc-data-registry-select-distinct',
     'title': 'WOUDC Data Registry Group Search',
     'description': 'A WOUDC Data Registry Search Index extension approximating'
@@ -267,40 +269,57 @@ class GroupSearchProcessor(BaseProcessor):
     query in SQL.
     """
 
-    def __init__(self, provider_def):
+    def __init__(self, processor_def):
         """
         Initialize object
 
-        :param provider_def: Provider definition?
+        :param processor_def: Provider definition?
         :returns: `woudc_api.plugins.groupings.GroupSearchProcessor`
         """
 
-        BaseProcessor.__init__(self, provider_def, PROCESS_SETTINGS)
+        LOGGER.debug('Initiating GroupSearchProcessor')
+        BaseProcessor.__init__(self, processor_def, PROCESS_SETTINGS)
 
+        # Extract URL information from
         LOGGER.debug('Setting Elasticsearch properties')
-        url_tokens = os.environ.get('WOUDC_API_ES_URL').split('/')
-        host = url_tokens[2]
+        es_url = os.environ.get('WOUDC_API_ES_URL',
+                                'http://elastic:password@localhost:9200')
 
-        LOGGER.debug('Host: {}'.format(host))
-        self.index_prefix = 'woudc_data_registry.'
+        # Parse the URL to extract components
+        parsed_url = urlparse(es_url)
+        host = parsed_url.hostname
+        username = parsed_url.username
+        password = parsed_url.password
+
+        self.index_prefix = os.environ.get('WOUDC_API_ES_INDEX_PREFIX',
+                                           'woudc_data_registry') + '.'
+
+        LOGGER.debug('Host for distinct.py: {}'.format(host))
+        LOGGER.debug('Index prefix name: {}'.format(self.index_prefix))
+        LOGGER.debug('Username: {}'.format(username))
 
         LOGGER.debug('Connecting to Elasticsearch')
-        self.es = Elasticsearch(host)
+        auth = (username, password)
+        self.es = Elasticsearch(
+            [es_url],
+            http_auth=auth,
+            verify_certs=False
+        )
 
         if not self.es.ping():
-            msg = 'Cannot connect to Elasticsearch'
+            msg = f'Cannot connect to Elasticsearch: {host}'
             LOGGER.error(msg)
             raise ProcessorExecuteError(msg)
 
         LOGGER.debug('Checking Elasticsearch version')
         version = float(self.es.info()['version']['number'][:3])
-        if version < 7:
-            msg = 'Elasticsearch version below 7 not supported ({})' \
+        if version < 8:
+            msg = 'Elasticsearch version below 8 not supported ({})' \
                   .format(version)
             LOGGER.error(msg)
             raise ProcessorExecuteError(msg)
 
-    def execute(self, inputs):
+    def execute(self, inputs: dict, **kwargs):
         """
         Responds to an incoming request to this endpoint of the API.
 

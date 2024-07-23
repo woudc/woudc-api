@@ -13,7 +13,13 @@
 %:
 	dh $@ --with python3 --buildsystem=pybuild
 
-	mkdir -p debian/schemas.opengis.net \
-	&& curl -O http://schemas.opengis.net/SCHEMAS_OPENGIS_NET.zip \
-	&& unzip -o ./SCHEMAS_OPENGIS_NET.zip "ogcapi/*" -d debian/schemas.opengis.net \
-	&& rm -f ./SCHEMAS_OPENGIS_NET.zip \
+override_dh_auto_configure:
+	# Create target directory for schema files
+	mkdir -p debian/schemas.opengis.net/ogcapi/
+
+	# Download and extract full schema archive
+	curl -O http://schemas.opengis.net/SCHEMAS_OPENGIS_NET.zip
+	unzip -o SCHEMAS_OPENGIS_NET.zip "ogcapi/*" -d debian/schemas.opengis.net/
+
+	# Remove all .zip files after extraction to prevent dpkg-source errors
+	rm -f SCHEMAS_OPENGIS_NET.zip debian/schemas.opengis.net/ogcapi/*.zip
