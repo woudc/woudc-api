@@ -1,8 +1,8 @@
 # =================================================================
 #
-# Author: Tom Kralidis <tom.kralidis@canada.ca>
+# Author: Kevin Ngai <kevin.ngai@ec.gc.ca>
 #
-# Copyright (c) 2020 Tom Kralidis
+# Copyright (c) 2024 Kevin Ngai
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -27,17 +27,4 @@
 #
 # =================================================================
 
-import os
-import sys
-
-os.environ['PYGEOAPI_CONFIG'] = '/data/web/woudc-api-nightly/latest/woudc-api/deploy/nightly/woudc-api-config.yml'
-os.environ['PYGEOAPI_OPENAPI'] = '/data/web/woudc-api-nightly/latest/woudc-api/deploy/nightly/woudc-api-openapi.yml'
-os.environ['WOUDC_API_BIND_HOST'] = '0.0.0.0'
-os.environ['WOUDC_API_BIND_PORT'] = '5000'
-os.environ['WOUDC_API_URL'] = 'https://gods-geo.woudc-dev.cmc.ec.gc.ca/woudc-api/nightly/latest/oapi'
-os.environ['WOUDC_API_ES_URL'] = 'http://localhost:9200'
-os.environ['WOUDC_API_OGC_SCHEMAS_LOCATION'] = '/data/web/woudc-api-nightly/latest/schemas.opengis.net'
-
-sys.path.insert(0, '/data/web/woudc-api-nightly/latest/lib/python3.8/site-packages')
-
-from woudc_api.app import app as application
+"""Provider module containing the plugins wrapping data sources"""

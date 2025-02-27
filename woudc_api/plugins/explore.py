@@ -47,6 +47,7 @@ import os
 import logging
 
 from elasticsearch import Elasticsearch
+from urllib.parse import urlparse
 
 from pygeoapi.process.base import BaseProcessor, ProcessorExecuteError
 
@@ -128,31 +129,45 @@ class SearchPageProcessor(BaseProcessor):
         BaseProcessor.__init__(self, provider_def, PROCESS_SETTINGS)
 
         LOGGER.debug('Setting Elasticsearch properties')
-        url_tokens = os.environ.get('WOUDC_API_ES_URL').split('/')
-        host = url_tokens[2]
+        es_url = os.environ.get('WOUDC_API_ES_URL',
+                                'http://elastic:password@localhost:9200')
 
-        self.index = 'woudc_data_registry.contribution'
+        # Parse the URL to extract components
+        parsed_url = urlparse(es_url)
+        host = parsed_url.hostname
+        username = parsed_url.username
+        password = parsed_url.password
+
+        self.index_prefix = os.environ.get('WOUDC_API_ES_INDEX_PREFIX',
+                                           'woudc_data_registry') + '.'
+        self.index = self.index_prefix + 'contribution'
 
         LOGGER.debug('Host: {}'.format(host))
+        LOGGER.debug('Index prefix name: {}'.format(self.index_prefix))
         LOGGER.debug('Index name: {}'.format(self.index))
 
         LOGGER.debug('Connecting to Elasticsearch')
-        self.es = Elasticsearch(host)
+        auth = (username, password)
+        self.es = Elasticsearch(
+            [es_url],
+            http_auth=auth,
+            verify_certs=False
+        )
 
         if not self.es.ping():
-            msg = 'Cannot connect to Elasticsearch'
+            msg = f'Cannot connect to Elasticsearch: {host}'
             LOGGER.error(msg)
             raise ProcessorExecuteError(msg)
 
         LOGGER.debug('Checking Elasticsearch version')
         version = float(self.es.info()['version']['number'][:3])
-        if version < 7:
-            msg = 'Elasticsearch version below 7 not supported ({})' \
+        if version < 8:
+            msg = 'Elasticsearch version below 8 not supported ({})' \
                   .format(version)
             LOGGER.error(msg)
             raise ProcessorExecuteError(msg)
 
-    def execute(self, inputs):
+    def execute(self, inputs: dict, **kwargs):
         """
         Responds to an incoming request to this endpoint of the API.
 
@@ -170,7 +185,7 @@ class SearchPageProcessor(BaseProcessor):
                                    'ndacc_total',
                                    'ndacc_uv',
                                    'ndacc_vertical']:
-            self.index = 'woudc_data_registry.peer_data_record'
+            self.index = self.index_prefix + 'peer_data_record'
             peer_records = True
 
         filters = {

@@ -47,6 +47,7 @@ import os
 import logging
 
 from elasticsearch import Elasticsearch
+from urllib.parse import urlparse
 
 from pygeoapi.process.base import BaseProcessor, ProcessorExecuteError
 from woudc_extcsv import (ExtendedCSV, MetadataValidationError,
@@ -126,26 +127,38 @@ class ExtendedCSVProcessor(BaseProcessor):
         BaseProcessor.__init__(self, provider_def, PROCESS_SETTINGS)
 
         LOGGER.debug('Setting Elasticsearch properties')
-        url_tokens = os.environ.get('WOUDC_API_ES_URL').split('/')
-        host = url_tokens[2]
+        es_url = os.environ.get('WOUDC_API_ES_URL',
+                                'http://elastic:password@localhost:9200')
 
-        self.index = 'woudc_data_registry'
+        # Parse the URL to extract components
+        parsed_url = urlparse(es_url)
+        host = parsed_url.hostname
+        username = parsed_url.username
+        password = parsed_url.password
+
+        self.index_prefix = os.environ.get('WOUDC_API_ES_INDEX_PREFIX',
+                                           'woudc_data_registry') + '.'
 
         LOGGER.debug('Host: {}'.format(host))
-        LOGGER.debug('Index name: {}'.format(self.index))
+        LOGGER.debug('Index prefix name: {}'.format(self.index_prefix))
 
         LOGGER.debug('Connecting to Elasticsearch')
-        self.es = Elasticsearch(host)
+        auth = (username, password)
+        self.es = Elasticsearch(
+            [es_url],
+            http_auth=auth,
+            verify_certs=False
+        )
 
         if not self.es.ping():
-            msg = 'Cannot connect to Elasticsearch'
+            msg = f'Cannot connect to Elasticsearch: {host}'
             LOGGER.error(msg)
             raise ProcessorExecuteError(msg)
 
         LOGGER.debug('Checking Elasticsearch version')
         version = float(self.es.info()['version']['number'][:3])
-        if version < 7:
-            msg = 'Elasticsearch version below 7 not supported ({})' \
+        if version < 8:
+            msg = 'Elasticsearch version below 8 not supported ({})' \
                   .format(version)
             LOGGER.error(msg)
             raise ProcessorExecuteError(msg)
@@ -718,14 +731,17 @@ class ExtendedCSVProcessor(BaseProcessor):
         buckets = response_body['buckets']
         return buckets
 
-    def execute(self, inputs, metadata_only=False):
+    def execute(self, inputs: dict, **kwargs):
         """
         Responds to an incoming request to this endpoint of the API.
 
         :param inputs: Body of the incoming request.
+        :param metadata_only: True or False to relax checks
+                              - defaults to False
         :returns: Body of the response sent for that request.
         """
 
+        metadata_only = kwargs.get("metadata_only", False)
         extcsv = inputs.get('extcsv', None)
         check_metadata = inputs.get('check_metadata', None)
 
@@ -746,7 +762,6 @@ class ExtendedCSVProcessor(BaseProcessor):
 
         if self.success and check_metadata:
             # Perform metadata checks
-            self.index_prefix = 'woudc_data_registry.'
             self.project = self.ecsv.extcsv['CONTENT']['Class']
             self.dataset = self.ecsv.extcsv['CONTENT']['Category']
             self.level = self.ecsv.extcsv['CONTENT']['Level']
