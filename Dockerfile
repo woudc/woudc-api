@@ -52,13 +52,13 @@ RUN sed -i 's/http:\/\/archive.ubuntu.com\/ubuntu\//mirror:\/\/mirrors.ubuntu.co
     # Install pygeoapi
     git clone ${PYGEOAPI_GITREPO} -b 0.19.0 --depth=1 && \
     cd pygeoapi && \
-    pip3 install -r requirements.txt && \
-    pip3 install . && \
+    pip install -r requirements.txt && \
+    pip install . && \
     cd ${BASEDIR} && \
     # Install woudc-extcsv
     git clone ${WOUDC_EXTCSV_GITREPO} -b master --depth=1 && \
     cd woudc-extcsv && \
-    pip3 install . && \
+    pip install . && \
     cd ${BASEDIR}
 
 # Copy application code
@@ -66,9 +66,9 @@ COPY . ${APPDIR}
 
 # Install application dependencies
 RUN cd ${APPDIR} && \
-    pip3 install -r requirements.txt && \
-    pip3 install gunicorn gevent Flask-Cors && \
-    pip3 install .
+    pip install -r requirements.txt && \
+    pip install gunicorn gevent Flask-Cors && \
+    pip install .
 
 # Cleanup unnecessary packages and files
 RUN apt-get remove --purge -y git && \

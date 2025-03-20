@@ -77,8 +77,8 @@ def serve(ctx):
     :returns: void
     """
 
-    HOST = os.environ.get('WOUDC_API_BIND_HOST', '0.0.0.0')
-    PORT = os.environ.get('WOUDC_API_BIND_PORT', 5000)
+    HOST = os.getenv('WOUDC_API_BIND_HOST', '0.0.0.0')
+    PORT = os.getenv('WOUDC_API_BIND_PORT', 5000)
 
     app.run(debug=True, host=HOST, port=PORT)
 

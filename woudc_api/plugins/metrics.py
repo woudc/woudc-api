@@ -47,7 +47,7 @@ import os
 import logging
 
 from elasticsearch import Elasticsearch
-from urllib.parse import urlparse
+from elastic_transport import TlsError
 
 from pygeoapi.process.base import BaseProcessor, ProcessorExecuteError
 
@@ -182,39 +182,50 @@ class MetricsProcessor(BaseProcessor):
         BaseProcessor.__init__(self, provider_def, PROCESS_SETTINGS)
 
         LOGGER.debug('Setting Elasticsearch properties')
-        es_url = os.environ.get('WOUDC_API_ES_URL',
-                                'http://elastic:password@localhost:9200')
+        es_url = os.getenv('WOUDC_API_ES_URL',
+                           'http://elastic:password@localhost:9200')
+        self.verify_certs = os.getenv(
+                            'WOUDC_API_VERIFY_CERTS',
+                            'True').strip().lower() in ('true', '1', 'yes')
+        host = es_url.split('@', 1)[-1]
 
-        # Parse the URL to extract components
-        parsed_url = urlparse(es_url)
-        host = parsed_url.hostname
-        username = parsed_url.username
-        password = parsed_url.password
-        self.index_prefix = os.environ.get('WOUDC_API_ES_INDEX_PREFIX',
-                                           'woudc_data_registry') + '.'
+        self.index_prefix = os.getenv('WOUDC_API_ES_INDEX_PREFIX',
+                                      'woudc_data_registry') + '.'
         self.index = self.index_prefix + 'data_record'
 
-        LOGGER.debug('Host: {}'.format(host))
-        LOGGER.debug('Index name: {}'.format(self.index))
+        LOGGER.debug(f"Host: {host}")
+        LOGGER.debug(f"Index name: {self.index}")
 
-        LOGGER.debug('Connecting to Elasticsearch')
-        auth = (username, password)
-        self.es = Elasticsearch(
-            [es_url],
-            http_auth=auth,
-            verify_certs=False
+        LOGGER.debug(
+            f"Connecting to Elasticsearch (verify_certs=${self.verify_certs})"
         )
+        try:
+            self.es = Elasticsearch(es_url, verify_certs=self.verify_certs)
+        except TlsError as err:
+            if self.verify_certs:
+                msg = (
+                    f"SSL certificate verification failed: {err}.\n"
+                    "Check your SSL certificates or set "
+                    "WOUDC_API_VERIFY_CERTS=False if "
+                    "connecting to an internal dev server."
+                )
+            else:
+                msg = f"Unexpected TLS error: {err}"
+
+            LOGGER.error(msg)
+            raise ProcessorExecuteError(msg)
 
         if not self.es.ping():
-            msg = f'Cannot connect to Elasticsearch: {host}'
+            msg = f"Cannot connect to Elasticsearch: {host}"
             LOGGER.error(msg)
             raise ProcessorExecuteError(msg)
 
         LOGGER.debug('Checking Elasticsearch version')
         version = float(self.es.info()['version']['number'][:3])
         if version < 8:
-            msg = 'Elasticsearch version below 8 not supported ({})' \
-                  .format(version)
+            msg = (
+                f"Elasticsearch version below 8 not supported ({version})"
+            )
             LOGGER.error(msg)
             raise ProcessorExecuteError(msg)
 
