@@ -76,7 +76,7 @@ class ElasticsearchWOUDCProvider(ElasticsearchProvider):
         self.es_host, self.index_name = self.data.rsplit('/', 1)
 
         LOGGER.debug(
-            f"Connecting to Elasticsearch (verify_certs=${self.verify_certs})"
+            f"Connecting to Elasticsearch (verify_certs={self.verify_certs})"
         )
 
         try:

@@ -197,7 +197,7 @@ class MetricsProcessor(BaseProcessor):
         LOGGER.debug(f"Index name: {self.index}")
 
         LOGGER.debug(
-            f"Connecting to Elasticsearch (verify_certs=${self.verify_certs})"
+            f"Connecting to Elasticsearch (verify_certs={self.verify_certs})"
         )
         try:
             self.es = Elasticsearch(es_url, verify_certs=self.verify_certs)
