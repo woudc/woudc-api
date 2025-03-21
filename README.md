@@ -35,23 +35,23 @@ source bin/activate
 mkdir schemas.opengis.net
 curl -O http://schemas.opengis.net/SCHEMAS_OPENGIS_NET.zip && unzip ./SCHEMAS_OPENGIS_NET.zip "ogcapi/*" -d schemas.opengis.net && rm -f ./SCHEMAS_OPENGIS_NET.zip
 
-# optional for development: clone pygeoapi codebase and install
+# clone pygeoapi codebase and install
 git clone https://github.com/geopython/pygeoapi.git
 cd pygeoapi
-pip3 install -r requirements.txt
-python3 setup.py install
+pip install -r requirements.txt
+pip install .
 cd ..
 
 # clone woudc-extcsv and install
 git clone https://github.com/woudc/woudc-extcsv.git
 cd woudc-extcsv
-python3 setup.py install
+pip install .
 cd ..
 
 # clone woudc-api codebase and install
 git clone https://github.com/woudc/woudc-api.git
 cd woudc-api
-python3 setup.py install
+pip install .
 
 # set system environment variables
 cp default.env local.env

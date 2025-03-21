@@ -42,7 +42,7 @@ services:
       WOUDC_API_OGC_SCHEMAS_LOCATION: /data/web/woudc-api-nightly/schemas.opengis.net
       PYGEOAPI_CONFIG: /data/web/woudc-api-nightly/woudc-api/deploy/default/woudc-api-config.yml
       PYGEOAPI_OPENAPI: /data/web/woudc-api-nightly/woudc-api/deploy/default/woudc-api-openapi.yml
-      # env variables from here are sourced your local.env
+      # env variables from here are sourced from your docker.env
       WOUDC_API_BIND_HOST: ${WOUDC_API_BIND_HOST}
       WOUDC_API_BIND_PORT: ${WOUDC_API_BIND_PORT}
       WOUDC_API_URL: ${WOUDC_API_URL}
@@ -50,6 +50,7 @@ services:
       WOUDC_API_ES_PASSWORD: ${WOUDC_API_ES_PASSWORD}
       WOUDC_API_ES_URL: ${WOUDC_API_ES_URL}
       WOUDC_API_ES_INDEX_PREFIX: ${WOUDC_API_ES_INDEX_PREFIX}
+      WOUDC_API_VERIFY_CERTS: ${WOUDC_API_VERIFY_CERTS}
     ports:
       - "${WOUDC_API_BIND_PORT}:${WOUDC_API_BIND_PORT}"
 

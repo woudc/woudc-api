@@ -27,10 +27,11 @@
 #
 # =================================================================
 
+import os
 import logging
-import urllib.parse
 
 from elasticsearch import Elasticsearch, exceptions
+from elastic_transport import TlsError
 
 from pygeoapi.provider.elasticsearch_ import ElasticsearchProvider
 from pygeoapi.provider.base import (ProviderConnectionError,
@@ -67,28 +68,38 @@ class ElasticsearchWOUDCProvider(ElasticsearchProvider):
 
         LOGGER.debug('Setting WOUDC specific Elasticsearch properties')
 
+        self.verify_certs = os.getenv(
+                            'WOUDC_API_VERIFY_CERTS',
+                            'True').strip().lower() in ('true', '1', 'yes')
+
         # Extract URL information from self.data
         self.es_host, self.index_name = self.data.rsplit('/', 1)
-        parsed_url = urllib.parse.urlparse(self.es_host)
-        # Extract username and password for auth, if available
-        if parsed_url.username and parsed_url.password:
-            auth = (parsed_url.username, parsed_url.password)
-        else:
-            LOGGER.error('ES username and password was undefined. Did you \
-                         forget to load your env variables before compiling?')
-            auth = None
 
-        LOGGER.debug(f'host: {self.es_host}')
-        LOGGER.debug(f'index: {self.index_name}')
-
-        LOGGER.debug('Connecting to Elasticsearch')
-        self.es = Elasticsearch(
-            [self.es_host],
-            http_auth=auth,
-            verify_certs=False  # Bypass SSL verification
+        LOGGER.debug(
+            f"Connecting to Elasticsearch (verify_certs=${self.verify_certs})"
         )
+
+        try:
+            self.es = Elasticsearch(
+                self.es_host,
+                verify_certs=self.verify_certs
+            )
+        except TlsError as err:
+            if self.verify_certs:
+                msg = (
+                    f"SSL certificate verification failed: {err}.\n"
+                    "Check your SSL certificates or set "
+                    "WOUDC_API_VERIFY_CERTS=False if "
+                    "connecting to an internal dev server."
+                )
+            else:
+                msg = f"Unexpected TLS error: {err}"
+
+            LOGGER.error(msg)
+            raise ProviderConnectionError(msg)
+
         if not self.es.ping():
-            msg = f'Cannot connect to Elasticsearch: {self.es_host}'
+            msg = f"Cannot connect to Elasticsearch: {self.es_host}"
             LOGGER.error(msg)
             raise ProviderConnectionError(msg)
 

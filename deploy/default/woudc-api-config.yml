@@ -78,7 +78,7 @@ resources:
                 end: null # or empty
         providers:
             - type: feature
-              name: woudc_api.provider.elasticsearch.ElasticsearchWOUDCProvider
+              name:  woudc_api.provider.elasticsearch.ElasticsearchWOUDCProvider
               data: ${WOUDC_API_ES_URL}/${WOUDC_API_ES_INDEX_PREFIX}.project
               id_field: identifier
     discovery_metadata:
@@ -96,7 +96,7 @@ resources:
                 end: null # or empty
         providers:
             - type: feature
-              name: woudc_api.provider.elasticsearch.ElasticsearchWOUDCProvider
+              name:  woudc_api.provider.elasticsearch.ElasticsearchWOUDCProvider
               data: ${WOUDC_API_ES_URL}/${WOUDC_API_ES_INDEX_PREFIX}.discovery_metadata
               id_field: identifier
     datasets:
@@ -114,7 +114,7 @@ resources:
                 end: null # or empty
         providers:
             - type: feature
-              name: woudc_api.provider.elasticsearch.ElasticsearchWOUDCProvider
+              name:  woudc_api.provider.elasticsearch.ElasticsearchWOUDCProvider
               data: ${WOUDC_API_ES_URL}/${WOUDC_API_ES_INDEX_PREFIX}.dataset
               id_field: identifier
     countries:
@@ -132,7 +132,7 @@ resources:
                 end: null # or empty
         providers:
             - type: feature
-              name: woudc_api.provider.elasticsearch.ElasticsearchWOUDCProvider
+              name:  woudc_api.provider.elasticsearch.ElasticsearchWOUDCProvider
               data: ${WOUDC_API_ES_URL}/${WOUDC_API_ES_INDEX_PREFIX}.country
               id_field: identifier
     contributors:
@@ -150,7 +150,7 @@ resources:
                 end: null # or empty
         providers:
             - type: feature
-              name: woudc_api.provider.elasticsearch.ElasticsearchWOUDCProvider
+              name:  woudc_api.provider.elasticsearch.ElasticsearchWOUDCProvider
               data: ${WOUDC_API_ES_URL}/${WOUDC_API_ES_INDEX_PREFIX}.contributor
               id_field: identifier
     stations:
@@ -168,7 +168,7 @@ resources:
                 end: null # or empty
         providers:
             - type: feature
-              name: woudc_api.provider.elasticsearch.ElasticsearchWOUDCProvider
+              name:  woudc_api.provider.elasticsearch.ElasticsearchWOUDCProvider
               data: ${WOUDC_API_ES_URL}/${WOUDC_API_ES_INDEX_PREFIX}.station
               id_field: woudc_id
     instruments:
@@ -186,7 +186,7 @@ resources:
                 end: null # or empty
         providers:
             - type: feature
-              name: woudc_api.provider.elasticsearch.ElasticsearchWOUDCProvider
+              name:  woudc_api.provider.elasticsearch.ElasticsearchWOUDCProvider
               data: ${WOUDC_API_ES_URL}/${WOUDC_API_ES_INDEX_PREFIX}.instrument
               id_field: identifier
     deployments:
@@ -204,7 +204,7 @@ resources:
                 end: null # or empty
         providers:
             - type: feature
-              name: woudc_api.provider.elasticsearch.ElasticsearchWOUDCProvider
+              name:  woudc_api.provider.elasticsearch.ElasticsearchWOUDCProvider
               data: ${WOUDC_API_ES_URL}/${WOUDC_API_ES_INDEX_PREFIX}.deployment
               id_field: identifier
     data_records:
@@ -222,7 +222,7 @@ resources:
                 end: null # or empty
         providers:
             - type: feature
-              name: woudc_api.provider.elasticsearch.ElasticsearchWOUDCProvider
+              name:  woudc_api.provider.elasticsearch.ElasticsearchWOUDCProvider
               data: ${WOUDC_API_ES_URL}/${WOUDC_API_ES_INDEX_PREFIX}.data_record
               id_field: identifier
               time_field: timestamp_utc
@@ -241,7 +241,7 @@ resources:
                 end: null # or empty
         providers:
             - type: feature
-              name: woudc_api.provider.elasticsearch.ElasticsearchWOUDCProvider
+              name:  woudc_api.provider.elasticsearch.ElasticsearchWOUDCProvider
               data: ${WOUDC_API_ES_URL}/${WOUDC_API_ES_INDEX_PREFIX}.notification
               id_field: published_date
               date_field: published_date
@@ -260,7 +260,7 @@ resources:
                 end: null # or empty
         providers:
             - type: feature
-              name: woudc_api.provider.elasticsearch.ElasticsearchWOUDCProvider
+              name:  woudc_api.provider.elasticsearch.ElasticsearchWOUDCProvider
               data: ${WOUDC_API_ES_URL}/${WOUDC_API_ES_INDEX_PREFIX}.peer_data_record
               id_field: identifier
               time_field: start_datetime
@@ -279,7 +279,7 @@ resources:
                 end: null # or empty
         providers:
             - type: feature
-              name: woudc_api.provider.elasticsearch.ElasticsearchWOUDCProvider
+              name:  woudc_api.provider.elasticsearch.ElasticsearchWOUDCProvider
               data: ${WOUDC_API_ES_URL}/${WOUDC_API_ES_INDEX_PREFIX}.uv_index_hourly
               id_field: identifier
               time_field: timestamp_utc
@@ -298,7 +298,7 @@ resources:
                 end: null # or empty
         providers:
             - type: feature
-              name: woudc_api.provider.elasticsearch.ElasticsearchWOUDCProvider
+              name:  woudc_api.provider.elasticsearch.ElasticsearchWOUDCProvider
               data: ${WOUDC_API_ES_URL}/${WOUDC_API_ES_INDEX_PREFIX}.totalozone
               id_field: identifier
               time_field: observation_date
@@ -317,7 +317,7 @@ resources:
                 end: null # or empty
         providers:
             - type: feature
-              name: woudc_api.provider.elasticsearch.ElasticsearchWOUDCProvider
+              name:  woudc_api.provider.elasticsearch.ElasticsearchWOUDCProvider
               data: ${WOUDC_API_ES_URL}/${WOUDC_API_ES_INDEX_PREFIX}.ozonesonde
               id_field: identifier
               time_field: timestamp_date
