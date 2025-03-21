@@ -48,7 +48,7 @@ RUN sed -i 's/http:\/\/archive.ubuntu.com\/ubuntu\//mirror:\/\/mirrors.ubuntu.co
     add-apt-repository ppa:gcpp-kalxas/wmo && \
     add-apt-repository ppa:ubuntugis/ppa && \
     apt-get update && \
-    apt-get install -y python3 python3-pip python3-flask git curl unzip && \
+    apt-get install -y python3 python3-pip python3-flask git curl unzip python3-certifi && \
     # Install pygeoapi
     git clone ${PYGEOAPI_GITREPO} -b 0.19.0 --depth=1 && \
     cd pygeoapi && \

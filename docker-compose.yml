@@ -51,6 +51,11 @@ services:
       WOUDC_API_ES_URL: ${WOUDC_API_ES_URL}
       WOUDC_API_ES_INDEX_PREFIX: ${WOUDC_API_ES_INDEX_PREFIX}
       WOUDC_API_VERIFY_CERTS: ${WOUDC_API_VERIFY_CERTS}
+    volumes:
+      # below is required so that the container has certificates required
+      # for SSL-enabled connections to internal hosts
+      - "/etc/ssl/certs:/etc/ssl/certs:ro" # mount host ssl certs
+      - "/usr/local/share/ca-certificates/:/usr/local/share/ca-certificates/:ro" # mount host ca-certificates
     ports:
       - "${WOUDC_API_BIND_PORT}:${WOUDC_API_BIND_PORT}"
 
