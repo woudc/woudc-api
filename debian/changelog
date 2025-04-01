@@ -6,9 +6,10 @@ woudc-api (0.9.0) jammy; urgency=medium
   * Update config.yml to use WOUDC_API_ES_INDEX_PREFIX env
   * Use custom ES provider instead of pygeoapi ES provider, subclassed from pygeoapi ElasticsearchProvider
   * Allow toggling verify_certs for ES connection
+  * Update metrics process to allow multiple datasets in comma seperated form
   * Updated README.md
 
- -- Kevin Ngai <kevin.ngai@ec.gc.ca>  Mon, 24 Mar 2025 20:13:00 +0000
+ -- Kevin Ngai <kevin.ngai@ec.gc.ca>  Tue, 01 Apr 2025 20:20:00 +0000
 
 woudc-api (0.8.2) focal; urgency=medium
 
