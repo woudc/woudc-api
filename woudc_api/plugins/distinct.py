@@ -104,7 +104,7 @@ PROCESS_SETTINGS = {
     'example': {
         'inputs': {
             'index': 'instrument',
-            'distinct': ['name', 'model', 'dataset', 'station_id'],
+            'distinct': ['name', 'model', 'dataset_id', 'station_id'],
             'source': ['data_class', 'station_name', 'waf_url',
                        'start_date', 'end_date']
         }

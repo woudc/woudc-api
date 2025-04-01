@@ -99,7 +99,7 @@ PROCESS_SETTINGS = {
     },
     'example': {
         'inputs': {
-            'dataset': 'OzoneSonde',
+            'dataset': 'OzoneSonde_1.0',
             'country': 'CAN',
             'station': '077'
         }

@@ -148,6 +148,7 @@ PROCESS_SETTINGS = {
     'example': {
         'inputs': {
             'domain': 'contributor',
+            'dataset': 'Spectral_1.0,Broad-band_1.0',
             'timescale': 'year',
             'network': 'Brewer',
             'country': 'CAN'
@@ -325,7 +326,10 @@ class MetricsProcessor(BaseProcessor):
             field = 'properties.start_datetime'
         else:
             if dataset is not None:
-                filters.append({'properties.content_category.raw': dataset})
+                dataset_list = dataset.split(',')
+                filters.append(
+                    {'terms': {'properties.dataset_id.raw': dataset_list}}
+                )
             if level is not None:
                 filters.append({'properties.content_level': level})
             if country is not None:
@@ -338,7 +342,12 @@ class MetricsProcessor(BaseProcessor):
                 minx, miny, maxx, maxy = [float(b) for b in bbox]
             field = 'properties.timestamp_date'
 
-        conditions = [{'term': body} for body in filters]
+        conditions = []
+        for body in filters:
+            if 'terms' in body:
+                conditions.append(body)
+            else:
+                conditions.append({'term': body})
 
         query_core = {
             date_aggregation_name: {
@@ -451,7 +460,10 @@ class MetricsProcessor(BaseProcessor):
             field = 'properties.start_datetime'
         else:
             if dataset is not None:
-                filters.append({'properties.content_category.raw': dataset})
+                dataset_list = dataset.split(',')
+                filters.append(
+                    {'terms': {'properties.dataset_id.raw': dataset_list}}
+                )
             if country is not None:
                 filters.append({'properties.platform_country.raw': country})
             if station is not None:
@@ -462,7 +474,12 @@ class MetricsProcessor(BaseProcessor):
                 minx, miny, maxx, maxy = [float(b) for b in bbox]
             field = 'properties.timestamp_date'
 
-        conditions = [{'term': body} for body in filters]
+        conditions = []
+        for body in filters:
+            if 'terms' in body:
+                conditions.append(body)
+            else:
+                conditions.append({'term': body})
 
         query_core = {
             date_aggregation_name: {

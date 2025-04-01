@@ -3237,7 +3237,7 @@
                                 "enum":[
                                     "contributor_name",
                                     "data_class",
-                                    "dataset",
+                                    "dataset_id",
                                     "end_date",
                                     "identifier",
                                     "model",
@@ -3284,7 +3284,7 @@
                         "explode":false
                     },
                     {
-                        "name":"dataset",
+                        "name":"dataset_id",
                         "in":"query",
                         "required":false,
                         "schema":{
@@ -3927,6 +3927,7 @@
                                     "data_generation_date",
                                     "data_generation_scientific_authority",
                                     "data_generation_version",
+                                    "dataset_id",
                                     "end_date",
                                     "filename",
                                     "identifier",
@@ -4113,6 +4114,16 @@
                         "schema":{
                             "type":"number",
                             "format":"float"
+                        },
+                        "style":"form",
+                        "explode":false
+                    },
+                    {
+                        "name":"dataset_id",
+                        "in":"query",
+                        "required":false,
+                        "schema":{
+                            "type":"keyword"
                         },
                         "style":"form",
                         "explode":false
@@ -6894,7 +6905,7 @@
                             },
                             "example":{
                                 "inputs":{
-                                    "dataset":"OzoneSonde",
+                                    "dataset":"OzoneSonde_1.0",
                                     "country":"CAN",
                                     "station":"077"
                                 }
@@ -6966,7 +6977,7 @@
                                     "distinct":[
                                         "name",
                                         "model",
-                                        "dataset",
+                                        "dataset_id",
                                         "station_id"
                                     ],
                                     "source":[
