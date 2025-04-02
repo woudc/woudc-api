@@ -50,7 +50,7 @@ RUN sed -i 's/http:\/\/archive.ubuntu.com\/ubuntu\//mirror:\/\/mirrors.ubuntu.co
     apt-get update && \
     apt-get install -y python3 python3-pip python3-flask git curl unzip python3-certifi && \
     # Install pygeoapi
-    git clone ${PYGEOAPI_GITREPO} -b 0.19.0 --depth=1 && \
+    git clone ${PYGEOAPI_GITREPO} -b 0.20.0 --depth=1 && \
     cd pygeoapi && \
     pip install -r requirements.txt && \
     pip install . && \
