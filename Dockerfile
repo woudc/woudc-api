@@ -82,5 +82,4 @@ RUN apt-get remove --purge -y git && \
 RUN chmod +x ${APPDIR}/entrypoint.sh
 
 # Start entrypoint.sh
-ENTRYPOINT /bin/sh -c "${APPDIR}/entrypoint.sh"
-
+ENTRYPOINT ["/bin/sh", "-c", "${APPDIR}/entrypoint.sh"]

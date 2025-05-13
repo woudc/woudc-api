@@ -2,6 +2,7 @@ woudc-api (0.9.1) jammy; urgency=medium
 
   * Update woudc-api.wsgi with new ENV variables
   * Update Dockerfile for pygeoapi 0.20.0 and CORS enabled
+  * Fix Dockerfile JSONArgsRecommended build check
 
  -- Kevin Ngai <kevin.ngai@ec.gc.ca>  Tue, 13 May 2025 16:33:33 +0000
 
