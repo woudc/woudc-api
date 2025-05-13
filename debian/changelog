@@ -1,3 +1,10 @@
+woudc-api (0.9.1) jammy; urgency=medium
+
+  * Update woudc-api.wsgi with new ENV variables
+  * Update Dockerfile for pygeoapi 0.20.0 and CORS enabled
+
+ -- Kevin Ngai <kevin.ngai@ec.gc.ca>  Tue, 13 May 2025 16:33:33 +0000
+
 woudc-api (0.9.0) jammy; urgency=medium
 
   * Updates to compatibility with ES8, Python 3.10 and pygeoapi 0.19.0
