@@ -68,6 +68,8 @@ COPY . ${APPDIR}
 RUN cd ${APPDIR} && \
     pip install -r requirements.txt && \
     pip install gunicorn gevent Flask-Cors && \
+    # ensure cors enabled in config
+    sed -i 's^# cors: true^cors: true^' ${APPDIR}/deploy/default/woudc-api-config.yml && \
     pip install .
 
 # Cleanup unnecessary packages and files
