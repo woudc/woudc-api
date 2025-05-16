@@ -23,3 +23,7 @@ override_dh_auto_configure:
 
 	# Remove all .zip files after extraction to prevent dpkg-source errors
 	rm -f SCHEMAS_OPENGIS_NET.zip debian/schemas.opengis.net/ogcapi/*.zip
+
+	# Create target directory for pygeoapi static files
+	mkdir -p debian/static/
+	cp -a /usr/lib/python3/dist-packages/pygeoapi/static/* debian/static/

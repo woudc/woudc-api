@@ -53,7 +53,7 @@ from pygeoapi.flask_app import BLUEPRINT as pygeoapi_blueprint
 app = Flask(__name__, static_url_path='/static')
 
 app.url_map.strict_slashes = False
-app.register_blueprint(pygeoapi_blueprint, url_prefix='/oapi')
+app.register_blueprint(pygeoapi_blueprint, url_prefix='/')
 
 try:
     from flask_cors import CORS
@@ -62,10 +62,10 @@ except ImportError:  # CORS handled by upstream server
     pass
 
 
-@app.route('/')
+# old path redirect to root path
+@app.route('/oapi')
 def hello_world():
-    return redirect('https://woudc.org/about/data-access.php#web-services',
-                    code=302)
+    return redirect(os.environ['WOUDC_API_URL'], code=302)
 
 
 @click.command()
