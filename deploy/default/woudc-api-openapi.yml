@@ -3,10 +3,10 @@
     "tags":[
         {
             "name":"server",
-            "description":"The World Ozone and Ultraviolet Radiation Data Centre (WOUDC) is one of six World Data Centres which are part of the Global Atmosphere Watch (GAW) programme of the World Meteorological Organization (WMO).  WOUDC contains ozone and UV data measured by instruments located on ground-based, shipborne or airborne platforms.  Data are subject to the WOUDC Data Policy (https://beta.woudc.org/en/data/data-use-policy)",
+            "description":"The World Ozone and Ultraviolet Radiation Data Centre (WOUDC) is one of six World Data Centres which are part of the Global Atmosphere Watch (GAW) programme of the World Meteorological Organization (WMO).  WOUDC contains ozone and UV data measured by instruments located on ground-based, shipborne or airborne platforms.  Data are subject to the WOUDC Data Policy (https://woudc.org/en/data/data-use-policy)",
             "externalDocs":{
                 "description":"information",
-                "url":"https://beta.woudc.org"
+                "url":"https://woudc.org"
             }
         },
         {
@@ -95,7 +95,7 @@
     ],
     "info":{
         "title":"World Ozone and Ultraviolet Radiation Data Centre (WOUDC)",
-        "description":"The World Ozone and Ultraviolet Radiation Data Centre (WOUDC) is one of six World Data Centres which are part of the Global Atmosphere Watch (GAW) programme of the World Meteorological Organization (WMO).  WOUDC contains ozone and UV data measured by instruments located on ground-based, shipborne or airborne platforms.  Data are subject to the WOUDC Data Policy (https://beta.woudc.org/en/data/data-use-policy)",
+        "description":"The World Ozone and Ultraviolet Radiation Data Centre (WOUDC) is one of six World Data Centres which are part of the Global Atmosphere Watch (GAW) programme of the World Meteorological Organization (WMO).  WOUDC contains ozone and UV data measured by instruments located on ground-based, shipborne or airborne platforms.  Data are subject to the WOUDC Data Policy (https://woudc.org/en/data/data-use-policy)",
         "x-keywords":[
             "ozone",
             "ultraviolet",
@@ -143,7 +143,7 @@
                 "links":[
                     {
                         "type":"text/html",
-                        "href":"https://beta.woudc.org/en/contact"
+                        "href":"https://woudc.org/en/contact"
                     }
                 ],
                 "contactInstructions":"During hours of service",
@@ -152,14 +152,14 @@
         },
         "license":{
             "name":"WOUDC Data Use Policy",
-            "url":"https://beta.woudc.org/en/data/data-use-policy"
+            "url":"https://woudc.org/en/data/data-use-policy"
         },
         "version":"0.19.0"
     },
     "servers":[
         {
             "url":"https://woudc-geo-dev4.edc-mtl.ec.gc.ca/oapi",
-            "description":"The World Ozone and Ultraviolet Radiation Data Centre (WOUDC) is one of six World Data Centres which are part of the Global Atmosphere Watch (GAW) programme of the World Meteorological Organization (WMO).  WOUDC contains ozone and UV data measured by instruments located on ground-based, shipborne or airborne platforms.  Data are subject to the WOUDC Data Policy (https://beta.woudc.org/en/data/data-use-policy)"
+            "description":"The World Ozone and Ultraviolet Radiation Data Centre (WOUDC) is one of six World Data Centres which are part of the Global Atmosphere Watch (GAW) programme of the World Meteorological Organization (WMO).  WOUDC contains ozone and UV data measured by instruments located on ground-based, shipborne or airborne platforms.  Data are subject to the WOUDC Data Policy (https://woudc.org/en/data/data-use-policy)"
         }
     ],
     "components":{
