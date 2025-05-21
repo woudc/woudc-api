@@ -1,3 +1,10 @@
+woudc-api (0.9.3) jammy; urgency=medium
+
+  * Fixed limits from pygeoapi changes
+  * Removed an extra `/oapi` prefix in default.env
+
+ -- Kevin Ngai <kevin.ngai@ec.gc.ca>  Wed, 21 May 2025 14:07:41 +0000
+
 woudc-api (0.9.2) jammy; urgency=medium
 
   * Removed `/oapi` prefix
