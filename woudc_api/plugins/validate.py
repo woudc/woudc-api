@@ -192,7 +192,9 @@ class ExtendedCSVProcessor(BaseProcessor):
             projects += [subbucket['key']]
         if self.project not in projects:
             valueline = self.ecsv.line_num('CONTENT') + 2
-            if not self.ecsv._add_to_report(51, valueline, value=self.project):
+            if not self.ecsv._add_to_report(
+                307, valueline, value=self.project
+            ):
                 success = False
         return success
 
@@ -208,7 +210,7 @@ class ExtendedCSVProcessor(BaseProcessor):
 
         success = True
         index = 'dataset'
-        field = 'identifier'
+        field = 'dataset_name'
         buckets = self.query_aggregations(index, field)
         datasets = []
         for subbucket in buckets:
@@ -216,7 +218,9 @@ class ExtendedCSVProcessor(BaseProcessor):
         datasets.append('UmkehrN14')
         if self.dataset not in datasets:
             valueline = self.ecsv.line_num('CONTENT') + 2
-            if not self.ecsv._add_to_report(52, valueline, value=self.dataset):
+            if not self.ecsv._add_to_report(
+                308, valueline, value=self.dataset
+            ):
                 success = False
         return success
 
@@ -234,35 +238,35 @@ class ExtendedCSVProcessor(BaseProcessor):
 
         if not isinstance(self.form, int):
             try:
-                if not self.ecsv._add_to_report(57, valueline,
+                if not self.ecsv._add_to_report(219, valueline,
                                                 oldvalue=self.form,
                                                 newvalue=int(self.form)):
                     success = False
                 self.form = int(self.form)
             except ValueError:
-                if not self.ecsv._add_to_report(58, valueline):
+                if not self.ecsv._add_to_report(311, valueline):
                     success = False
 
         if not isinstance(self.level, float):
             try:
                 newvalue = float(self.level)
-                if not self.ecsv._add_to_report(54, valueline,
+                if not self.ecsv._add_to_report(218, valueline,
                                                 oldvalue=self.level,
                                                 newvalue=newvalue):
                     success = False
                 self.level = newvalue
             except ValueError:
-                if not self.ecsv._add_to_report(55, valueline):
+                if not self.ecsv._add_to_report(310, valueline):
                     success = False
 
         if self.dataset == 'UmkehrN14':
             if 'C_PROFILE' in self.ecsv.extcsv:
                 if self.level != 2.0:
-                    if not self.ecsv._add_to_report(53, valueline, value=2.0):
+                    if not self.ecsv._add_to_report(217, valueline, value=2.0):
                         success = False
                     self.level = 2.0
             elif self.level != 1.0:
-                if not self.ecsv._add_to_report(53, valueline, value=1.0):
+                if not self.ecsv._add_to_report(217, valueline, value=1.0):
                     success = False
                 self.level = 1.0
             self.dataset += '_' + str(self.level)
@@ -280,7 +284,7 @@ class ExtendedCSVProcessor(BaseProcessor):
             levels.append(label[len(label)-3:])
 
         if str(self.level) not in levels:
-            if not self.ecsv._add_to_report(56, valueline,
+            if not self.ecsv._add_to_report(309, valueline,
                                             dataset=self.dataset):
                 success = False
 
@@ -320,7 +324,7 @@ class ExtendedCSVProcessor(BaseProcessor):
         contributor_body = response['hits']['hits']
         if len(contributor_body) != 1:
             valueline = self.ecsv.line_num('DATA_GENERATION') + 2
-            if not self.ecsv._add_to_report(67, valueline):
+            if not self.ecsv._add_to_report(317, valueline):
                 success = False
         return success
 
@@ -345,11 +349,11 @@ class ExtendedCSVProcessor(BaseProcessor):
             not self.country, self.country in water_codes
         ]):
             self.country = 'XY'
-            if not self.ecsv._add_to_report(75, valueline):
+            if not self.ecsv._add_to_report(323, valueline):
                 success = False
 
         if len(self.station_id) < 3:
-            if not self.ecsv._add_to_report(70, valueline):
+            if not self.ecsv._add_to_report(318, valueline):
                 success = False
 
         self.station_id = self.station_id.rjust(3, '0')
@@ -359,7 +363,7 @@ class ExtendedCSVProcessor(BaseProcessor):
         field = 'woudc_id'
         station_body = self.query_by_field(index, field, self.station_id)
         if len(station_body) != 1:
-            if not self.ecsv._add_to_report(71, valueline):
+            if not self.ecsv._add_to_report(319, valueline):
                 success = False
                 return success
 
@@ -370,7 +374,7 @@ class ExtendedCSVProcessor(BaseProcessor):
                 self.station_type == station_properties['type']:
             LOGGER.debug('Validated station type {}'.format(self.station_type))
         else:
-            if not self.ecsv._add_to_report(72, valueline):
+            if not self.ecsv._add_to_report(320, valueline):
                 success = False
 
         LOGGER.debug('Validating station name...')
@@ -378,7 +382,7 @@ class ExtendedCSVProcessor(BaseProcessor):
             LOGGER.debug('Validated with name {} for id {}'.format(
                 self.station_name, self.station_id))
         else:
-            if not self.ecsv._add_to_report(73, valueline):
+            if not self.ecsv._add_to_report(321, valueline):
                 success = False
 
         if not success:
@@ -390,13 +394,13 @@ class ExtendedCSVProcessor(BaseProcessor):
         field = 'identifier'
         country_body = self.query_by_field(index, field, self.country)
         if len(country_body) != 1:
-            if not self.ecsv._add_to_report(74, valueline):
+            if not self.ecsv._add_to_report(322, valueline):
                 success = False
         else:
             country_properties = country_body[0]['_source']['properties']
             country_name_en = country_properties['country_name_en']
             if country_name_en != station_properties['country_name_en']:
-                if not self.ecsv._add_to_report(74, valueline):
+                if not self.ecsv._add_to_report(322, valueline):
                     success = False
             else:
                 LOGGER.debug('Validated with country: {} for id: {}'
@@ -421,7 +425,7 @@ class ExtendedCSVProcessor(BaseProcessor):
         deployment_body = self.query_by_field(index, field, deployment_id)
         if len(deployment_body) != 1:
             valueline = self.ecsv.line_num('PLATFORM') + 2
-            if not self.ecsv._add_to_report(88, valueline,
+            if not self.ecsv._add_to_report(334, valueline,
                                             ident=deployment_id):
                 success = False
         return success
@@ -442,7 +446,7 @@ class ExtendedCSVProcessor(BaseProcessor):
 
         if not self.instrument_name or \
                 self.instrument_name.lower() in ['na', 'n/a']:
-            if not self.ecsv._add_to_report(82, valueline):
+            if not self.ecsv._add_to_report(223, valueline):
                 success = False
             self.instrument_name = 'UNKNOWN'
         else:
@@ -453,14 +457,14 @@ class ExtendedCSVProcessor(BaseProcessor):
             for subbucket in buckets:
                 names += [subbucket['key']]
             if self.instrument_name not in names:
-                if not self.ecsv._add_to_report(85, valueline,
+                if not self.ecsv._add_to_report(331, valueline,
                                                 value=self.instrument_name):
                     success = False
 
         if not self.instrument_model or str(
             self.instrument_model
         ).lower() in ['na', 'n/a']:
-            if not self.ecsv._add_to_report(83, valueline):
+            if not self.ecsv._add_to_report(329, valueline):
                 success = False
             self.instrument_model = 'UNKNOWN'
         else:
@@ -471,7 +475,7 @@ class ExtendedCSVProcessor(BaseProcessor):
             for subbucket in buckets:
                 models += [subbucket['key']]
             if self.instrument_model not in models:
-                if not self.ecsv._add_to_report(86, valueline):
+                if not self.ecsv._add_to_report(332, valueline):
                     success = False
         return success
 
@@ -497,7 +501,7 @@ class ExtendedCSVProcessor(BaseProcessor):
         instrument_body = self.query_by_field(index, field, self.instrument_id)
         if len(instrument_body) != 1:
             valueline = self.ecsv.line_num('INSTRUMENT') + 2
-            if not self.ecsv._add_to_report(87, valueline):
+            if not self.ecsv._add_to_report(333, valueline):
                 success = False
         return success
 
@@ -518,11 +522,11 @@ class ExtendedCSVProcessor(BaseProcessor):
             lat_numeric = float(self.latitude)
             if -90 <= lat_numeric <= 90:
                 LOGGER.debug('Validated instrument latitude')
-            elif not self.ecsv._add_to_report(78, valueline, field='Latitude',
+            elif not self.ecsv._add_to_report(325, valueline, field='Latitude',
                                               lower=-90, upper=90):
                 success = False
         except ValueError:
-            if not self.ecsv._add_to_report(76, valueline, field='Longitude'):
+            if not self.ecsv._add_to_report(339, valueline, field='Longitude'):
                 success = False
 
             self.latitude = lat_numeric = None
@@ -531,11 +535,13 @@ class ExtendedCSVProcessor(BaseProcessor):
             lon_numeric = float(self.longitude)
             if -180 <= lon_numeric <= 180:
                 LOGGER.debug('Validated instrument longitude')
-            elif not self.ecsv._add_to_report(78, valueline, field='Longitude',
-                                              lower=-180, upper=180):
+            elif not self.ecsv._add_to_report(
+                325, valueline, field='Longitude',
+                lower=-180, upper=180
+            ):
                 success = False
         except ValueError:
-            if not self.ecsv._add_to_report(76, valueline, field='Longitude'):
+            if not self.ecsv._add_to_report(339, valueline, field='Longitude'):
                 success = False
 
             self.longitude = lon_numeric = None
@@ -544,11 +550,11 @@ class ExtendedCSVProcessor(BaseProcessor):
             height_numeric = float(self.height) if self.height else None
             if not self.height or -50 <= height_numeric <= 5100:
                 LOGGER.debug('Validated instrument height')
-            elif not self.ecsv._add_to_report(79, valueline, lower=-50,
+            elif not self.ecsv._add_to_report(326, valueline, lower=-50,
                                               upper=5100):
                 success = False
         except ValueError:
-            if not self.ecsv._add_to_report(77, valueline):
+            if not self.ecsv._add_to_report(324, valueline):
                 success = False
 
             self.height = height_numeric = None
@@ -581,19 +587,19 @@ class ExtendedCSVProcessor(BaseProcessor):
 
             if lat_numeric is not None and coordinates[1] is not None \
                and abs(lat_numeric - coordinates[1]) >= lat_interval:
-                if not self.ecsv._add_to_report(80, valueline,
+                if not self.ecsv._add_to_report(327, valueline,
                                                 field='Latitude'):
                     success = False
             if lon_numeric is not None and coordinates[0] is not None:
                 if in_polar_region and ignore_polar_lon:
                     LOGGER.info('Skipping longitude check in polar region')
                 elif abs(lon_numeric - coordinates[0]) >= lon_interval:
-                    if not self.ecsv._add_to_report(80, valueline,
+                    if not self.ecsv._add_to_report(327, valueline,
                                                     field='Longitude'):
                         success = False
             if height_numeric is not None and coordinates[2] is not None \
                and abs(height_numeric - coordinates[2]) >= height_interval:
-                if not self.ecsv._add_to_report(81, valueline):
+                if not self.ecsv._add_to_report(328, valueline):
                     success = False
 
         return success
@@ -611,21 +617,21 @@ class ExtendedCSVProcessor(BaseProcessor):
 
         valueline = self.ecsv.line_num('DATA_GENERATION')
         if not self.dg_date:
-            if not self.ecsv._add_to_report(62, valueline):
+            if not self.ecsv._add_to_report(221, valueline):
                 success = False
 
         try:
             numeric_version = float(self.version)
         except TypeError:
-            if not self.ecsv._add_to_report(63, valueline, default=1.0):
+            if not self.ecsv._add_to_report(314, valueline, default=1.0):
                 success = False
             return success
         if not 0 <= numeric_version <= 20:
-            if not self.ecsv._add_to_report(64, valueline, lower=0.0,
+            if not self.ecsv._add_to_report(315, valueline, lower=0.0,
                                             upper=20.0):
                 success = False
         if str(self.version) == str(int(numeric_version)):
-            if not self.ecsv._add_to_report(65, valueline):
+            if not self.ecsv._add_to_report(222, valueline):
                 success = False
 
         return success
@@ -654,13 +660,17 @@ class ExtendedCSVProcessor(BaseProcessor):
             for line, other_date in enumerate(date_column, valueline):
                 if (isinstance(other_date, (str, int, type(None)))
                    or isinstance(self.dg_date, (str, int, type(None)))):
-                    err_code = 91 if table.startswith('TIMESTAMP') else 92
+                    err_code = (
+                        336 if table.startswith('TIMESTAMP') else 337
+                    )
                     if not self.ecsv._add_to_report(err_code, line,
                                                     table=table):
                         success = False
                 else:
                     if other_date > self.dg_date:
-                        err_code = 91 if table.startswith('TIMESTAMP') else 92
+                        err_code = (
+                            336 if table.startswith('TIMESTAMP') else 337
+                        )
                         if not self.ecsv._add_to_report(err_code,
                                                         line, table=table):
                             success = False
@@ -675,7 +685,7 @@ class ExtendedCSVProcessor(BaseProcessor):
                        or isinstance(self.ts_time, (str, int, type(None)))):
                         pass
                     elif other_time < self.ts_time:
-                        if not self.ecsv._add_to_report(93, line):
+                        if not self.ecsv._add_to_report(228, line):
                             success = False
 
         return success
@@ -685,8 +695,9 @@ class ExtendedCSVProcessor(BaseProcessor):
         Creates and returns an Instrument instance from the contents of
         the inputted csv
         """
+        dataset = self.dataset + '_' + str(self.level)
         id_elements = [self.instrument_name, self.instrument_model,
-                       self.instrument_number, self.dataset,
+                       self.instrument_number, dataset,
                        self.station_id, self.agency, self.project]
         self.instrument_id = ':'.join(id_elements)
 
@@ -760,7 +771,7 @@ class ExtendedCSVProcessor(BaseProcessor):
             self.ecsv = ExtendedCSV(extcsv)
         except (MetadataValidationError, NonStandardDataError):
             self.ecsv = ExtendedCSV('')
-            self.ecsv._add_to_report(209)
+            self.ecsv._add_to_report(410)
             self.success = False
 
         if self.success:
