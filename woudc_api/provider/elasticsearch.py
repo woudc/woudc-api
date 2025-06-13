@@ -116,3 +116,50 @@ class ElasticsearchWOUDCProvider(ElasticsearchProvider):
         except exceptions.NotFoundError as err:
             LOGGER.error(err)
             raise ProviderQueryError(err)
+          
+    def query(self, offset=0, limit=10, resulttype='results',
+              bbox=[], datetime_=None, properties=[], sortby=[],
+              select_properties=[], skip_geometry=False, q=None,
+              filterq=None, **kwargs):
+
+          language = kwargs.get('language', 'en')
+
+          new_features = []
+
+          records = super().query(
+              offset=offset, limit=limit,
+              resulttype=resulttype, bbox=bbox,
+              datetime_=datetime_, properties=properties,
+              sortby=sortby,
+              select_properties=select_properties,
+              skip_geometry=skip_geometry,
+              q=q)
+
+        if self.index_name == 'discovery_metadata':
+            LOGGER.debug('Intercepting default ES response')
+            for feature in records['features']:
+                  if feature['id'].endwith(language):
+                      feature['id'] = feature['id'].rsplit(f"-{language}")
+                      new_features.append(feature)
+
+        records['features'] = new_features
+
+        return records
+
+    def get(self, identifier, **kwargs):
+        """
+        Get ES document by id
+
+        :param identifier: feature id
+
+        :returns: dict of single GeoJSON feature
+        """
+
+        language = kwargs.get('language', 'en')
+      
+        if self.index_name == 'discovery_metadata':
+            identifier2 = f'{identifier}-{language}'
+        else:
+            idenfifier2 = identifier
+       
+        return super().get(identifier2, kwargs)
