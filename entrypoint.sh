@@ -45,7 +45,7 @@ export PYGEOAPI_OPENAPI=${PYGEOAPI_OPENAPI}  # PyGeoAPI OpenAPI specification
 export CONTAINER_NAME="woudc-api-nightly"  # Name of the container
 export CONTAINER_HOST=${WOUDC_API_BIND_HOST:-0.0.0.0}  # Host to bind to
 export CONTAINER_PORT=${WOUDC_API_BIND_PORT:-6080}  # Port to bind to
-export WSGI_WORKERS=${WSGI_WORKERS:-4}  # Number of WSGI workers
+export WSGI_WORKERS=${WSGI_WORKERS:-1}  # Number of WSGI workers
 export WSGI_WORKER_TIMEOUT=${WSGI_WORKER_TIMEOUT:-6000}  # Timeout for WSGI workers
 export WSGI_WORKER_CLASS=${WSGI_WORKER_CLASS:-gevent}  # Worker class for Gunicorn
 
