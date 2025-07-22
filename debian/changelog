@@ -1,3 +1,10 @@
+woudc-api (0.10.0) jammy; urgency=medium
+
+  * Fixed validator
+  * Update Dockerfile configuration
+
+ -- Kevin Ngai <kevin.ngai@ec.gc.ca>  Tue, 22 Jul 2025 18:52:12 +0000
+
 woudc-api (0.9.4) jammy; urgency=medium
 
   * Fixed static path in debian/woudc-api.install 
