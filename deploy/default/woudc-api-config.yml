@@ -21,7 +21,7 @@ server:
     ogc_schemas_location: ${WOUDC_API_OGC_SCHEMAS_LOCATION}
 
 logging:
-    level: DEBUG
+    level: ERROR
     # logfile: /tmp/woudc-api.log
 
 metadata:
