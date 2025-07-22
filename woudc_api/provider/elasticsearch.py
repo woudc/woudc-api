@@ -36,7 +36,6 @@ from elastic_transport import TlsError
 from pygeoapi.provider.elasticsearch_ import ElasticsearchProvider
 from pygeoapi.provider.base import (ProviderConnectionError,
                                     ProviderQueryError)
-from flask import request
 
 LOGGER = logging.getLogger(__name__)
 
@@ -123,7 +122,11 @@ class ElasticsearchWOUDCProvider(ElasticsearchProvider):
               select_properties=[], skip_geometry=False, q=None,
               filterq=None, **kwargs):
 
-        language = request.args.get('lang', 'en')
+        language = kwargs.get('language')
+        if language is not None:
+            language = language.language
+        else:
+            language = 'en'
 
         new_features = []
 
@@ -136,11 +139,11 @@ class ElasticsearchWOUDCProvider(ElasticsearchProvider):
             skip_geometry=skip_geometry,
             q=q)
 
-        if self.index_name.split('.')[-1] == 'discovery_metadata':
+        if self.index_name.endswith('discovery_metadata'):
             LOGGER.debug('Intercepting default ES response')
             for feature in records['features']:
                 if feature['id'].endswith(language):
-                    feature['id'] = feature['id'].rsplit(f"_{language}")[0]
+                    feature['id'] = feature['id'].rsplit(f'_{language}')[0]
                     new_features.append(feature)
             records['features'] = new_features
 
@@ -158,18 +161,22 @@ class ElasticsearchWOUDCProvider(ElasticsearchProvider):
         :returns: dict of single GeoJSON feature
         """
 
-        language = request.args.get('lang', 'en')
+        language = kwargs.get('language')
+        if language is not None:
+            language = language.language
+        else:
+            language = 'en'
 
-        LOGGER.info("Getting identifier: %s with language: %s",
+        LOGGER.info('Getting identifier: %s with language: %s',
                     identifier, language)
 
-        if self.index_name.split('.')[-1] == 'discovery_metadata':
+        if self.index_name.endswith('discovery_metadata'):
             identifier2 = f'{identifier}_{language}'
         else:
             identifier2 = identifier
 
         dataset = super().get(identifier2, **kwargs)
 
-        dataset['id'] = dataset['id'].rsplit(f"_{language}")[0]
+        dataset['id'] = dataset['id'].rsplit(f'_{language}')[0]
 
         return dataset

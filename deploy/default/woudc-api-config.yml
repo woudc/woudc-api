@@ -7,8 +7,8 @@ server:
     mimetype: application/json; charset=UTF-8
     encoding: utf-8
     languages:
-        - en-CA
-        - fr-CA
+        - en
+        - fr
     # cors: true
     pretty_print: true
     limits:
@@ -21,7 +21,7 @@ server:
     ogc_schemas_location: ${WOUDC_API_OGC_SCHEMAS_LOCATION}
 
 logging:
-    level: ERROR
+    level: DEBUG
     # logfile: /tmp/woudc-api.log
 
 metadata:
@@ -101,6 +101,9 @@ resources:
               name:  woudc_api.provider.elasticsearch.ElasticsearchWOUDCProvider
               data: ${WOUDC_API_ES_URL}/${WOUDC_API_ES_INDEX_PREFIX}.discovery_metadata
               id_field: identifier
+              languages:
+                - en
+                - fr
     datasets:
         type: collection
         title: WOUDC Data Registry Datasets
