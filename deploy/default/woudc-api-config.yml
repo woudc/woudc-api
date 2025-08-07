@@ -313,6 +313,8 @@ resources:
         description: Connection to ozonesonde in the WOUDC Data Registry Search Index.
         keywords: []
         links: []
+        limits:
+            max_items: 1000
         extents:
             spatial:
                 bbox: [-180, -90, 180, 90]
