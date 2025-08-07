@@ -1,3 +1,9 @@
+woudc-api (0.10.1) jammy; urgency=medium
+
+  * Reduce limits.max_items to 1000 for OzoneSonde to prevent overloading API
+
+ -- Kevin Ngai <kevin.ngai@ec.gc.ca>  Thu, 07 Aug 2025 22:58:10 +0000
+
 woudc-api (0.10.0) jammy; urgency=medium
 
   * Fixed validator
