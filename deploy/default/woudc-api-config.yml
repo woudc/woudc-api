@@ -314,7 +314,7 @@ resources:
         keywords: []
         links: []
         limits:
-            max_items: 1000
+            max_items: 100
         extents:
             spatial:
                 bbox: [-180, -90, 180, 90]
