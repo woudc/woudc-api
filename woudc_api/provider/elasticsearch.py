@@ -117,65 +117,65 @@ class ElasticsearchWOUDCProvider(ElasticsearchProvider):
             LOGGER.error(err)
             raise ProviderQueryError(err)
 
-    # def query(self, offset=0, limit=10, resulttype='results',
-    #           bbox=[], datetime_=None, properties=[], sortby=[],
-    #           select_properties=[], skip_geometry=False, q=None,
-    #           filterq=None, **kwargs):
+    def query(self, offset=0, limit=10, resulttype='results',
+              bbox=[], datetime_=None, properties=[], sortby=[],
+              select_properties=[], skip_geometry=False, q=None,
+              filterq=None, **kwargs):
 
-    #     language = kwargs.get('language')
-    #     if language is not None:
-    #         language = language.language
-    #     else:
-    #         language = 'en'
+        language = kwargs.get('language')
+        if language is not None:
+            language = language.language
+        else:
+            language = 'en'
 
-    #     new_features = []
+        new_features = []
 
-    #     records = super().query(
-    #         offset=offset, limit=limit,
-    #         resulttype=resulttype, bbox=bbox,
-    #         datetime_=datetime_, properties=properties,
-    #         sortby=sortby,
-    #         select_properties=select_properties,
-    #         skip_geometry=skip_geometry,
-    #         q=q)
+        records = super().query(
+            offset=offset, limit=limit,
+            resulttype=resulttype, bbox=bbox,
+            datetime_=datetime_, properties=properties,
+            sortby=sortby,
+            select_properties=select_properties,
+            skip_geometry=skip_geometry,
+            q=q)
 
-    #     if self.index_name.endswith('discovery_metadata'):
-    #         LOGGER.debug('Intercepting default ES response')
-    #         for feature in records['features']:
-    #             if feature['id'].endswith(language):
-    #                 feature['id'] = feature['id'].rsplit(f'_{language}')[0]
-    #                 new_features.append(feature)
-    #         records['features'] = new_features
-    #         records['numberMatched'] = len(records['features']) + offset
-    #         records['numberReturned'] = len(records['features'])
+        if self.index_name.endswith('discovery_metadata'):
+            LOGGER.debug('Intercepting default ES response')
+            for feature in records['features']:
+                if feature['id'].endswith(language):
+                    feature['id'] = feature['id'].rsplit(f'_{language}')[0]
+                    new_features.append(feature)
+            records['features'] = new_features
+            records['numberMatched'] = len(records['features']) + offset
+            records['numberReturned'] = len(records['features'])
 
-    #     return records
+        return records
 
-    # def get(self, identifier, **kwargs):
-    #     """
-    #     Get ES document by id
+    def get(self, identifier, **kwargs):
+        """
+        Get ES document by id
 
-    #     :param identifier: feature id
+        :param identifier: feature id
 
-    #     :returns: dict of single GeoJSON feature
-    #     """
+        :returns: dict of single GeoJSON feature
+        """
 
-    #     language = kwargs.get('language')
-    #     if language is not None:
-    #         language = language.language
-    #     else:
-    #         language = 'en'
+        language = kwargs.get('language')
+        if language is not None:
+            language = language.language
+        else:
+            language = 'en'
 
-    #     LOGGER.info('Getting identifier: %s with language: %s',
-    #                 identifier, language)
+        LOGGER.info('Getting identifier: %s with language: %s',
+                    identifier, language)
 
-    #     if self.index_name.endswith('discovery_metadata'):
-    #         identifier2 = f'{identifier}_{language}'
-    #     else:
-    #         identifier2 = identifier
+        if self.index_name.endswith('discovery_metadata'):
+            identifier2 = f'{identifier}_{language}'
+        else:
+            identifier2 = identifier
 
-    #     dataset = super().get(identifier2, **kwargs)
+        dataset = super().get(identifier2, **kwargs)
 
-    #     dataset['id'] = dataset['id'].rsplit(f'_{language}')[0]
+        dataset['id'] = dataset['id'].rsplit(f'_{language}')[0]
 
-    #     return dataset
+        return dataset
