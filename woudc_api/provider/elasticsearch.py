@@ -35,7 +35,8 @@ from elastic_transport import TlsError
 
 from pygeoapi.provider.elasticsearch_ import ElasticsearchProvider
 from pygeoapi.provider.base import (ProviderConnectionError,
-                                    ProviderQueryError)
+                                    ProviderQueryError,
+                                    BaseProvider)
 
 LOGGER = logging.getLogger(__name__)
 
@@ -52,7 +53,7 @@ class ElasticsearchWOUDCProvider(ElasticsearchProvider):
         :returns: woudc_api.provider.elasticsearch.ElasticsearchWOUDCProvider
         """
         LOGGER.debug('Initializing ElasticsearchWOUDCProvider')
-        LOGGER.debug(f'provider_def: {provider_def}')
+        LOGGER.debug("provider_def: %s", provider_def)
 
         # Ensure that 'properties' attribute is set up
         self.properties = getattr(self, 'properties', {})
@@ -63,7 +64,6 @@ class ElasticsearchWOUDCProvider(ElasticsearchProvider):
         # Call BaseProvider.__init__ directly.
         # Don't use ElasticsearchProvider.__init__
         # with super().__init__(provider_def).
-        from pygeoapi.provider.base import BaseProvider
         BaseProvider.__init__(self, provider_def)
 
         LOGGER.debug('Setting WOUDC specific Elasticsearch properties')
@@ -75,9 +75,8 @@ class ElasticsearchWOUDCProvider(ElasticsearchProvider):
         # Extract URL information from self.data
         self.es_host, self.index_name = self.data.rsplit('/', 1)
 
-        LOGGER.debug(
-            f"Connecting to Elasticsearch (verify_certs={self.verify_certs})"
-        )
+        LOGGER.debug("Connecting to Elasticsearch (verify_certs=%s)",
+                     self.verify_certs)
 
         try:
             self.es = Elasticsearch(
@@ -121,6 +120,24 @@ class ElasticsearchWOUDCProvider(ElasticsearchProvider):
               bbox=[], datetime_=None, properties=[], sortby=[],
               select_properties=[], skip_geometry=False, q=None,
               filterq=None, **kwargs):
+        """
+        query ElasticSearch index with special handling for discovery_metadata
+        index.
+
+        :param offset: starting record to return (default 0)
+        :param limit: number of records to return (default 10)
+        :param resulttype: return results or hit limit (default results)
+        :param bbox: bounding box [minx,miny,maxx,maxy]
+        :param datetime_: temporal (datestamp or extent)
+        :param properties: list of tuples (name, value)
+        :param sortby: list of dicts (property, order)
+        :param select_properties: list of property names
+        :param skip_geometry: bool of whether to skip geometry (default False)
+        :param q: full-text search term(s)
+        :param filterq: filter object
+
+        :returns: dict of 0..n GeoJSON features
+        """
 
         language = kwargs.get('language')
         if language is not None:
@@ -129,6 +146,9 @@ class ElasticsearchWOUDCProvider(ElasticsearchProvider):
             language = 'en'
 
         new_features = []
+
+        if self.index_name.endswith('discovery_metadata'):
+            limit = limit * 2  # to account for en|fr split
 
         records = super().query(
             offset=offset, limit=limit,
@@ -153,7 +173,8 @@ class ElasticsearchWOUDCProvider(ElasticsearchProvider):
 
     def get(self, identifier, **kwargs):
         """
-        Get ES document by id
+        Get ES document by id with special language/identifier handling for
+        discovery_metadata index.
 
         :param identifier: feature id
 
