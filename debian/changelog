@@ -1,3 +1,9 @@
+woudc-api (0.11.0) jammy; urgency=medium
+
+  * Use custom ES handler for discovery_metadata collection
+
+ -- Kevin Ngai <kevin.ngai@ec.gc.ca>  Tue, 26 Aug 2025 18:46:29 +0000
+
 woudc-api (0.10.2) jammy; urgency=medium
 
   * Further reduce limits.max_items to 100 for OzoneSonde
