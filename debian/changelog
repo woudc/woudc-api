@@ -1,6 +1,7 @@
 woudc-api (0.11.0) jammy; urgency=medium
 
   * Use custom ES handler for discovery_metadata collection
+  * Adjust limit number for discovery_metadata split by language
 
  -- Kevin Ngai <kevin.ngai@ec.gc.ca>  Tue, 26 Aug 2025 18:46:29 +0000
 
