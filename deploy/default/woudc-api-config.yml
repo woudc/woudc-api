@@ -97,7 +97,7 @@ resources:
                 begin: 1928-08-18
                 end: null # or empty
         providers:
-            - type: feature
+            - type: record
               name:  woudc_api.provider.elasticsearch.ElasticsearchWOUDCProvider
               data: ${WOUDC_API_ES_URL}/${WOUDC_API_ES_INDEX_PREFIX}.discovery_metadata
               id_field: identifier
