@@ -5471,7 +5471,6 @@
                                     "country_name_en",
                                     "country_name_fr",
                                     "dataset_id",
-                                    "file_path",
                                     "gaw_id",
                                     "identifier",
                                     "instrument_model",
@@ -5571,16 +5570,6 @@
                     },
                     {
                         "name":"dataset_id",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"file_path",
                         "in":"query",
                         "required":false,
                         "schema":{
@@ -6550,7 +6539,6 @@
                                     "country_name_en",
                                     "country_name_fr",
                                     "dataset_id",
-                                    "file_path",
                                     "flight_correctioncode",
                                     "flight_correctionfactor",
                                     "flight_integratedo3",
@@ -6652,16 +6640,6 @@
                     },
                     {
                         "name":"dataset_id",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"file_path",
                         "in":"query",
                         "required":false,
                         "schema":{
