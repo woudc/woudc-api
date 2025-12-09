@@ -1,3 +1,13 @@
+woudc-api (0.11.1) jammy; urgency=medium
+
+  * Updated openapi document that was causing refererce errors from incorrect paths/URLs
+  * Removed old properties from openapi document
+  * Set additionalProperties to false, which was causing errors by default in Swagger UI try it out
+  * Fixed provider type to record for discovery_metadata
+  * Fixed double pathing issue of schemas.opengis.net during debian install
+
+ -- Kevin Ngai <kevin.ngai@ec.gc.ca>  Tue, 09 Dec 2025 18:23:27 +0000
+
 woudc-api (0.11.0) jammy; urgency=medium
 
   * Use custom ES handler for discovery_metadata collection
