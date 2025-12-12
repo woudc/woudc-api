@@ -2,7 +2,19 @@
 
 set -e
 
+# setup default vars
 USERNAME="woudcuser"
 GROUP="www-data"
+WOUDC_API_URL="https://api.woudc.org"
 
-chown -R $USERNAME.$GROUP /opt/woudc-api
+# Attempt to read in env defined specifics
+if [ -f /home/$USERNAME/.profile ]; then
+    . /home/$USERNAME/.profile
+else
+    echo "Warning: Profile not found for user $USERNAME" >&2
+fi
+
+chown -R $USERNAME:$GROUP /opt/woudc-api
+
+# point schema URLs to correct domain in openapi doc
+sed -i "s#https://api.woudc.org#${WOUDC_API_URL}#" /opt/woudc-api/conf/woudc-api-openapi.yml

@@ -1,6 +1,7 @@
 woudc-api (0.11.1) jammy; urgency=medium
 
   * Updated openapi document that was causing refererce errors from incorrect paths/URLs
+  * Updated debian/postinst to adjust schema path/URLs in openapi document per deployment
   * Removed old properties from openapi document
   * Set additionalProperties to false, which was causing errors by default in Swagger UI try it out
   * Fixed provider type to record for discovery_metadata
