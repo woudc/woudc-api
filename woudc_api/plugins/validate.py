@@ -275,7 +275,7 @@ class ExtendedCSVProcessor(BaseProcessor):
             return success
 
         index = 'discovery_metadata'
-        field = 'identifier'
+        field = '_id'
         content_body = self.query_by_field(index, field, self.dataset)
         _levels = content_body[0]['_source']['properties']['levels']
         levels = []
@@ -712,13 +712,22 @@ class ExtendedCSVProcessor(BaseProcessor):
         """
 
         _index = self.index_prefix + index
-        query = {
-            "query": {
-                "term": {
-                    "properties." + field + ".raw": value,
+        if index == 'discovery_metadata':
+            query = {
+                "query": {
+                    "term": {
+                        "_id": value + "_en",
+                    }
                 }
             }
-        }
+        else:
+            query = {
+                "query": {
+                    "term": {
+                        "properties." + field + ".raw": value,
+                    }
+                }
+            }
         response = self.es.search(index=_index, body=query)
         response_body = response['hits']['hits']
         return response_body
@@ -769,8 +778,9 @@ class ExtendedCSVProcessor(BaseProcessor):
         self.success = True
         try:
             self.ecsv = ExtendedCSV(extcsv)
-        except (MetadataValidationError, NonStandardDataError):
+        except (MetadataValidationError, NonStandardDataError) as e:
             self.ecsv = ExtendedCSV('')
+            self.ecsv.errors = e.errors
             self.ecsv._add_to_report(410)
             self.success = False
 
