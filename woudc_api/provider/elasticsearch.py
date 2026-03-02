@@ -162,8 +162,7 @@ class ElasticsearchWOUDCProvider(ElasticsearchProvider):
         if self.index_name.endswith('discovery_metadata'):
             LOGGER.debug('Intercepting default ES response')
             for feature in records['features']:
-                if feature['id'].endswith(language):
-                    feature['id'] = feature['id'].rsplit(f'_{language}')[0]
+                if feature['properties']['language']['code'] == language:
                     new_features.append(feature)
             records['features'] = new_features
             records['numberMatched'] = len(records['features']) + offset
@@ -191,12 +190,11 @@ class ElasticsearchWOUDCProvider(ElasticsearchProvider):
                     identifier, language)
 
         if self.index_name.endswith('discovery_metadata'):
-            identifier2 = f'{identifier}_{language}'
+            new_id = identifier.split(':')[-1]
+            identifier2 = f'{new_id}_{language}'
         else:
             identifier2 = identifier
 
         dataset = super().get(identifier2, **kwargs)
-
-        dataset['id'] = dataset['id'].rsplit(f'_{language}')[0]
 
         return dataset

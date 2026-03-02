@@ -269,20 +269,15 @@ class ExtendedCSVProcessor(BaseProcessor):
                 if not self.ecsv._add_to_report(217, valueline, value=1.0):
                     success = False
                 self.level = 1.0
-            self.dataset += '_' + str(self.level)
 
         if not success:
             return success
 
-        index = 'discovery_metadata'
-        field = '_id'
+        index = 'dataset'
+        field = 'dataset_name'
         content_body = self.query_by_field(index, field, self.dataset)
-        _levels = content_body[0]['_source']['properties']['levels']
-        levels = []
-        for level in _levels:
-            label = level['label_en']
-            levels.append(label[len(label)-3:])
-
+        levels = [content_body[i]['_source']['properties']['dataset_level']
+                  for i in range(0, len(content_body))]
         if str(self.level) not in levels:
             if not self.ecsv._add_to_report(309, valueline,
                                             dataset=self.dataset):
@@ -716,7 +711,7 @@ class ExtendedCSVProcessor(BaseProcessor):
             query = {
                 "query": {
                     "term": {
-                        "_id": value + "_en",
+                        "_id": value,
                     }
                 }
             }
