@@ -1256,7 +1256,6 @@
                             "items":{
                                 "type":"string",
                                 "enum":[
-                                    "abstract",
                                     "contacts.addresses.administrativeArea",
                                     "contacts.addresses.city",
                                     "contacts.addresses.country",
@@ -1274,65 +1273,23 @@
                                     "contacts.position",
                                     "contacts.roles",
                                     "created",
-                                    "dataset_snapshots.description_en",
-                                    "dataset_snapshots.description_fr",
-                                    "dataset_snapshots.function",
-                                    "dataset_snapshots.label_en",
-                                    "dataset_snapshots.label_fr",
-                                    "dataset_snapshots.linktype",
-                                    "dataset_snapshots.url",
                                     "description",
                                     "externalIds.scheme",
                                     "externalIds.value",
                                     "identifier",
                                     "keywords",
                                     "language.code",
-                                    "levels.label",
-                                    "levels.label_en",
-                                    "levels.networks.instruments",
-                                    "levels.networks.label",
-                                    "levels.networks.label_en",
                                     "rights",
-                                    "search.description_en",
-                                    "search.description_fr",
-                                    "search.function",
-                                    "search.label_en",
-                                    "search.label_fr",
-                                    "search.linktype",
-                                    "search.url",
-                                    "spatial_extent",
-                                    "temporal_begin",
-                                    "temporal_end",
+                                    "themes.concepts.description",
                                     "themes.concepts.id",
+                                    "themes.concepts.title",
+                                    "themes.concepts.url",
                                     "themes.scheme",
                                     "title",
-                                    "topic_category",
                                     "type",
-                                    "uri",
+                                    "updated",
                                     "version",
-                                    "waf.description_en",
-                                    "waf.description_fr",
-                                    "waf.function",
-                                    "waf.label_en",
-                                    "waf.label_fr",
-                                    "waf.linktype",
-                                    "waf.url",
-                                    "wfs.description_en",
-                                    "wfs.description_fr",
-                                    "wfs.function",
-                                    "wfs.label_en",
-                                    "wfs.label_fr",
-                                    "wfs.linktype",
-                                    "wfs.url",
-                                    "wmo:dataPolicy",
-                                    "wms.description_en",
-                                    "wms.description_fr",
-                                    "wms.function",
-                                    "wms.label_en",
-                                    "wms.label_fr",
-                                    "wms.linktype",
-                                    "wms.url",
-                                    "woudc:content_category"
+                                    "wmo:dataPolicy"
                                 ]
                             }
                         }
@@ -1351,16 +1308,6 @@
                     },
                     {
                         "$ref":"https://raw.githubusercontent.com/opengeospatial/ogcapi-records/master/core/openapi/parameters/q.yaml"
-                    },
-                    {
-                        "name":"abstract",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
                     },
                     {
                         "name":"contacts.addresses.administrativeArea",
@@ -1534,76 +1481,6 @@
                         "explode":false
                     },
                     {
-                        "name":"dataset_snapshots.description_en",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"dataset_snapshots.description_fr",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"dataset_snapshots.function",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"dataset_snapshots.label_en",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"dataset_snapshots.label_fr",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"dataset_snapshots.linktype",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"dataset_snapshots.url",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
                         "name":"description",
                         "in":"query",
                         "required":false,
@@ -1618,7 +1495,7 @@
                         "in":"query",
                         "required":false,
                         "schema":{
-                            "type":"string"
+                            "type":"keyword"
                         },
                         "style":"form",
                         "explode":false
@@ -1628,7 +1505,7 @@
                         "in":"query",
                         "required":false,
                         "schema":{
-                            "type":"string"
+                            "type":"keyword"
                         },
                         "style":"form",
                         "explode":false
@@ -1664,56 +1541,6 @@
                         "explode":false
                     },
                     {
-                        "name":"levels.label",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"levels.label_en",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"levels.networks.instruments",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"levels.networks.label",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"levels.networks.label_en",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
                         "name":"rights",
                         "in":"query",
                         "required":false,
@@ -1724,98 +1551,7 @@
                         "explode":false
                     },
                     {
-                        "name":"search.description_en",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"search.description_fr",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"search.function",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"search.label_en",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"search.label_fr",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"search.linktype",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"search.url",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"spatial_extent",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"number",
-                            "format":"long"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"temporal_begin",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"temporal_end",
+                        "name":"themes.concepts.description",
                         "in":"query",
                         "required":false,
                         "schema":{
@@ -1829,7 +1565,27 @@
                         "in":"query",
                         "required":false,
                         "schema":{
+                            "type":"keyword"
+                        },
+                        "style":"form",
+                        "explode":false
+                    },
+                    {
+                        "name":"themes.concepts.title",
+                        "in":"query",
+                        "required":false,
+                        "schema":{
                             "type":"string"
+                        },
+                        "style":"form",
+                        "explode":false
+                    },
+                    {
+                        "name":"themes.concepts.url",
+                        "in":"query",
+                        "required":false,
+                        "schema":{
+                            "type":"keyword"
                         },
                         "style":"form",
                         "explode":false
@@ -1839,7 +1595,7 @@
                         "in":"query",
                         "required":false,
                         "schema":{
-                            "type":"string"
+                            "type":"keyword"
                         },
                         "style":"form",
                         "explode":false
@@ -1855,31 +1611,22 @@
                         "explode":false
                     },
                     {
-                        "name":"topic_category",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
                         "name":"type",
                         "in":"query",
                         "required":false,
                         "schema":{
-                            "type":"string"
+                            "type":"keyword"
                         },
                         "style":"form",
                         "explode":false
                     },
                     {
-                        "name":"uri",
+                        "name":"updated",
                         "in":"query",
                         "required":false,
                         "schema":{
-                            "type":"string"
+                            "type":"string",
+                            "format":"date"
                         },
                         "style":"form",
                         "explode":false
@@ -1889,147 +1636,7 @@
                         "in":"query",
                         "required":false,
                         "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"waf.description_en",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"waf.description_fr",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"waf.function",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"waf.label_en",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"waf.label_fr",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"waf.linktype",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"waf.url",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"wfs.description_en",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"wfs.description_fr",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"wfs.function",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"wfs.label_en",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"wfs.label_fr",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"wfs.linktype",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"wfs.url",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
+                            "type":"keyword"
                         },
                         "style":"form",
                         "explode":false
@@ -2039,87 +1646,7 @@
                         "in":"query",
                         "required":false,
                         "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"wms.description_en",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"wms.description_fr",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"wms.function",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"wms.label_en",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"wms.label_fr",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"wms.linktype",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"wms.url",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
-                        },
-                        "style":"form",
-                        "explode":false
-                    },
-                    {
-                        "name":"woudc:content_category",
-                        "in":"query",
-                        "required":false,
-                        "schema":{
-                            "type":"string"
+                            "type":"keyword"
                         },
                         "style":"form",
                         "explode":false
