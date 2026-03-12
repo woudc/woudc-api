@@ -1,3 +1,10 @@
+woudc-api (0.12.0) jammy; urgency=medium
+
+  * Updated validator for updated discovery metadata structure
+  * Updated validator to include new errors/warnings raised in ExtendedCSV
+
+ -- Kevin Ngai <kevin.ngai@ec.gc.ca>  Thu, 12 Mar 2026 21:55:08 +0000
+
 woudc-api (0.11.1) jammy; urgency=medium
 
   * Updated openapi document that was causing refererce errors from incorrect paths/URLs
