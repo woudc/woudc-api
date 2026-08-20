@@ -150,6 +150,17 @@ class ElasticsearchWOUDCProvider(ElasticsearchProvider):
         if self.index_name.endswith('discovery_metadata'):
             limit = limit * 2  # to account for en|fr split
 
+        for prop in properties:
+            values_list = prop[1].split('|')
+            values = [self._escape_special_chars(value
+                                                 ) for value in values_list]
+            if len(values) > 1:
+                values = ' OR '.join(values)
+            else:
+                values = values[0]
+            prop_name = super().mask_prop(prop[0])
+            q = f'{prop_name}.raw:({values})'
+
         records = super().query(
             offset=offset, limit=limit,
             resulttype=resulttype, bbox=bbox,
@@ -198,3 +209,20 @@ class ElasticsearchWOUDCProvider(ElasticsearchProvider):
         dataset = super().get(identifier2, **kwargs)
 
         return dataset
+
+    def _escape_special_chars(self, text):
+        """
+        Escape special characters and spaces in a string for use in
+        an Elasticsearch query.
+
+        :param text: The input string to escape
+
+        :returns: The escaped string
+        """
+        LOGGER.debug(f'checking {text} query value for special characters')
+        special_chars = r'+=&|><!(){}[]^"~*?: '
+
+        for char in special_chars:
+            text = text.replace(char, '\\' + char)
+
+        return text
